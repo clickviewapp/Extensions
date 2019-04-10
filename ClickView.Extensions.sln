@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1BF72BE4-3F51-462F-807B-DC9C87C5109C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{1BF72BE4-3F51-462F-807B-DC9C87C5109C}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClickView.Extensions.Utilit
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClickView.Extensions.Primitives.Tests", "src\Primitives\Primitives\test\ClickView.Extensions.Primitives.Tests.csproj", "{F86C5BEF-3F30-4E99-B81C-A82828F2F1E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClickView.Extensions.Utilities.Tests", "src\Utilities\Utilities\test\ClickView.Extensions.Utilities.Tests\ClickView.Extensions.Utilities.Tests.csproj", "{6407F7D8-EC95-4720-9AF0-FA16E1D9CF2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClickView.Extensions.Utilities.Tests", "src\Utilities\Utilities\test\ClickView.Extensions.Utilities.Tests\ClickView.Extensions.Utilities.Tests.csproj", "{6407F7D8-EC95-4720-9AF0-FA16E1D9CF2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
