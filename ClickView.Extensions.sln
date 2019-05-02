@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.572
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{1BF72BE4-3F51-462F-807B-DC9C87C5109C}"
 	ProjectSection(SolutionItems) = preProject
@@ -26,6 +26,21 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClickView.Extensions.Primitives.Tests", "src\Primitives\Primitives\test\ClickView.Extensions.Primitives.Tests.csproj", "{F86C5BEF-3F30-4E99-B81C-A82828F2F1E2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClickView.Extensions.Utilities.Tests", "src\Utilities\Utilities\test\ClickView.Extensions.Utilities.Tests\ClickView.Extensions.Utilities.Tests.csproj", "{6407F7D8-EC95-4720-9AF0-FA16E1D9CF2A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RestClient", "RestClient", "{BD0881FC-4083-49F5-B108-2205C691A9E4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClickView.Extensions.RestClient", "src\RestClient\RestClient\src\ClickView.Extensions.RestClient.csproj", "{16B2EFBD-A7DF-4A3E-9FC6-1AF1F60E8B10}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authenticators", "Authenticators", "{438F1A9E-539F-4974-A60E-FEB2D48DBAF2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClickView.Extensions.RestClient.Authenticators.OAuth", "src\RestClient\Authenticators\OAuth\src\ClickView.Extensions.RestClient.Authenticators.OAuth.csproj", "{29CC0760-FF46-4BF6-AB39-C8F51A7B6020}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OAuth", "OAuth", "{1F86755A-71B2-4D6B-9F65-819B371F85C6}"
+	ProjectSection(SolutionItems) = preProject
+		src\RestClient\Authenticators\OAuth\README.md = src\RestClient\Authenticators\OAuth\README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClickView.Extensions.RestClient.Authenticators.OAuth.Tests", "src\RestClient\Authenticators\OAuth\test\ClickView.Extensions.RestClient.Authenticators.OAuth.Tests.csproj", "{666CEABE-5916-4376-B819-4F4067CC5990}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +68,18 @@ Global
 		{6407F7D8-EC95-4720-9AF0-FA16E1D9CF2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6407F7D8-EC95-4720-9AF0-FA16E1D9CF2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6407F7D8-EC95-4720-9AF0-FA16E1D9CF2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16B2EFBD-A7DF-4A3E-9FC6-1AF1F60E8B10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16B2EFBD-A7DF-4A3E-9FC6-1AF1F60E8B10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16B2EFBD-A7DF-4A3E-9FC6-1AF1F60E8B10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16B2EFBD-A7DF-4A3E-9FC6-1AF1F60E8B10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29CC0760-FF46-4BF6-AB39-C8F51A7B6020}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29CC0760-FF46-4BF6-AB39-C8F51A7B6020}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29CC0760-FF46-4BF6-AB39-C8F51A7B6020}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29CC0760-FF46-4BF6-AB39-C8F51A7B6020}.Release|Any CPU.Build.0 = Release|Any CPU
+		{666CEABE-5916-4376-B819-4F4067CC5990}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{666CEABE-5916-4376-B819-4F4067CC5990}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{666CEABE-5916-4376-B819-4F4067CC5990}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{666CEABE-5916-4376-B819-4F4067CC5990}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,6 +90,11 @@ Global
 		{BFC8BEF3-24D4-42FA-AFC3-0AC96B39E2CD} = {682EFFC0-8C26-455C-B785-4B4C8250E0C5}
 		{F86C5BEF-3F30-4E99-B81C-A82828F2F1E2} = {948DB1B5-4AD4-42AF-B838-96F3BCBCFED8}
 		{6407F7D8-EC95-4720-9AF0-FA16E1D9CF2A} = {682EFFC0-8C26-455C-B785-4B4C8250E0C5}
+		{16B2EFBD-A7DF-4A3E-9FC6-1AF1F60E8B10} = {BD0881FC-4083-49F5-B108-2205C691A9E4}
+		{438F1A9E-539F-4974-A60E-FEB2D48DBAF2} = {BD0881FC-4083-49F5-B108-2205C691A9E4}
+		{29CC0760-FF46-4BF6-AB39-C8F51A7B6020} = {1F86755A-71B2-4D6B-9F65-819B371F85C6}
+		{1F86755A-71B2-4D6B-9F65-819B371F85C6} = {438F1A9E-539F-4974-A60E-FEB2D48DBAF2}
+		{666CEABE-5916-4376-B819-4F4067CC5990} = {1F86755A-71B2-4D6B-9F65-819B371F85C6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3A15E820-F957-4F4D-AE2F-6EF055C27DB8}

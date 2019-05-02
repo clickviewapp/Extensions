@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>OAuth authenticators for ClickView.Extensions.RestClient</Description>
+    <PackageId>ClickView.Extensions.RestClient.Authenticators.OAuth</PackageId>
+    <Version>0.0.6</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IdentityModel" Version="3.9.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\RestClient\src\ClickView.Extensions.RestClient.csproj" />
+  </ItemGroup>
+
+</Project>
