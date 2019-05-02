@@ -2,10 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ClickView.Extensions.RestClient.csproj" />
+    <ProjectReference Include="..\..\RestClient\src\ClickView.Extensions.RestClient.csproj" />
   </ItemGroup>
 
 </Project>
