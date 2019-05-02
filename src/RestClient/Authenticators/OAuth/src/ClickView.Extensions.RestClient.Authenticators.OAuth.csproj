@@ -2,10 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Description>OAuth authenticators for ClickView.Extensions.RestClient</Description>
-    <PackageId>ClickView.Extensions.RestClient.Authenticators.OAuth</PackageId>
+    <Version>0.0.1</Version>
     <LangVersion>7.1</LangVersion>
-    <Version>0.0.6</Version>
+    <PackageTags>restclient rest http oauth</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Description>OAuth authenticators for ClickView.Extensions.RestClient</Description>
+    <Company>ClickView</Company>
+    <Authors>ClickView</Authors>
+    <PackageProjectUrl>https://github.com/clickviewapp/Extensions</PackageProjectUrl>
+    <PackageIconUrl>https://static.clickview.com.au/assets/images/nugetlogo-64x64.png</PackageIconUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

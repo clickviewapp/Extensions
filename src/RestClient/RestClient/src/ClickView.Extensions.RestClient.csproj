@@ -2,7 +2,15 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
+    <Version>0.0.1</Version>
     <LangVersion>7.1</LangVersion>
+    <PackageTags>restclient rest http</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Company>ClickView</Company>
+    <Authors>ClickView</Authors>
+    <PackageProjectUrl>https://github.com/clickviewapp/Extensions</PackageProjectUrl>
+    <PackageIconUrl>https://static.clickview.com.au/assets/images/nugetlogo-64x64.png</PackageIconUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
   
   <ItemGroup>
