@@ -14,3 +14,4 @@ ClickView .NET Extensions is an open-source set of APIs for commonly used progra
 |-------|:-----:|
 | ClickView.Extensions.Hosting | [![NuGet Status](https://img.shields.io/nuget/v/ClickView.Extensions.Hosting.svg)](https://www.nuget.org/packages/ClickView.Extensions.Hosting) |
 | ClickView.Extensions.Utilities | [![NuGet Status](https://img.shields.io/nuget/v/ClickView.Extensions.Utilities.svg)](https://www.nuget.org/packages/ClickView.Extensions.Utilities) |
+| ClickView.Extensions.Events | [![NuGet Status](https://img.shields.io/nuget/v/ClickView.Extensions.Events.svg)](https://www.nuget.org/packages/ClickView.Extensions.Events) |
