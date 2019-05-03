@@ -9,7 +9,8 @@
         {
         }
 
-        public NetworkException(HttpStatusCode httpStatusCode, string message, Exception innerException) : base(httpStatusCode, message, innerException)
+        public NetworkException(HttpStatusCode httpStatusCode, string message, Exception innerException) :
+            base(httpStatusCode, message, innerException)
         {
         }
     }

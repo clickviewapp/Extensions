@@ -17,26 +17,29 @@
 
     public abstract class BaseRestClientRequest<TResponse> : IClientRequest where TResponse : RestClientResponse
     {
-        public string Resource { get; set; }
-        public HttpMethod Method { get; }
-        public ISerializer Serializer { internal get; set; } = NewonsoftJsonSerializer.Instance;
-        public IEnumerable<KeyValuePair<string, IEnumerable<string>>> Headers => _headers;
-
-        internal HttpContent Content { get; set; }
-        internal readonly Dictionary<string, List<RequestParameterValue>> Parameters = new Dictionary<string, List<RequestParameterValue>>();
-
-        /// <summary>
-        /// Set to true if we should throw an exception on 404
-        /// </summary>
-        protected bool ThrowOnNotFound { get; set; } = false;
-
         private readonly RestClientRequestHeaders _headers = new RestClientRequestHeaders();
+
+        internal readonly Dictionary<string, List<RequestParameterValue>> Parameters =
+            new Dictionary<string, List<RequestParameterValue>>();
 
         protected BaseRestClientRequest(HttpMethod method, string resource)
         {
             Method = method;
             Resource = resource;
         }
+
+        public ISerializer Serializer { internal get; set; } = NewonsoftJsonSerializer.Instance;
+
+        internal HttpContent Content { get; set; }
+
+        /// <summary>
+        ///     Set to true if we should throw an exception on 404
+        /// </summary>
+        protected bool ThrowOnNotFound { get; set; } = false;
+
+        public string Resource { get; set; }
+        public HttpMethod Method { get; }
+        public IEnumerable<KeyValuePair<string, IEnumerable<string>>> Headers => _headers;
 
         public void AddHeader(string key, string value)
         {

@@ -9,7 +9,8 @@
         {
         }
 
-        public BadRequestException(HttpStatusCode httpStatusCode, string message, Exception innerException) : base(httpStatusCode, message, innerException)
+        public BadRequestException(HttpStatusCode httpStatusCode, string message, Exception innerException) :
+            base(httpStatusCode, message, innerException)
         {
         }
     }

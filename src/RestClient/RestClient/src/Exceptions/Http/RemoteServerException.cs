@@ -5,7 +5,7 @@
 
     /// <inheritdoc />
     /// <summary>
-    /// The exception thrown when the exception is caused by the remote server
+    ///     The exception thrown when the exception is caused by the remote server
     /// </summary>
     public class RemoteServerException : ClickViewClientHttpException
     {
@@ -13,7 +13,8 @@
         {
         }
 
-        public RemoteServerException(HttpStatusCode httpStatusCode, string message, Exception innerException) : base(httpStatusCode, message, innerException)
+        public RemoteServerException(HttpStatusCode httpStatusCode, string message, Exception innerException) :
+            base(httpStatusCode, message, innerException)
         {
         }
     }

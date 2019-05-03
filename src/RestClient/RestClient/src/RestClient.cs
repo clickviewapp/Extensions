@@ -11,19 +11,23 @@
 
     public class RestClient
     {
-        private readonly CoreRestClientOptions _options;
         private readonly HttpClient _httpClient;
+        private readonly CoreRestClientOptions _options;
 
         public RestClient(Uri baseAddress) : this(baseAddress, RestClientOptions.Default)
         {
         }
 
-        public RestClient(Uri baseAddress, RestClientOptions options) : this(baseAddress, CreateHandler(options), options)
+        public RestClient(Uri baseAddress, RestClientOptions options) : this(baseAddress, CreateHandler(options),
+            options)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RestClient"/> class with a specified <param name="httpClient"><see cref="HttpClient"/></param>
+        ///     Initializes a new instance of the <see cref="RestClient" /> class with a specified
+        ///     <param name="httpClient">
+        ///         <see cref="HttpClient" />
+        ///     </param>
         /// </summary>
         /// <param name="httpClient"></param>
         /// <param name="options"></param>
@@ -34,7 +38,10 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RestClient"/> class with a specified <param name="httpClient"><see cref="HttpClient"/></param>
+        ///     Initializes a new instance of the <see cref="RestClient" /> class with a specified
+        ///     <param name="httpClient">
+        ///         <see cref="HttpClient" />
+        ///     </param>
         /// </summary>
         /// <param name="httpClient"></param>
         public RestClient(HttpClient httpClient) : this(httpClient, new CoreRestClientOptions())
@@ -46,7 +53,8 @@
         {
         }
 
-        public async Task<TResponse> ExecuteAsync<TResponse>(BaseRestClientRequest<TResponse> request) where TResponse : RestClientResponse
+        public async Task<TResponse> ExecuteAsync<TResponse>(BaseRestClientRequest<TResponse> request)
+            where TResponse : RestClientResponse
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
@@ -58,10 +66,7 @@
 
             using (var httpRequest = new HttpRequestMessage(request.Method, resource))
             {
-                foreach (var h in request.Headers)
-                {
-                    httpRequest.Headers.TryAddWithoutValidation(h.Key, h.Value);
-                }
+                foreach (var h in request.Headers) httpRequest.Headers.TryAddWithoutValidation(h.Key, h.Value);
 
                 SetContent(httpRequest, request);
 
@@ -79,7 +84,8 @@
             }
         }
 
-        internal void SetContent<TResponse>(HttpRequestMessage httpRequest, BaseRestClientRequest<TResponse> request) where TResponse : RestClientResponse
+        internal void SetContent<TResponse>(HttpRequestMessage httpRequest, BaseRestClientRequest<TResponse> request)
+            where TResponse : RestClientResponse
         {
             if (request.Content == null)
                 return;

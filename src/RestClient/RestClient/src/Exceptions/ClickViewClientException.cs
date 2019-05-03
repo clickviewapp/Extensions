@@ -4,7 +4,7 @@
 
     /// <inheritdoc />
     /// <summary>
-    /// The base exception thrown by the ClickView Clients
+    ///     The base exception thrown by the ClickView Clients
     /// </summary>
     public class ClickViewClientException : Exception
     {

@@ -9,7 +9,8 @@
         {
         }
 
-        public NotFoundException(HttpStatusCode httpStatusCode, string message, Exception innerException) : base(httpStatusCode, message, innerException)
+        public NotFoundException(HttpStatusCode httpStatusCode, string message, Exception innerException) :
+            base(httpStatusCode, message, innerException)
         {
         }
     }

@@ -9,7 +9,8 @@
         {
         }
 
-        public UnauthorizedException(HttpStatusCode httpStatusCode, string message, Exception innerException) : base(httpStatusCode, message, innerException)
+        public UnauthorizedException(HttpStatusCode httpStatusCode, string message, Exception innerException) :
+            base(httpStatusCode, message, innerException)
         {
         }
     }

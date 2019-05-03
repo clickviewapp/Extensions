@@ -2,13 +2,13 @@
 {
     internal class RequestParameterValue
     {
-        internal object Value { get; set; }
-        internal RequestParameterType Type { get; }
-
         public RequestParameterValue(object value, RequestParameterType type)
         {
             Value = value;
             Type = type;
         }
+
+        internal object Value { get; set; }
+        internal RequestParameterType Type { get; }
     }
 }

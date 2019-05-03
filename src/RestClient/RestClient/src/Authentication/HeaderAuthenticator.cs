@@ -4,7 +4,7 @@
     using Requests;
 
     /// <summary>
-    /// Basic authenticator which adds a header value to each request
+    ///     Basic authenticator which adds a header value to each request
     /// </summary>
     public class HeaderAuthenticator : IAuthenticator
     {

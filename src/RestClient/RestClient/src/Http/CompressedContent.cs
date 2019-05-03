@@ -9,23 +9,17 @@
 
     public class CompressedContent : HttpContent
     {
-        private readonly HttpContent _originalContent;
         private readonly CompressionMethod _compressionMethod;
+        private readonly HttpContent _originalContent;
 
         public CompressedContent(HttpContent content, CompressionMethod compressionMethod)
         {
-            if (compressionMethod == CompressionMethod.None)
-            {
-                throw new ArgumentNullException(nameof(compressionMethod));
-            }
+            if (compressionMethod == CompressionMethod.None) throw new ArgumentNullException(nameof(compressionMethod));
 
             _originalContent = content ?? throw new ArgumentNullException(nameof(content));
             _compressionMethod = compressionMethod;
 
-            foreach (var header in _originalContent.Headers)
-            {
-                Headers.TryAddWithoutValidation(header.Key, header.Value);
-            }
+            foreach (var header in _originalContent.Headers) Headers.TryAddWithoutValidation(header.Key, header.Value);
 
             Headers.ContentEncoding.Add(_compressionMethod.ToString().ToLowerInvariant());
         }
@@ -44,17 +38,18 @@
             switch (_compressionMethod)
             {
                 case CompressionMethod.GZip:
-                    compressedStream = new GZipStream(stream, CompressionMode.Compress, leaveOpen: true);
+                    compressedStream = new GZipStream(stream, CompressionMode.Compress, true);
                     break;
                 case CompressionMethod.Deflate:
-                    compressedStream = new DeflateStream(stream, CompressionMode.Compress, leaveOpen: true);
+                    compressedStream = new DeflateStream(stream, CompressionMode.Compress, true);
                     break;
                 case CompressionMethod.None:
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            return _originalContent.CopyToAsync(compressedStream, context).ContinueWith(_ => compressedStream?.Dispose());
+            return _originalContent.CopyToAsync(compressedStream, context)
+                .ContinueWith(_ => compressedStream?.Dispose());
         }
     }
 }
