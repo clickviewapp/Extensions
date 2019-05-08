@@ -3,19 +3,19 @@
     using System;
     using Newtonsoft.Json;
 
-    public class NewonsoftJsonSerializer : ISerializer
+    public class NewtonsoftJsonSerializer : ISerializer
     {
-        public static readonly ISerializer Instance = new NewonsoftJsonSerializer();
+        public static readonly ISerializer Instance = new NewtonsoftJsonSerializer();
 
         private readonly JsonSerializerSettings _jsonSerializerSettings;
 
-        public NewonsoftJsonSerializer()
+        public NewtonsoftJsonSerializer()
         {
             //use default
             _jsonSerializerSettings = null;
         }
 
-        public NewonsoftJsonSerializer(JsonSerializerSettings jsonSerializerSettings)
+        public NewtonsoftJsonSerializer(JsonSerializerSettings jsonSerializerSettings)
         {
             _jsonSerializerSettings = jsonSerializerSettings;
         }

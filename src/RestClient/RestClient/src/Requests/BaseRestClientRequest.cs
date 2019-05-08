@@ -28,7 +28,7 @@ namespace ClickView.Extensions.RestClient.Requests
             Resource = resource;
         }
 
-        public ISerializer Serializer { internal get; set; } = NewonsoftJsonSerializer.Instance;
+        public ISerializer Serializer { internal get; set; } = NewtonsoftJsonSerializer.Instance;
 
         internal HttpContent Content { get; set; }
 

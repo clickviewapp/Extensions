@@ -14,7 +14,8 @@
 
         public CompressedContent(HttpContent content, CompressionMethod compressionMethod)
         {
-            if (compressionMethod == CompressionMethod.None) throw new ArgumentNullException(nameof(compressionMethod));
+            if (compressionMethod == CompressionMethod.None)
+                throw new ArgumentNullException(nameof(compressionMethod));
 
             _originalContent = content ?? throw new ArgumentNullException(nameof(content));
             _compressionMethod = compressionMethod;
