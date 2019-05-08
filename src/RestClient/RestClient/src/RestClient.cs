@@ -66,7 +66,10 @@
 
             using (var httpRequest = new HttpRequestMessage(request.Method, resource))
             {
-                foreach (var h in request.Headers) httpRequest.Headers.TryAddWithoutValidation(h.Key, h.Value);
+                foreach (var h in request.Headers)
+                {
+                    httpRequest.Headers.TryAddWithoutValidation(h.Key, h.Value);
+                }
 
                 SetContent(httpRequest, request);
 

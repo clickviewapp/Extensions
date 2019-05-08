@@ -18,11 +18,14 @@ namespace ClickView.Extensions.RestClient.Helpers
         /// <returns>The combined result.</returns>
         public static string AddQueryString(string uri, string name, string value)
         {
-            if (uri == null) throw new ArgumentNullException(nameof(uri));
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
 
-            if (name == null) throw new ArgumentNullException(nameof(name));
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
 
-            if (value == null) throw new ArgumentNullException(nameof(value));
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
 
             return AddQueryString(
                 uri, new[] {new KeyValuePair<string, string>(name, value)});
@@ -36,9 +39,11 @@ namespace ClickView.Extensions.RestClient.Helpers
         /// <returns>The combined result.</returns>
         public static string AddQueryString(string uri, IDictionary<string, string> queryString)
         {
-            if (uri == null) throw new ArgumentNullException(nameof(uri));
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
 
-            if (queryString == null) throw new ArgumentNullException(nameof(queryString));
+            if (queryString == null)
+                throw new ArgumentNullException(nameof(queryString));
 
             return AddQueryString(uri, (IEnumerable<KeyValuePair<string, string>>) queryString);
         }
@@ -51,9 +56,11 @@ namespace ClickView.Extensions.RestClient.Helpers
         /// <returns>The combined result.</returns>
         internal static string AddQueryString(string uri, IDictionary<string, List<RequestParameterValue>> parameters)
         {
-            if (uri == null) throw new ArgumentNullException(nameof(uri));
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
 
-            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+            if (parameters == null)
+                throw new ArgumentNullException(nameof(parameters));
 
             return AddQueryString(uri, Flatten(parameters));
         }
@@ -63,14 +70,18 @@ namespace ClickView.Extensions.RestClient.Helpers
         {
             foreach (var p in parameters)
             foreach (var pp in p.Value.Where(v => v.Type == RequestParameterType.Query))
+            {
                 yield return new KeyValuePair<string, string>(p.Key, pp.Value.ToString());
+            }
         }
 
         private static string AddQueryString(string uri, IEnumerable<KeyValuePair<string, string>> queryString)
         {
-            if (uri == null) throw new ArgumentNullException(nameof(uri));
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
 
-            if (queryString == null) throw new ArgumentNullException(nameof(queryString));
+            if (queryString == null)
+                throw new ArgumentNullException(nameof(queryString));
 
             var anchorIndex = uri.IndexOf('#');
             var uriToBeAppended = uri;
@@ -88,6 +99,7 @@ namespace ClickView.Extensions.RestClient.Helpers
 
             var sb = new StringBuilder();
             sb.Append(uriToBeAppended);
+
             foreach (var parameter in queryString)
             {
                 sb.Append(hasQuery ? '&' : '?');

@@ -19,7 +19,10 @@
             _originalContent = content ?? throw new ArgumentNullException(nameof(content));
             _compressionMethod = compressionMethod;
 
-            foreach (var header in _originalContent.Headers) Headers.TryAddWithoutValidation(header.Key, header.Value);
+            foreach (var header in _originalContent.Headers)
+            {
+                Headers.TryAddWithoutValidation(header.Key, header.Value);
+            }
 
             Headers.ContentEncoding.Add(_compressionMethod.ToString().ToLowerInvariant());
         }
