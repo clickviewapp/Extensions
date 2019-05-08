@@ -12,7 +12,7 @@
     <PackageIconUrl>https://static.clickview.com.au/assets/images/nugetlogo-64x64.png</PackageIconUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="System.Text.Encodings.Web" Version="4.5.0" />

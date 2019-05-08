@@ -11,10 +11,11 @@
     internal class ClientCredentialsTokenSource : AccessTokenSource
     {
         private readonly IClientFactory _clientFactory;
-        private readonly string _scope;
         private readonly ILogger<ClientCredentialsTokenSource> _logger;
+        private readonly string _scope;
 
-        public ClientCredentialsTokenSource(IClientFactory clientFactory, ILoggerFactory loggerFactory, IEnumerable<string> scopes)
+        public ClientCredentialsTokenSource(IClientFactory clientFactory, ILoggerFactory loggerFactory,
+            IEnumerable<string> scopes)
         {
             _clientFactory = clientFactory;
             _scope = string.Join(" ", scopes);
@@ -31,7 +32,9 @@
             if (!response.IsError)
                 return Helpers.CreateAccessToken(response);
 
-            _logger.LogError(response.Exception, "Error fetching client credentials token. {Error} ({ErrorDescription})", response.Error, response.ErrorDescription);
+            _logger.LogError(response.Exception,
+                "Error fetching client credentials token. {Error} ({ErrorDescription})", response.Error,
+                response.ErrorDescription);
 
             return null;
         }

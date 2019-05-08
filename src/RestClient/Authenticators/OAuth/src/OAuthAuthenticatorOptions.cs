@@ -15,7 +15,7 @@
         public bool EnableDiscovery { get; set; } = true;
 
         /// <summary>
-        /// If set to true, a <see cref="Exceptions.NoTokenException"/> will be thrown if no token could be found in any store
+        ///     If set to true, a <see cref="Exceptions.NoTokenException" /> will be thrown if no token could be found in any store
         /// </summary>
         public bool ThrowIfNoToken { get; set; } = false;
 

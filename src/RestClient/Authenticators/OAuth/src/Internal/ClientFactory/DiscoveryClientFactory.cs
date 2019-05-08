@@ -7,13 +7,11 @@
 
     internal class DiscoveryClientFactory : IClientFactory
     {
-        private readonly OAuthAuthenticatorOptions _options;
         private readonly DiscoveryClient _discoveryClient;
+        private readonly OAuthAuthenticatorOptions _options;
         private AsyncLazy<Clients> _clientsCache;
 
         private DateTime _nextReload = DateTime.MinValue;
-
-        public TimeSpan CacheDuration { get; set; } = TimeSpan.FromHours(8);
 
         public DiscoveryClientFactory(string authority, OAuthAuthenticatorOptions options)
         {
@@ -27,6 +25,8 @@
                 }
             };
         }
+
+        public TimeSpan CacheDuration { get; set; } = TimeSpan.FromHours(8);
 
         public async Task<TokenClient> GetTokenClientAsync()
         {
@@ -43,9 +43,7 @@
         private Task<Clients> GetClientsAsync()
         {
             if (_nextReload <= DateTime.UtcNow)
-            {
                 Refresh();
-            }
 
             return _clientsCache.Value;
         }
@@ -54,8 +52,9 @@
         {
             var endpoints = await _discoveryClient.GetAsync().ConfigureAwait(false);
 
-            if(endpoints.IsError)
-                throw new ClientDiscoveryException("Failed to retrieve endpoints from discovery document", endpoints.Exception);
+            if (endpoints.IsError)
+                throw new ClientDiscoveryException("Failed to retrieve endpoints from discovery document",
+                    endpoints.Exception);
 
             var clients = new Clients
             {

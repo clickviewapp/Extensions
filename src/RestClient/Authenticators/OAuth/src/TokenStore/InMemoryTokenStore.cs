@@ -18,7 +18,9 @@
         public Task StoreTokens(IEnumerable<Token> tokens)
         {
             foreach (var t in tokens)
+            {
                 _tokens.AddOrUpdate(t.TokenType, t, (type, _) => t);
+            }
 
             return Task.CompletedTask;
         }

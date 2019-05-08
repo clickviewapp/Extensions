@@ -14,18 +14,17 @@
 
     public abstract class OAuthAuthenticator<TOptions> : IAuthenticator where TOptions : OAuthAuthenticatorOptions
     {
-        protected readonly TOptions Options;
-        protected readonly ITokenStore TokenStore;
+        private readonly ILogger<OAuthAuthenticator<TOptions>> _logger;
 
         private readonly List<ITokenSource> _tokenSources = new List<ITokenSource>();
-
-        private readonly ILogger<OAuthAuthenticator<TOptions>> _logger;
+        protected readonly TOptions Options;
+        protected readonly ITokenStore TokenStore;
 
         protected OAuthAuthenticator(TOptions options)
         {
             Options = options;
 
-            if(options.LoggerFactory == null)
+            if (options.LoggerFactory == null)
                 throw new ArgumentException("No LoggerFactory configured");
 
             _logger = options.LoggerFactory.CreateLogger<OAuthAuthenticator<TOptions>>();
@@ -35,11 +34,6 @@
             // our token store should be the first place we look, so add that to our sources first
             if (TokenStore != null)
                 AddTokenSource(new TokenStoreTokenSource(TokenStore));
-        }
-
-        protected void AddTokenSource(ITokenSource tokenSource)
-        {
-            _tokenSources.Add(tokenSource);
         }
 
         public virtual async Task AuthenticateAsync(IClientRequest request)
@@ -55,6 +49,11 @@
             }
 
             request.AddHeader("Authorization", "Bearer " + token);
+        }
+
+        protected void AddTokenSource(ITokenSource tokenSource)
+        {
+            _tokenSources.Add(tokenSource);
         }
 
         protected async Task<string> GetTokenAsync()
@@ -76,7 +75,8 @@
                 // check expired
                 if (accessToken.ExpireTime.HasValue && accessToken.ExpireTime < DateTimeOffset.UtcNow)
                 {
-                    _logger.LogInformation("Token expired ({ExpireTime}) in store: {StoreType}", accessToken.ExpireTime.Value.ToString("O"), storeName);
+                    _logger.LogInformation("Token expired ({ExpireTime}) in store: {StoreType}",
+                        accessToken.ExpireTime.Value.ToString("O"), storeName);
                     continue;
                 }
 

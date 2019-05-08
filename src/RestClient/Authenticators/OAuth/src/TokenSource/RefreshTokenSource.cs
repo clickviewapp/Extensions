@@ -10,9 +10,9 @@
 
     public class RefreshTokenSource : ITokenSource
     {
-        private readonly ITokenStore _tokenStore;
         private readonly IClientFactory _clientFactory;
         private readonly ILogger<RefreshTokenSource> _logger;
+        private readonly ITokenStore _tokenStore;
 
         public RefreshTokenSource(ITokenStore tokenStore, IClientFactory clientFactory, ILoggerFactory loggerFactory)
         {
@@ -31,12 +31,14 @@
 
             _logger.LogDebug("Refreshing token");
 
-            var refreshTokenResponse = await tokenClient.RequestRefreshTokenAsync(refreshToken.Value).ConfigureAwait(false);
+            var refreshTokenResponse =
+                await tokenClient.RequestRefreshTokenAsync(refreshToken.Value).ConfigureAwait(false);
 
             //todo: handle errors
             if (refreshTokenResponse.IsError)
             {
-                _logger.LogError(refreshTokenResponse.Exception, "Error refreshing token. {Message}", refreshTokenResponse.ErrorDescription);
+                _logger.LogError(refreshTokenResponse.Exception, "Error refreshing token. {Message}",
+                    refreshTokenResponse.ErrorDescription);
                 return new List<Token>();
             }
 
