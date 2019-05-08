@@ -1,4 +1,4 @@
-﻿namespace ClickView.Extensions.RestClient.Helpers
+namespace ClickView.Extensions.RestClient.Helpers
 {
     using System;
     using System.Collections.Generic;

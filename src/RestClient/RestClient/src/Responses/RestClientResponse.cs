@@ -1,4 +1,4 @@
-﻿namespace ClickView.Extensions.RestClient.Responses
+namespace ClickView.Extensions.RestClient.Responses
 {
     using System.Net;
     using System.Net.Http;

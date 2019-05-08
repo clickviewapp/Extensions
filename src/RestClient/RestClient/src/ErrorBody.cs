@@ -1,4 +1,4 @@
-﻿namespace ClickView.Extensions.RestClient
+namespace ClickView.Extensions.RestClient
 {
     public class ErrorBody
     {

@@ -1,4 +1,4 @@
-﻿namespace ClickView.Extensions.RestClient.Exceptions.Http
+namespace ClickView.Extensions.RestClient.Exceptions.Http
 {
     using System;
     using System.Net;

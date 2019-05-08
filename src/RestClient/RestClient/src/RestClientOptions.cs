@@ -1,4 +1,4 @@
-﻿namespace ClickView.Extensions.RestClient
+namespace ClickView.Extensions.RestClient
 {
     using System;
     using System.Net;

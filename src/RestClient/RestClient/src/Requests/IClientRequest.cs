@@ -1,4 +1,4 @@
-﻿namespace ClickView.Extensions.RestClient.Requests
+namespace ClickView.Extensions.RestClient.Requests
 {
     using System.Collections.Generic;
     using System.Net.Http;

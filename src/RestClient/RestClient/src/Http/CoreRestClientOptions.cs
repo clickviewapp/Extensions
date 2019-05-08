@@ -1,4 +1,4 @@
-﻿namespace ClickView.Extensions.RestClient.Http
+namespace ClickView.Extensions.RestClient.Http
 {
     using Authentication;
 

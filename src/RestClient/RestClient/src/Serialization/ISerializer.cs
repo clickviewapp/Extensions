@@ -1,4 +1,4 @@
-﻿namespace ClickView.Extensions.RestClient.Serialization
+namespace ClickView.Extensions.RestClient.Serialization
 {
     using System;
 
