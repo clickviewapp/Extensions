@@ -30,7 +30,7 @@
                 ClientSecret = _clientSecret,
                 Scope = scope,
                 Address = endpoints.TokenEndpoint
-            });
+            }).ConfigureAwait(false);
         }
 
         public async Task<TokenResponse> GetRefreshTokenAsync(string refreshToken)
@@ -41,7 +41,7 @@
             {
                 Address = endpoints.TokenEndpoint,
                 RefreshToken = refreshToken
-            });
+            }).ConfigureAwait(false);
         }
     }
 }

@@ -22,7 +22,7 @@
 
         protected override async Task<AccessToken> GetAccessTokenAsync()
         {
-            var response = await _tokenClient.GetClientCredentialsTokenAsync(_scope);
+            var response = await _tokenClient.GetClientCredentialsTokenAsync(_scope).ConfigureAwait(false);
 
             //todo: handle errors
             if (!response.IsError)

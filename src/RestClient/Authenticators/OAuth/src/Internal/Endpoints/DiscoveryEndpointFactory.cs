@@ -47,7 +47,7 @@
             {
                 Address = _authority,
                 Policy = _discoveryPolicy
-            });
+            }).ConfigureAwait(false);
 
             if (result.IsError)
                 throw new ClientDiscoveryException("Failed to retrieve endpoints from discovery document",
