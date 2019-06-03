@@ -1,5 +1,6 @@
 ﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth
 {
+    using System.Net.Http;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Logging.Abstractions;
     using TokenStore;
@@ -11,6 +12,8 @@
 
         public ITokenStore TokenStore { get; set; } = new InMemoryTokenStore();
         public ILoggerFactory LoggerFactory { get; set; } = new NullLoggerFactory();
+
+        public HttpClient HttpClient { get; set; }
 
         public bool EnableDiscovery { get; set; } = true;
 

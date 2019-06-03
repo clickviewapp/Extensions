@@ -2,31 +2,27 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using IdentityModel.Client;
-    using Internal.ClientFactory;
     using Microsoft.Extensions.Logging;
     using Tokens;
     using TokenSource;
 
     internal class ClientCredentialsTokenSource : AccessTokenSource
     {
-        private readonly IClientFactory _clientFactory;
+        private readonly TokenClient _tokenClient;
         private readonly ILogger<ClientCredentialsTokenSource> _logger;
         private readonly string _scope;
 
-        public ClientCredentialsTokenSource(IClientFactory clientFactory, ILoggerFactory loggerFactory,
+        public ClientCredentialsTokenSource(TokenClient tokenClient, ILoggerFactory loggerFactory,
             IEnumerable<string> scopes)
         {
-            _clientFactory = clientFactory;
+            _tokenClient = tokenClient;
             _scope = string.Join(" ", scopes);
             _logger = loggerFactory.CreateLogger<ClientCredentialsTokenSource>();
         }
 
         protected override async Task<AccessToken> GetAccessTokenAsync()
         {
-            var tokenClient = await _clientFactory.GetTokenClientAsync().ConfigureAwait(false);
-
-            var response = await tokenClient.RequestClientCredentialsAsync(_scope).ConfigureAwait(false);
+            var response = await _tokenClient.GetClientCredentialsTokenAsync(_scope);
 
             //todo: handle errors
             if (!response.IsError)
