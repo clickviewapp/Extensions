@@ -1,14 +1,13 @@
 ﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Authenticators
 {
-    using Internal.ClientFactory;
-
     public class ClientCredentialsAuthenticator : OAuthAuthenticator<ClientCredentialsAuthenticatorOptions>
     {
         public ClientCredentialsAuthenticator(string endpoint, ClientCredentialsAuthenticatorOptions options) :
             base(options)
         {
-            AddTokenSource(new ClientCredentialsTokenSource(ClientFactoryHelper.CreateClientFactory(endpoint, options),
-                options.LoggerFactory, options.Scopes));
+            var tokenClient = new TokenClient(HttpClient, options.ClientId, options.ClientSecret, CreateEndpointFactory(endpoint));
+
+            AddTokenSource(new ClientCredentialsTokenSource(tokenClient, options.LoggerFactory, options.Scopes));
         }
     }
 }

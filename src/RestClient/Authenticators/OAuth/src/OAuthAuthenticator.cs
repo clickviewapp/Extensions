@@ -3,9 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net.Http;
     using System.Threading.Tasks;
     using Authentication;
     using Exceptions;
+    using Internal.Endpoints;
     using Microsoft.Extensions.Logging;
     using Requests;
     using Tokens;
@@ -17,11 +19,15 @@
         private readonly ILogger<OAuthAuthenticator<TOptions>> _logger;
 
         private readonly List<ITokenSource> _tokenSources = new List<ITokenSource>();
+
         protected readonly TOptions Options;
         protected readonly ITokenStore TokenStore;
+        protected readonly HttpClient HttpClient;
 
         protected OAuthAuthenticator(TOptions options)
         {
+            HttpClient = options.HttpClient ?? new HttpClient();
+
             Options = options;
 
             if (options.LoggerFactory == null)
@@ -95,6 +101,14 @@
             _logger.LogWarning("No token could be found in any store");
 
             return null;
+        }
+
+        protected IAuthenticatorEndpointFactory CreateEndpointFactory(string endpoint)
+        {
+            if (Options.EnableDiscovery)
+                return new DiscoveryEndpointFactory(endpoint, HttpClient);
+
+            return new DefaultEndpointFactory(Options.Endpoints);
         }
     }
 }
