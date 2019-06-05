@@ -56,5 +56,17 @@
 
             await Assert.ThrowsAsync<ClientDiscoveryException>(() => factory.GetAsync());
         }
+
+        [Fact]
+        public async Task GetTokenClientAsync_ThreadSafe()
+        {
+            var factory = new DiscoveryEndpointFactory("https://samples.auth0.com", new HttpClient());
+
+            var endpoints1Task = factory.GetAsync();
+            var endpoints2Task = factory.GetAsync();
+
+            await endpoints1Task;
+            await endpoints2Task;
+        }
     }
 }
