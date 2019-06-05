@@ -15,6 +15,7 @@
         private AsyncLazy<AuthenticatorEndpoints> _discoveryCache;
 
         private DateTime _nextReload = DateTime.MinValue;
+        private readonly object _reloadLock = new object();
 
         public DiscoveryEndpointFactory(string authority, HttpClient httpClient)
         {
@@ -38,7 +39,14 @@
 
         public void Refresh()
         {
-            _discoveryCache = new AsyncLazy<AuthenticatorEndpoints>(GetEndpointsAsync);
+            lock (_reloadLock)
+            {
+                if (_nextReload > DateTime.UtcNow)
+                    return;
+
+                _nextReload = DateTime.UtcNow.Add(CacheDuration);
+                _discoveryCache = new AsyncLazy<AuthenticatorEndpoints>(GetEndpointsAsync);
+            }
         }
 
         private async Task<AuthenticatorEndpoints> GetEndpointsAsync()
@@ -49,16 +57,22 @@
                 Policy = _discoveryPolicy
             }).ConfigureAwait(false);
 
-            if (result.IsError)
-                throw new ClientDiscoveryException("Failed to retrieve endpoints from discovery document",
-                    result.Exception);
-
-            _nextReload = DateTime.UtcNow.Add(CacheDuration);
-
-            return new AuthenticatorEndpoints
+            if (!result.IsError)
             {
-                TokenEndpoint = result.TokenEndpoint
-            };
+                return new AuthenticatorEndpoints
+                {
+                    TokenEndpoint = result.TokenEndpoint
+                };
+            }
+
+            lock (_reloadLock)
+            {
+                // Force reload next request
+                _nextReload = DateTime.MinValue;
+            }
+
+            throw new ClientDiscoveryException("Failed to retrieve endpoints from discovery document",
+                result.Exception);
         }
     }
 }

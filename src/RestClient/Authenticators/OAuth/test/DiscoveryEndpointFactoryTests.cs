@@ -23,10 +23,7 @@
         [Fact]
         public async Task GetTokenClientAsync_SameInstance()
         {
-            var factory = new DiscoveryEndpointFactory("https://samples.auth0.com", new HttpClient())
-            {
-                CacheDuration = TimeSpan.FromSeconds(1)
-            };
+            var factory = new DiscoveryEndpointFactory("https://samples.auth0.com", new HttpClient());
 
             var endpoints = await factory.GetAsync();
             var endpoints2 = await factory.GetAsync();
@@ -67,6 +64,17 @@
 
             await endpoints1Task;
             await endpoints2Task;
+        }
+
+        [Fact]
+        public async Task GetTokenClientAsync_ThreadSafe_SameInstance()
+        {
+            var factory = new DiscoveryEndpointFactory("https://samples.auth0.com", new HttpClient());
+
+            var endpoints1Task = factory.GetAsync();
+            var endpoints2Task = factory.GetAsync();
+
+            Assert.Equal(await endpoints1Task, await endpoints2Task);
         }
     }
 }
