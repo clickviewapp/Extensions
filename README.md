@@ -6,7 +6,7 @@ ClickView .NET Extensions is an open-source set of APIs for commonly used progra
 
 |Branch|AppVeyor|
 |------|:--------:|
-|master|![AppVeyor](https://img.shields.io/appveyor/ci/MrSmoke/Extensions.svg) ![AppVeyor tests](https://img.shields.io/appveyor/tests/MrSmoke/Extensions.svg)|
+|master|![AppVeyor](https://img.shields.io/appveyor/ci/clickviewapp/Extensions.svg) ![AppVeyor tests](https://img.shields.io/appveyor/tests/clickviewapp/Extensions.svg)|
 
 |Package|NuGet|
 |-------|:-----:|
