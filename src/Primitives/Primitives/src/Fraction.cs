@@ -26,12 +26,17 @@
 
         public static bool TryParse(string str, out Fraction fraction)
         {
+            return TryParse(str, new[] {'/', ':'}, out fraction);
+        }
+
+        public static bool TryParse(string str, char[] separators, out Fraction fraction)
+        {
             fraction = new Fraction();
 
             if (string.IsNullOrWhiteSpace(str))
                 return false;
 
-            var pieces = str.Split('/');
+            var pieces = str.Split(separators);
             if (pieces.Length < 1 || pieces.Length > 2)
                 return false;
 
