@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading;
     using System.Threading.Tasks;
     using Authentication;
     using Exceptions;
@@ -42,11 +43,11 @@
                 AddTokenSource(new TokenStoreTokenSource(TokenStore));
         }
 
-        public virtual async Task AuthenticateAsync(IClientRequest request)
+        public virtual async Task AuthenticateAsync(IClientRequest request, CancellationToken token = default)
         {
-            var token = await GetTokenAsync().ConfigureAwait(false);
+            var oAuthToken = await GetTokenAsync(token).ConfigureAwait(false);
 
-            if (string.IsNullOrWhiteSpace(token))
+            if (string.IsNullOrWhiteSpace(oAuthToken))
             {
                 if (Options.ThrowIfNoToken)
                     throw new NoTokenException("No token could be found in any stores");
@@ -54,7 +55,7 @@
                 return;
             }
 
-            request.AddHeader("Authorization", "Bearer " + token);
+            request.AddHeader("Authorization", "Bearer " + oAuthToken);
         }
 
         protected void AddTokenSource(ITokenSource tokenSource)
@@ -62,19 +63,22 @@
             _tokenSources.Add(tokenSource);
         }
 
-        protected async Task<string> GetTokenAsync()
+        protected async Task<string> GetTokenAsync(CancellationToken cancellationToken = default)
         {
             foreach (var ts in _tokenSources)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 // todo: find a better way to get the name
                 var storeName = ts.GetType().Name;
 
-                var tokens = await ts.GetTokensAsync().ConfigureAwait(false);
+                var tokens = await ts.GetTokensAsync(cancellationToken);
                 var accessToken = tokens.FirstOrDefault(t => t.TokenType == TokenType.AccessToken);
 
                 if (accessToken == null)
                 {
                     _logger.LogInformation("No token found in store: {StoreType}", storeName);
+
                     continue;
                 }
 
@@ -83,6 +87,7 @@
                 {
                     _logger.LogInformation("Token expired ({ExpireTime}) in store: {StoreType}",
                         accessToken.ExpireTime.Value.ToString("O"), storeName);
+
                     continue;
                 }
 
