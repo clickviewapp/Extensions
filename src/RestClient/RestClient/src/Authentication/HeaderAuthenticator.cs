@@ -1,5 +1,6 @@
 ﻿namespace ClickView.Extensions.RestClient.Authentication
 {
+    using System.Threading;
     using System.Threading.Tasks;
     using Requests;
 
@@ -17,7 +18,7 @@
             _value = value;
         }
 
-        public Task AuthenticateAsync(IClientRequest request)
+        public Task AuthenticateAsync(IClientRequest request, CancellationToken token = default)
         {
             request.AddHeader(_key, _value);
 

@@ -1,6 +1,7 @@
 ﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
 {
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
     using Tokens;
 
@@ -11,6 +12,6 @@
         /// </summary>
         bool StoreTokens { get; }
 
-        Task<IReadOnlyCollection<Token>> GetTokensAsync();
+        Task<IReadOnlyCollection<Token>> GetTokensAsync(CancellationToken cancellationToken = default);
     }
 }

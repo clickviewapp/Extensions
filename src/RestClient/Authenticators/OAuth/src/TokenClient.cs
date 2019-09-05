@@ -1,6 +1,7 @@
 ﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth
 {
     using System.Net.Http;
+    using System.Threading;
     using System.Threading.Tasks;
     using IdentityModel.Client;
     using Internal.Endpoints;
@@ -20,7 +21,7 @@
             _endpointFactory = endpointFactory;
         }
 
-        public async Task<TokenResponse> GetClientCredentialsTokenAsync(string scope)
+        public async Task<TokenResponse> GetClientCredentialsTokenAsync(string scope, CancellationToken cancellationToken = default)
         {
             var endpoints = await _endpointFactory.GetAsync().ConfigureAwait(false);
 
@@ -30,10 +31,10 @@
                 ClientSecret = _clientSecret,
                 Scope = scope,
                 Address = endpoints.TokenEndpoint
-            }).ConfigureAwait(false);
+            }, cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<TokenResponse> GetRefreshTokenAsync(string refreshToken)
+        public async Task<TokenResponse> GetRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
         {
             var endpoints = await _endpointFactory.GetAsync().ConfigureAwait(false);
 
@@ -41,7 +42,7 @@
             {
                 Address = endpoints.TokenEndpoint,
                 RefreshToken = refreshToken
-            }).ConfigureAwait(false);
+            }, cancellationToken).ConfigureAwait(false);
         }
     }
 }

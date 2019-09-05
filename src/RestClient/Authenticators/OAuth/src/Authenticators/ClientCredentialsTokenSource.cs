@@ -1,6 +1,7 @@
 ﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Authenticators
 {
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Tokens;
@@ -20,9 +21,9 @@
             _logger = loggerFactory.CreateLogger<ClientCredentialsTokenSource>();
         }
 
-        protected override async Task<AccessToken> GetAccessTokenAsync()
+        protected override async Task<AccessToken> GetAccessTokenAsync(CancellationToken cancellationToken = default)
         {
-            var response = await _tokenClient.GetClientCredentialsTokenAsync(_scope).ConfigureAwait(false);
+            var response = await _tokenClient.GetClientCredentialsTokenAsync(_scope, cancellationToken);
 
             //todo: handle errors
             if (!response.IsError)

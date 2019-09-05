@@ -1,6 +1,7 @@
 ﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
 {
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Tokens;
@@ -19,7 +20,7 @@
             _logger = loggerFactory.CreateLogger<RefreshTokenSource>();
         }
 
-        public async Task<IReadOnlyCollection<Token>> GetTokensAsync()
+        public async Task<IReadOnlyCollection<Token>> GetTokensAsync(CancellationToken cancellationToken = default)
         {
             var refreshToken = await _tokenStore.GetTokenAsync(TokenType.RefreshToken).ConfigureAwait(false);
             if (refreshToken == null)
@@ -28,7 +29,7 @@
             _logger.LogDebug("Refreshing token");
 
             var refreshTokenResponse =
-                await _tokenClient.GetRefreshTokenAsync(refreshToken.Value).ConfigureAwait(false);
+                await _tokenClient.GetRefreshTokenAsync(refreshToken.Value, cancellationToken).ConfigureAwait(false);
 
             //todo: handle errors
             if (refreshTokenResponse.IsError)

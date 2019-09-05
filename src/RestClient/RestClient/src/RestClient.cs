@@ -2,6 +2,7 @@
 {
     using System;
     using System.Net.Http;
+    using System.Threading;
     using System.Threading.Tasks;
     using Exceptions;
     using Helpers;
@@ -53,14 +54,18 @@
         {
         }
 
-        public async Task<TResponse> ExecuteAsync<TResponse>(BaseRestClientRequest<TResponse> request)
+        public async Task<TResponse> ExecuteAsync<TResponse>(BaseRestClientRequest<TResponse> request, CancellationToken token = default)
             where TResponse : RestClientResponse
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
+            token.ThrowIfCancellationRequested();
+
             if (_options.Authenticator != null)
-                await _options.Authenticator.AuthenticateAsync(request).ConfigureAwait(false);
+                await _options.Authenticator.AuthenticateAsync(request, token).ConfigureAwait(false);
+
+            token.ThrowIfCancellationRequested();
 
             var resource = QueryHelpers.AddQueryString(request.Resource, request.Parameters);
 
@@ -75,7 +80,7 @@
 
                 try
                 {
-                    using (var response = await _httpClient.SendAsync(httpRequest).ConfigureAwait(false))
+                    using (var response = await _httpClient.SendAsync(httpRequest, token).ConfigureAwait(false))
                     {
                         return await request.GetResponseAsync(response).ConfigureAwait(false);
                     }
