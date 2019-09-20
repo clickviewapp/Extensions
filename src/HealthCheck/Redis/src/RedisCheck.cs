@@ -50,9 +50,6 @@
             try
             {
                 var servers = GetServers().ToList();
-
-                var connectedCount = 0;
-
                 var pingTasks = new List<Task<TimeSpan>>();
 
                 foreach (var s in servers)
@@ -60,22 +57,21 @@
                     if (!s.IsConnected)
                         continue;
 
-                    connectedCount++;
                     pingTasks.Add(s.PingAsync());
                 }
+
+                var connectedMsg = $"{pingTasks.Count}/{servers.Count} redis servers connected";
+
+                //Nothing connected
+                if (pingTasks.Count == 0)
+                    return HealthCheckResult.Degraded(connectedMsg);
 
                 //Get the average ping times
                 var pingResults = await Task.WhenAll(pingTasks).ConfigureAwait(false);
                 var avg = TimeSpan.FromTicks(Convert.ToInt64(pingResults.Average(p => p.Ticks)));
 
-                var connectedMsg = $"{connectedCount}/{servers.Count} redis servers connected";
-
-                //Nothing connected
-                if (connectedCount == 0)
-                    return HealthCheckResult.Degraded(connectedMsg);
-
                 //Some connected
-                if (connectedCount != servers.Count)
+                if (pingTasks.Count != servers.Count)
                     return TimedHealthCheckResult.Unhealthy(avg, connectedMsg);
 
                 //All connected
