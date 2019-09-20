@@ -5,7 +5,7 @@
 
     public interface IHealthChecker
     {
-        Task<HealthCheckResults> CheckAllAsync(CancellationToken cancellationToken);
-        Task<HealthCheckResultItem> RunCheck(IHealthCheck check, CancellationToken cancellationToken);
+        Task<HealthCheckResults> CheckAllAsync(CancellationToken cancellationToken = default);
+        Task<HealthCheckResultItem> RunCheckAsync(IHealthCheck check, CancellationToken cancellationToken = default);
     }
 }

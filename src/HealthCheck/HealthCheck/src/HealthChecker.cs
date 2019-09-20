@@ -30,16 +30,19 @@
             _checkSlim = new SemaphoreSlim(o.CheckConcurrency, o.CheckConcurrency);
         }
 
-        public async Task<HealthCheckResults> CheckAllAsync(CancellationToken cancellationToken)
+        public async Task<HealthCheckResults> CheckAllAsync(CancellationToken cancellationToken = default)
         {
-            var tasks = _checks.Select(c => RunCheck(c, cancellationToken));
+            var tasks = _checks.Select(c => RunCheckAsync(c, cancellationToken));
             var results = await Task.WhenAll(tasks).ConfigureAwait(false);
 
             return new HealthCheckResults(results);
         }
 
-        public async Task<HealthCheckResultItem> RunCheck(IHealthCheck check, CancellationToken cancellationToken)
+        public async Task<HealthCheckResultItem> RunCheckAsync(IHealthCheck check, CancellationToken cancellationToken = default)
         {
+            if (check == null)
+                throw new ArgumentNullException(nameof(check));
+
             await _checkSlim.WaitAsync(cancellationToken).ConfigureAwait(false);
 
             try
