@@ -19,6 +19,8 @@
 
         public IHealthCheckBuilder AddCheck(IHealthCheck healthCheck)
         {
+            if (healthCheck == null) throw new ArgumentNullException(nameof(healthCheck));
+
             _checks.Add(healthCheck);
 
             return this;
@@ -29,7 +31,7 @@
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
             if (checkFunc == null) throw new ArgumentNullException(nameof(checkFunc));
 
-            _checks.Add(new CustomCheck(name, checkFunc));
+            AddCheck(new CustomCheck(name, checkFunc));
 
             return this;
         }
