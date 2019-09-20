@@ -15,9 +15,9 @@
             Timing = timing;
         }
 
-        public static HealthCheckResult Ok(TimeSpan timing)
+        public static HealthCheckResult Healthy(TimeSpan timing)
         {
-            return new TimedHealthCheckResult(HealthCheckStatus.Ok, timing);
+            return new TimedHealthCheckResult(HealthCheckStatus.Healthy, timing);
         }
 
         public static HealthCheckResult Unhealthy(TimeSpan timing)
@@ -30,6 +30,11 @@
             return new TimedHealthCheckResult(HealthCheckStatus.Unhealthy, timing, message);
         }
 
+        public static HealthCheckResult Unhealthy(TimeSpan timing, Exception exception)
+        {
+            return new TimedHealthCheckResult(HealthCheckStatus.Unhealthy, timing, exception.Message, exception);
+        }
+
         public static HealthCheckResult Degraded(TimeSpan timing)
         {
             return new TimedHealthCheckResult(HealthCheckStatus.Degraded, timing);
@@ -38,11 +43,6 @@
         public static HealthCheckResult Degraded(TimeSpan timing, string message)
         {
             return new TimedHealthCheckResult(HealthCheckStatus.Degraded, timing, message);
-        }
-
-        public static HealthCheckResult Degraded(TimeSpan timing, Exception exception)
-        {
-            return new TimedHealthCheckResult(HealthCheckStatus.Degraded, timing, exception.Message, exception);
         }
 
         public static async Task<HealthCheckResult> TimeAsync(Func<Task<HealthCheckResult>> checkFunc)
@@ -57,7 +57,7 @@
             }
             catch (Exception ex)
             {
-                return new TimedHealthCheckResult(HealthCheckStatus.Degraded, timer.Stop(), exception: ex);
+                return new TimedHealthCheckResult(HealthCheckStatus.Unhealthy, timer.Stop(), exception: ex);
             }
         }
 

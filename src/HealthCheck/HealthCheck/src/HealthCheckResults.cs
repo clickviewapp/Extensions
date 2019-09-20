@@ -14,7 +14,7 @@
 
         private static bool GetHealthy(IEnumerable<HealthCheckResultItem> results)
         {
-            if (results.All(r => r.Result.Status == HealthCheckStatus.Ok))
+            if (results.All(r => r.Result.Status == HealthCheckStatus.Healthy))
                 return true;
 
             return false;

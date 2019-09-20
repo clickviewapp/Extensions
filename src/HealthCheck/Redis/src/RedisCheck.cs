@@ -64,7 +64,7 @@
 
                 //Nothing connected
                 if (pingTasks.Count == 0)
-                    return HealthCheckResult.Degraded(connectedMsg);
+                    return HealthCheckResult.Unhealthy(connectedMsg);
 
                 //Get the average ping times
                 var pingResults = await Task.WhenAll(pingTasks).ConfigureAwait(false);
@@ -72,19 +72,19 @@
 
                 //Some connected
                 if (pingTasks.Count != servers.Count)
-                    return TimedHealthCheckResult.Unhealthy(avg, connectedMsg);
+                    return TimedHealthCheckResult.Degraded(avg, connectedMsg);
 
                 //All connected
                 //Check timing
                 if(avg > _options.UnhealthyThreshold)
-                    return TimedHealthCheckResult.Unhealthy(avg);
+                    return TimedHealthCheckResult.Degraded(avg);
 
                 //All good
-                return TimedHealthCheckResult.Ok(avg);
+                return TimedHealthCheckResult.Healthy(avg);
             }
             catch (Exception ex)
             {
-                return TimedHealthCheckResult.Degraded(timer.Stop(), ex);
+                return TimedHealthCheckResult.Unhealthy(timer.Stop(), ex);
             }
         }
 

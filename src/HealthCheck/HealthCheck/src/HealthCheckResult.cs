@@ -15,9 +15,9 @@
             Exception = exception;
         }
 
-        public static HealthCheckResult Ok()
+        public static HealthCheckResult Healthy()
         {
-            return new HealthCheckResult(HealthCheckStatus.Ok);
+            return new HealthCheckResult(HealthCheckStatus.Healthy);
         }
 
         public static HealthCheckResult Unhealthy()

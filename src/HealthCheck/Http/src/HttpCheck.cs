@@ -54,24 +54,24 @@
                     var timing = timer.Stop();
 
                     if (!response.IsSuccessStatusCode)
-                        return TimedHealthCheckResult.Degraded(timing, response.ReasonPhrase);
+                        return TimedHealthCheckResult.Unhealthy(timing, response.ReasonPhrase);
 
                     if (timing > _options.UnhealthyThreshold)
-                        return TimedHealthCheckResult.Unhealthy(timing);
+                        return TimedHealthCheckResult.Degraded(timing);
 
                     if (!matchContent)
-                        return TimedHealthCheckResult.Ok(timing);
+                        return TimedHealthCheckResult.Healthy(timing);
 
                     // need to match the response content
                     if(_options.ExpectedContent.Equals(contentString))
-                        return TimedHealthCheckResult.Ok(timing);
+                        return TimedHealthCheckResult.Healthy(timing);
 
                     return HealthCheckResult.Degraded("Response content does not match expected content");
                 }
             }
             catch (Exception ex)
             {
-                return TimedHealthCheckResult.Degraded(timer.Stop(), ex);
+                return TimedHealthCheckResult.Unhealthy(timer.Stop(), ex);
             }
         }
     }

@@ -31,12 +31,12 @@
                 {
                     await conn.OpenAsync(cancellationToken).ConfigureAwait(false);
 
-                    return TimedHealthCheckResult.Ok(timer.Stop());
+                    return TimedHealthCheckResult.Healthy(timer.Stop());
                 }
             }
             catch (Exception ex)
             {
-                return TimedHealthCheckResult.Degraded(timer.Stop(), ex);
+                return TimedHealthCheckResult.Unhealthy(timer.Stop(), ex);
             }
         }
 
