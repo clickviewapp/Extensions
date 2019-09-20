@@ -1,5 +1,6 @@
 ﻿namespace ClickView.Extensions.HealthCheck
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
@@ -16,6 +17,12 @@
 
         public HealthChecker(IEnumerable<IHealthCheck> checks, IOptions<HealthCheckerOptions> options)
         {
+            if (checks == null)
+                throw new ArgumentNullException(nameof(checks));
+
+            if (options == null)
+                throw new ArgumentNullException(nameof(options));
+
             _checks = checks;
 
             var o = options.Value;
