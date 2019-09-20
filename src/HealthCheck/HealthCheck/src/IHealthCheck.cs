@@ -6,6 +6,7 @@ namespace ClickView.Extensions.HealthCheck
     public interface IHealthCheck
     {
         string Name { get; }
-        Task<HealthCheckResult> CheckAsync(CancellationToken cancellationToken);
+
+        Task<HealthCheckResult> CheckAsync(CancellationToken cancellationToken = default);
     }
 }

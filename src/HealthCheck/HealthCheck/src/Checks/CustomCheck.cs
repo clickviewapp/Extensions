@@ -16,7 +16,7 @@
 
         public string Name { get; }
 
-        public Task<HealthCheckResult> CheckAsync(CancellationToken cancellationToken)
+        public Task<HealthCheckResult> CheckAsync(CancellationToken cancellationToken = default)
         {
             return _checkFunc(cancellationToken);
         }

@@ -28,7 +28,7 @@
 
         public string Name { get; }
 
-        public async Task<HealthCheckResult> CheckAsync(CancellationToken cancellationToken)
+        public async Task<HealthCheckResult> CheckAsync(CancellationToken cancellationToken = default)
         {
             var timer = CheckTimer.Start();
 
