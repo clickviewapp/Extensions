@@ -1,7 +1,9 @@
 ﻿namespace ClickView.Extensions.RestClient
 {
     using System;
+    using System.IO;
     using System.Net.Http;
+    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using Exceptions;
@@ -82,7 +84,7 @@
                 {
                     using (var response = await _httpClient.SendAsync(httpRequest, token).ConfigureAwait(false))
                     {
-                        return await request.GetResponseAsync(response).ConfigureAwait(false);
+                        return await request.GetResponseAsync(response, _options.ThrowOnErrorStatusCode).ConfigureAwait(false);
                     }
                 }
                 catch (HttpRequestException e)

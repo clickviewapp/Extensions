@@ -113,14 +113,15 @@ namespace ClickView.Extensions.RestClient.Requests
             list.AddRange(values.Select(v => new RequestParameterValue(v, RequestParameterType.Query)));
         }
 
-        internal async Task<TResponse> GetResponseAsync(HttpResponseMessage message)
+        internal async Task<TResponse> GetResponseAsync(HttpResponseMessage message, bool throwOnErrorStatusCode)
         {
             var response = await ParseResponseAsync(message).ConfigureAwait(false);
             var error = await GetErrorAsync(message).ConfigureAwait(false);
 
             if (error != null)
             {
-                HandleError(error);
+                if(throwOnErrorStatusCode)
+                    HandleError(error);
 
                 response.Error = error;
             }
