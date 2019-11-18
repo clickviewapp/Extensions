@@ -8,6 +8,7 @@
 
     /// <summary>
     ///     Basic Access Authenticator which adds an Authorization header value to each request
+    ///     Follows this spec: https://tools.ietf.org/html/rfc7617
     /// </summary>
     public class BasicAccessAuthenticator : IAuthenticator
     {
