@@ -12,19 +12,19 @@
     /// </summary>
     public class BasicAccessAuthenticator : IAuthenticator
     {
-        private readonly string _key;
-        private readonly string _val;
-
-        public BasicAccessAuthenticator(string key, string val)
+        private readonly string _encoded;
+        
+        public BasicAccessAuthenticator(string userId, string password)
         {
-            _key = key;
-            _val = val;
+            if (userId is null) throw new ArgumentNullException(nameof(userId));
+            if (password is null) throw new ArgumentNullException(nameof(password));
+
+            _encoded = ToBase64($"{userId}:{password}");
         }
 
         public Task AuthenticateAsync(IClientRequest request, CancellationToken token = default)
         {
-            var encoded = ToBase64($"{_key}:{_val}");
-            request.AddHeader("Authorization", $"Basic {encoded}");
+            request.AddHeader("Authorization", $"Basic {_encoded}");
             return Task.CompletedTask;
         }
 
