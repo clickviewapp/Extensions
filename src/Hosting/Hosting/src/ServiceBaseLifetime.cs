@@ -11,15 +11,15 @@
     {
         private readonly TaskCompletionSource<object> _delayStart = new TaskCompletionSource<object>();
 
-        public ServiceBaseLifetime(IHostingEnvironment environment, IApplicationLifetime applicationLifetime, ILoggerFactory loggerFactory)
+        public ServiceBaseLifetime(IHostEnvironment environment, IHostApplicationLifetime applicationLifetime, ILoggerFactory loggerFactory)
         {
             Environment = environment ?? throw new ArgumentNullException(nameof(environment));
             ApplicationLifetime = applicationLifetime ?? throw new ArgumentNullException(nameof(applicationLifetime));
-            Logger = loggerFactory.CreateLogger("Microsoft.Hosting.Lifetime");
+            Logger = loggerFactory.CreateLogger("ClickView.Extensions.Hosting.Lifetime");
         }
 
-        private IApplicationLifetime ApplicationLifetime { get; }
-        private IHostingEnvironment Environment { get; }
+        private IHostApplicationLifetime ApplicationLifetime { get; }
+        private IHostEnvironment Environment { get; }
         private ILogger Logger { get; }
 
         public Task WaitForStartAsync(CancellationToken cancellationToken)
