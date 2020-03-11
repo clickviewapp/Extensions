@@ -35,15 +35,13 @@
                 {
                     var tcs = (TaskCompletionSource<TVal>)value;
 
-                    Task.Run(() => { });
-
                     return tcs.Task;
                 }
                 else
                 {
                     var tcs = new TaskCompletionSource<TVal>();
 
-                    _ = Runner(key, tcs, func);
+                    _ = RunAsync(key, tcs, func);
 
                     _completionTasks.Add(key, tcs);
 
@@ -52,11 +50,11 @@
             }
         }
 
-        private async Task Runner<TVal>(TKey key, TaskCompletionSource<TVal> tcs, Func<Task<TVal>> func)
+        private async Task RunAsync<TVal>(TKey key, TaskCompletionSource<TVal> tcs, Func<Task<TVal>> func)
         {
             try
             {
-                var result = await func();
+                var result = await func().ConfigureAwait(false);
 
                 tcs.SetResult(result);
             }

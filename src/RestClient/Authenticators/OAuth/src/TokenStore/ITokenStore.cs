@@ -7,6 +7,6 @@
     public interface ITokenStore
     {
         Task<Token> GetTokenAsync(TokenType tokenType);
-        Task StoreTokens(IEnumerable<Token> tokens);
+        Task StoreTokensAsync(IEnumerable<Token> tokens);
     }
 }

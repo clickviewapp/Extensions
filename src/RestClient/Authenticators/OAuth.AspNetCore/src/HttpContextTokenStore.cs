@@ -34,7 +34,7 @@
         }
 
         //Token reference https://github.com/aspnet/AspNetCore/blob/master/src/Security/Authentication/OAuth/src/OAuthHandler.cs#L116
-        public async Task StoreTokens(IEnumerable<Token> tokens)
+        public async Task StoreTokensAsync(IEnumerable<Token> tokens)
         {
             var httpContext = GetHttpContext();
             var authResult = await httpContext.AuthenticateAsync().ConfigureAwait(false);

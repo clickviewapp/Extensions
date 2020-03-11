@@ -50,7 +50,7 @@
             _cts.Cancel();
 
             // Wait until the task completes or the stop token triggers
-            await Task.WhenAny(_executingTask, Task.Delay(-1, cancellationToken));
+            await Task.WhenAny(_executingTask, Task.Delay(-1, cancellationToken)).ConfigureAwait(false);
 
             _logger.LogInformation("Worker {WorkerName} stopped", Name);
 
