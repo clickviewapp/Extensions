@@ -97,7 +97,7 @@
                     if (TokenStore == null)
                         throw new OAuthAuthenticatorException("No TokenStore configured");
 
-                    await TokenStore.StoreTokens(tokens).ConfigureAwait(false);
+                    await TokenStore.StoreTokensAsync(tokens).ConfigureAwait(false);
                 }
 
                 return accessToken.Value;

@@ -5,6 +5,7 @@
     using System.IO.Compression;
     using System.Net;
     using System.Net.Http;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public class CompressedContent : HttpContent
@@ -15,7 +16,7 @@
         public CompressedContent(HttpContent content, CompressionMethod compressionMethod)
         {
             if (compressionMethod == CompressionMethod.None)
-                throw new ArgumentNullException(nameof(compressionMethod));
+                throw new ArgumentException("Invalid CompressionMethod", nameof(compressionMethod));
 
             _originalContent = content ?? throw new ArgumentNullException(nameof(content));
             _compressionMethod = compressionMethod;
@@ -53,7 +54,10 @@
             }
 
             return _originalContent.CopyToAsync(compressedStream, context)
-                .ContinueWith(_ => compressedStream?.Dispose());
+                .ContinueWith(_ => compressedStream?.Dispose(),
+                    CancellationToken.None,
+                    TaskContinuationOptions.ExecuteSynchronously,
+                    TaskScheduler.Default);
         }
     }
 }

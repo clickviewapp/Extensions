@@ -15,7 +15,7 @@
             return Task.FromResult(token);
         }
 
-        public Task StoreTokens(IEnumerable<Token> tokens)
+        public Task StoreTokensAsync(IEnumerable<Token> tokens)
         {
             foreach (var t in tokens)
             {
