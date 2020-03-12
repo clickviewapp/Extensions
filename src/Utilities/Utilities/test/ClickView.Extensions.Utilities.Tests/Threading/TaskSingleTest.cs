@@ -17,9 +17,9 @@
 
             async Task<string> ThingToRunAsync(string key)
             {
-                Interlocked.Increment(ref timesRun);
-
                 await Task.Delay(200);
+
+                Interlocked.Increment(ref timesRun);
 
                 return key;
             }
@@ -43,9 +43,9 @@
 
             async Task<string> ThingToRunAsync(string key)
             {
-                Interlocked.Increment(ref timesRun);
-
                 await Task.Delay(200);
+
+                Interlocked.Increment(ref timesRun);
 
                 return key;
             }
@@ -69,9 +69,9 @@
 
             async Task<string> ThingToRunAsync(string key)
             {
-                Interlocked.Increment(ref timesRun);
-
                 await Task.Delay(200);
+
+                Interlocked.Increment(ref timesRun);
 
                 return key;
             }

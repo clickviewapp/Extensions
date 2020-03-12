@@ -41,9 +41,11 @@
                 {
                     var tcs = new TaskCompletionSource<TVal>();
 
-                    _ = RunAsync(key, tcs, func);
-
+                    // Add to our internal list of completion tasks
                     _completionTasks.Add(key, tcs);
+
+                    // Start the task
+                    _ = RunAsync(key, tcs, func);
 
                     return tcs.Task;
                 }
