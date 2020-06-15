@@ -54,24 +54,32 @@
 
         private async Task RunAsync<TVal>(TKey key, TaskCompletionSource<TVal> tcs, Func<Task<TVal>> func)
         {
+            TVal result = default;
+            Exception throwException = null;
+
             try
             {
-                var result = await func().ConfigureAwait(false);
-
-                tcs.SetResult(result);
-            }
-            catch (OperationCanceledException)
-            {
-                tcs.SetCanceled();
+                result = await func().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                tcs.SetException(ex);
+                throwException = ex;
             }
 
             lock (_completionTasks)
-            {
                 _completionTasks.Remove(key);
+
+            switch (throwException)
+            {
+                case null:
+                    tcs.SetResult(result);
+                    break;
+                case OperationCanceledException _:
+                    tcs.SetCanceled();
+                    break;
+                default:
+                    tcs.SetException(throwException);
+                    break;
             }
         }
     }
