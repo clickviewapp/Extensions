@@ -77,6 +77,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClickView.Extensions.Health
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClickView.Extensions.HealthCheck.Sql", "src\HealthCheck\Sql\src\ClickView.Extensions.HealthCheck.Sql.csproj", "{C32A4655-B6FA-4CC2-98D9-50DF19098A60}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClickView.Extensions.RestClient.Tests", "src\RestClient\RestClient\test\ClickView.Extensions.RestClient.Tests.csproj", "{051B6555-18CA-45A6-984A-BC0818432A20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -151,6 +153,10 @@ Global
 		{C32A4655-B6FA-4CC2-98D9-50DF19098A60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C32A4655-B6FA-4CC2-98D9-50DF19098A60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C32A4655-B6FA-4CC2-98D9-50DF19098A60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{051B6555-18CA-45A6-984A-BC0818432A20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{051B6555-18CA-45A6-984A-BC0818432A20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{051B6555-18CA-45A6-984A-BC0818432A20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{051B6555-18CA-45A6-984A-BC0818432A20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -177,6 +183,7 @@ Global
 		{EEBF3C4F-9924-4A7D-A42C-8CA0A78DCEAE} = {83C18C61-AA26-4C00-A35A-49EFAC318D76}
 		{1C7485D4-CEE7-4ADA-A32A-C4437F7D2EC2} = {83C18C61-AA26-4C00-A35A-49EFAC318D76}
 		{C32A4655-B6FA-4CC2-98D9-50DF19098A60} = {83C18C61-AA26-4C00-A35A-49EFAC318D76}
+		{051B6555-18CA-45A6-984A-BC0818432A20} = {BD0881FC-4083-49F5-B108-2205C691A9E4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3A15E820-F957-4F4D-AE2F-6EF055C27DB8}
