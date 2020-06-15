@@ -12,16 +12,18 @@
 
     public class RestClient
     {
+        private readonly Uri _baseAddress;
         private readonly HttpClient _httpClient;
         private readonly CoreRestClientOptions _options;
 
-        public RestClient(Uri baseAddress) : this(baseAddress, RestClientOptions.Default)
+        public RestClient(Uri baseAddress, RestClientOptions options = null)
         {
-        }
+            _baseAddress = baseAddress ?? throw new ArgumentNullException(nameof(baseAddress));
 
-        public RestClient(Uri baseAddress, RestClientOptions options) : this(baseAddress, CreateHandler(options),
-            options)
-        {
+            var o = options ?? RestClientOptions.Default;
+            _options = o;
+
+            _httpClient = CreateClient(o);
         }
 
         /// <summary>
@@ -32,10 +34,10 @@
         /// </summary>
         /// <param name="httpClient"></param>
         /// <param name="options"></param>
-        public RestClient(HttpClient httpClient, CoreRestClientOptions options)
+        public RestClient(HttpClient httpClient, CoreRestClientOptions options = null)
         {
-            _options = options;
-            _httpClient = httpClient;
+            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            _options = options ?? RestClientOptions.Default;
         }
 
         /// <summary>
@@ -44,14 +46,13 @@
         ///         <see cref="HttpClient" />
         ///     </param>
         /// </summary>
+        /// <param name="baseAddress"></param>
         /// <param name="httpClient"></param>
-        public RestClient(HttpClient httpClient) : this(httpClient, new CoreRestClientOptions())
+        /// <param name="options"></param>
+        public RestClient(Uri baseAddress, HttpClient httpClient, CoreRestClientOptions options = null)
+            : this(httpClient, options)
         {
-        }
-
-        internal RestClient(Uri baseAddress, HttpMessageHandler handler, RestClientOptions options) : this(
-            CreateClient(baseAddress, handler, options), options)
-        {
+            _baseAddress = baseAddress ?? throw new ArgumentNullException(nameof(baseAddress));
         }
 
         public async Task<TResponse> ExecuteAsync<TResponse>(BaseRestClientRequest<TResponse> request, CancellationToken token = default)
@@ -67,9 +68,28 @@
 
             token.ThrowIfCancellationRequested();
 
-            var resource = QueryHelpers.AddQueryString(request.Resource, request.Parameters);
+            var requestUri = new Uri(
+                QueryHelpers.AddQueryString(request.Resource, request.Parameters),
+                UriKind.RelativeOrAbsolute);
 
-            using (var httpRequest = new HttpRequestMessage(request.Method, resource))
+            // only do the following logic if the _httpClient doesn't have a base address already
+            // we should remove this if we update the ctor to always have a baseAddress
+            if (_httpClient.BaseAddress == null)
+            {
+                // if the request uri is not absolute, use the base uri
+                if (!requestUri.IsAbsoluteUri)
+                {
+                    if (_baseAddress == null)
+                    {
+                        throw new InvalidOperationException(
+                            "An invalid request URI was provided. The request URI must either be an absolute URI or BaseAddress must be set.");
+                    }
+
+                    requestUri = new Uri(_baseAddress, requestUri);
+                }
+            }
+
+            using (var httpRequest = new HttpRequestMessage(request.Method, requestUri))
             {
                 foreach (var h in request.Headers)
                 {
@@ -108,21 +128,15 @@
             request.Content = new CompressedContent(request.Content, _options.CompressionMethod);
         }
 
-        private static HttpMessageHandler CreateHandler(RestClientOptions options)
+        private static HttpClient CreateClient(RestClientOptions options)
         {
             var handler = new HttpClientHandler();
 
             if (handler.SupportsAutomaticDecompression)
                 handler.AutomaticDecompression = options.DecompressionMethods;
 
-            return handler;
-        }
-
-        private static HttpClient CreateClient(Uri baseAddress, HttpMessageHandler handler, RestClientOptions options)
-        {
             return new HttpClient(handler)
             {
-                BaseAddress = baseAddress,
                 Timeout = options.Timeout
             };
         }
