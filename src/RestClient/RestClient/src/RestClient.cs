@@ -16,6 +16,11 @@
         private readonly HttpClient _httpClient;
         private readonly CoreRestClientOptions _options;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RestClient" /> class
+        /// </summary>
+        /// <param name="baseAddress"></param>
+        /// <param name="options"></param>
         public RestClient(Uri baseAddress, RestClientOptions options = null)
         {
             _baseAddress = baseAddress ?? throw new ArgumentNullException(nameof(baseAddress));
@@ -55,6 +60,16 @@
             _baseAddress = baseAddress ?? throw new ArgumentNullException(nameof(baseAddress));
         }
 
+        /// <summary>
+        /// Executes a <see cref="RestClientRequest{TData}"/>
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="token"></param>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="ClickViewClientException"></exception>
         public async Task<TResponse> ExecuteAsync<TResponse>(BaseRestClientRequest<TResponse> request, CancellationToken token = default)
             where TResponse : RestClientResponse
         {
