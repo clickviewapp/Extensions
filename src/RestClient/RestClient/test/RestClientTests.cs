@@ -44,6 +44,40 @@ namespace ClickView.Extensions.RestClient.Tests
         }
 
         [Fact]
+        public async Task ExecuteAsync_UsesBaseAddressOverHttpClientBaseAddress()
+        {
+            // setup message handler
+            var mockMessageHandler = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+
+            mockMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(message =>
+                        message.RequestUri.Equals(new Uri("http://clickview.com.au/v1/test"))),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent("test"),
+                })
+                .Verifiable();
+
+            // arrange
+            var request = new RestClientRequest(HttpMethod.Get, "v1/test");
+            var client = new RestClient(new Uri("http://clickview.com.au"), new HttpClient(mockMessageHandler.Object)
+            {
+                BaseAddress = new Uri("http://clickview.co.uk")
+            });
+
+            // act
+            await client.ExecuteAsync(request);
+
+            // assert
+            mockMessageHandler.Verify();
+        }
+
+        [Fact]
         public async Task ExecuteAsync_UsesHttpClientBaseAddress()
         {
             // setup message handler

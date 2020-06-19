@@ -72,20 +72,25 @@
                 QueryHelpers.AddQueryString(request.Resource, request.Parameters),
                 UriKind.RelativeOrAbsolute);
 
-            // only do the following logic if the _httpClient doesn't have a base address already
-            // we should remove this if we update the ctor to always have a baseAddress
-            if (_httpClient.BaseAddress == null)
+            // if the request uri is not absolute, use the base uri
+            if (!requestUri.IsAbsoluteUri)
             {
-                // if the request uri is not absolute, use the base uri
-                if (!requestUri.IsAbsoluteUri)
+                if (_baseAddress != null)
                 {
-                    if (_baseAddress == null)
+                    requestUri = new Uri(_baseAddress, requestUri);
+                }
+                else
+                {
+                    // only do the following logic if the _httpClient doesn't have a base address already
+                    // we should remove this if we update the ctor to always have a baseAddress
+
+                    if (_httpClient.BaseAddress == null)
                     {
                         throw new InvalidOperationException(
                             "An invalid request URI was provided. The request URI must either be an absolute URI or BaseAddress must be set.");
                     }
 
-                    requestUri = new Uri(_baseAddress, requestUri);
+                    requestUri = new Uri(_httpClient.BaseAddress, requestUri);
                 }
             }
 
