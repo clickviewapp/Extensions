@@ -72,7 +72,7 @@
                 // todo: find a better way to get the name
                 var storeName = ts.GetType().Name;
 
-                var tokens = await ts.GetTokensAsync(cancellationToken);
+                var tokens = await ts.GetTokensAsync(cancellationToken).ConfigureAwait(false);
                 var accessToken = tokens.FirstOrDefault(t => t.TokenType == TokenType.AccessToken);
 
                 if (accessToken == null)

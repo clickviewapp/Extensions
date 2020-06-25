@@ -28,14 +28,15 @@
 
             _logger.LogDebug("Refreshing token");
 
-            var refreshTokenResponse =
-                await _tokenClient.GetRefreshTokenAsync(refreshToken.Value, cancellationToken).ConfigureAwait(false);
+            var refreshTokenResponse = await _tokenClient.GetRefreshTokenAsync(refreshToken.Value, cancellationToken)
+                .ConfigureAwait(false);
 
             //todo: handle errors
             if (refreshTokenResponse.IsError)
             {
                 _logger.LogError(refreshTokenResponse.Exception, "Error refreshing token. {Message}",
                     refreshTokenResponse.ErrorDescription);
+
                 return new List<Token>();
             }
 

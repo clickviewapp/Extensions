@@ -23,7 +23,8 @@
 
         protected override async Task<AccessToken> GetAccessTokenAsync(CancellationToken cancellationToken = default)
         {
-            var response = await _tokenClient.GetClientCredentialsTokenAsync(_scope, cancellationToken);
+            var response = await _tokenClient.GetClientCredentialsTokenAsync(_scope, cancellationToken)
+                .ConfigureAwait(false);
 
             //todo: handle errors
             if (!response.IsError)
