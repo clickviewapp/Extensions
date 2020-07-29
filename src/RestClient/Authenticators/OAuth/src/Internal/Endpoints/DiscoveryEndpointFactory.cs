@@ -6,7 +6,7 @@
     using Exceptions;
     using IdentityModel.Client;
 
-    internal class DiscoveryEndpointFactory : IAuthenticatorEndpointFactory
+    public class DiscoveryEndpointFactory : IAuthenticatorEndpointFactory
     {
         private readonly string _authority;
         private readonly HttpClient _httpClient;
