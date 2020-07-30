@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    internal class DefaultEndpointFactory : IAuthenticatorEndpointFactory
+    public class DefaultEndpointFactory : IAuthenticatorEndpointFactory
     {
         private readonly AuthenticatorEndpoints _endpoints;
 
