@@ -1,8 +1,8 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Internal.Endpoints
+﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Endpoints
 {
     using System.Threading.Tasks;
 
-    internal class DefaultEndpointFactory : IAuthenticatorEndpointFactory
+    public class DefaultEndpointFactory : IAuthenticatorEndpointFactory
     {
         private readonly AuthenticatorEndpoints _endpoints;
 

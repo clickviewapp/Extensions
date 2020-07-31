@@ -3,8 +3,8 @@
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
+    using Endpoints;
     using IdentityModel.Client;
-    using Internal.Endpoints;
 
     public class TokenClient
     {

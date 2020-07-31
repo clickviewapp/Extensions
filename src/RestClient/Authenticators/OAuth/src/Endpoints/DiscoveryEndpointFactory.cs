@@ -1,12 +1,13 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Internal.Endpoints
+﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Endpoints
 {
     using System;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using Internal;
     using Exceptions;
     using IdentityModel.Client;
 
-    internal class DiscoveryEndpointFactory : IAuthenticatorEndpointFactory
+    public class DiscoveryEndpointFactory : IAuthenticatorEndpointFactory
     {
         private readonly string _authority;
         private readonly HttpClient _httpClient;

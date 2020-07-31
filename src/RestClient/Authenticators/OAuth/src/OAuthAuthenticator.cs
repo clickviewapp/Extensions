@@ -7,8 +7,8 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Authentication;
+    using Endpoints;
     using Exceptions;
-    using Internal.Endpoints;
     using Microsoft.Extensions.Logging;
     using Requests;
     using Tokens;
@@ -63,7 +63,7 @@
             _tokenSources.Add(tokenSource);
         }
 
-        protected async Task<string> GetTokenAsync(CancellationToken cancellationToken = default)
+        protected virtual async Task<string> GetTokenAsync(CancellationToken cancellationToken = default)
         {
             foreach (var ts in _tokenSources)
             {

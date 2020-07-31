@@ -7,7 +7,7 @@
     using Tokens;
     using TokenSource;
 
-    internal class ClientCredentialsTokenSource : AccessTokenSource
+    public class ClientCredentialsTokenSource : AccessTokenSource
     {
         private readonly TokenClient _tokenClient;
         private readonly ILogger<ClientCredentialsTokenSource> _logger;

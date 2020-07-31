@@ -1,4 +1,4 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Internal.Endpoints
+﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Endpoints
 {
     using System.Threading.Tasks;
 
