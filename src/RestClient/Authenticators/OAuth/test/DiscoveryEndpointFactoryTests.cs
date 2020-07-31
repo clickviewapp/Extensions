@@ -3,8 +3,8 @@
     using System;
     using System.Net.Http;
     using System.Threading.Tasks;
+    using Endpoints;
     using Exceptions;
-    using Internal.Endpoints;
     using Xunit;
 
     public class DiscoveryEndpointFactoryTests
