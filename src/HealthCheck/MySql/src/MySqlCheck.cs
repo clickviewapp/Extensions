@@ -1,9 +1,8 @@
-﻿using MySqlConnection = MySql.Data.MySqlClient.MySqlConnection;
-
-namespace ClickView.Extensions.HealthCheck.MySql
+﻿namespace ClickView.Extensions.HealthCheck.MySql
 {
     using System.Data.Common;
     using Checks.Db;
+    using MySqlConnector;
 
     public class MySqlCheck : DbCheck
     {
