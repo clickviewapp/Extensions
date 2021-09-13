@@ -17,4 +17,9 @@
     <ProjectReference Include="..\..\HealthCheck\src\ClickView.Extensions.HealthCheck.csproj" />
   </ItemGroup>
 
+  <!-- Conditionally obtain references for the .NET Framework 4.6.1 target -->
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
 </Project>
