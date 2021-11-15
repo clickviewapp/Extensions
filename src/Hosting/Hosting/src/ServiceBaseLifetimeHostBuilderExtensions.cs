@@ -8,6 +8,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
 
+    [Obsolete("Use the built in .NET Generic Host instead")]
     public static class ServiceBaseLifetimeHostBuilderExtensions
     {
         /// <summary>
