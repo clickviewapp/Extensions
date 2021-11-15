@@ -9,7 +9,7 @@
 
     public class ServiceBaseLifetime : ServiceBase, IHostLifetime
     {
-        private readonly TaskCompletionSource<object> _delayStart = new TaskCompletionSource<object>();
+        private readonly TaskCompletionSource<object?> _delayStart = new TaskCompletionSource<object?>();
 
         public ServiceBaseLifetime(IHostEnvironment environment, IHostApplicationLifetime applicationLifetime, ILoggerFactory loggerFactory)
         {

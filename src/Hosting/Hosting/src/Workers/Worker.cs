@@ -8,8 +8,8 @@
     public abstract class Worker : IHostedService
     {
         private readonly ILogger _logger;
-        private Task _executingTask;
-        private CancellationTokenSource _cts;
+        private Task? _executingTask;
+        private CancellationTokenSource? _cts;
 
         protected Worker(ILogger logger)
         {
@@ -47,12 +47,17 @@
             _logger.LogInformation("Stopping Worker {WorkerName}...", Name);
 
             // Signal cancellation to the executing method
-            _cts.Cancel();
+            _cts?.Cancel();
 
             // Wait until the task completes or the stop token triggers
             await Task.WhenAny(_executingTask, Task.Delay(-1, cancellationToken)).ConfigureAwait(false);
 
             _logger.LogInformation("Worker {WorkerName} stopped", Name);
+
+            // Dispose our CancellationTokenSource and cleanup
+            _cts?.Dispose();
+            _cts = null;
+            _executingTask = null;
 
             // Throw if cancellation triggered
             cancellationToken.ThrowIfCancellationRequested();
