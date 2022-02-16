@@ -22,7 +22,7 @@
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool CloseHandle([In] IntPtr hObject);
 
-        internal static Process GetParentProcess()
+        internal static Process? GetParentProcess()
         {
             var snapshotHandle = IntPtr.Zero;
             try
