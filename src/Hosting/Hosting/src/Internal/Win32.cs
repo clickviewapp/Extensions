@@ -1,9 +1,10 @@
-﻿namespace ClickView.Extensions.Hosting.Internal
+namespace ClickView.Extensions.Hosting.Internal
 {
     using System;
     using System.Diagnostics;
     using System.Runtime.InteropServices;
 
+    [Obsolete("Use the built in .NET Generic Host instead")]
     internal static class Win32
     {
         // https://docs.microsoft.com/en-us/windows/desktop/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot

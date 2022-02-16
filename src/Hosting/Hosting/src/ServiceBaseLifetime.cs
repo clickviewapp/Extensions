@@ -1,4 +1,4 @@
-﻿namespace ClickView.Extensions.Hosting
+namespace ClickView.Extensions.Hosting
 {
     using System;
     using System.ServiceProcess;
@@ -7,6 +7,7 @@
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
 
+    [Obsolete("Use the built in .NET Generic Host instead")]
     public class ServiceBaseLifetime : ServiceBase, IHostLifetime
     {
         private readonly TaskCompletionSource<object?> _delayStart = new TaskCompletionSource<object?>();

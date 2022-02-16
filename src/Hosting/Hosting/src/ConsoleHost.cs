@@ -1,11 +1,13 @@
 ﻿namespace ClickView.Extensions.Hosting
 {
+    using System;
     using System.IO;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
 
+    [Obsolete("Use the built in .NET Generic Host instead")]
     public static class ConsoleHost
     {
         public static IHostBuilder CreateDefaultBuilder(string[] args) =>
