@@ -40,6 +40,8 @@
 
             return await _httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
+                ClientId = _clientId,
+                ClientSecret = _clientSecret,
                 Address = endpoints.TokenEndpoint,
                 RefreshToken = refreshToken
             }, cancellationToken).ConfigureAwait(false);
