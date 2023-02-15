@@ -38,6 +38,8 @@
 
             TokenStore = options.TokenStore;
 
+            // todo: this seems to be useless for client credential authenticator as client credential token source will be added in
+            // todo: client credential authenticator constructor, maybe move this to HttpContextAuthenticator if refresh is not enabled
             // our token store should be the first place we look, so add that to our sources first
             if (TokenStore != null)
                 AddTokenSource(new TokenStoreTokenSource(TokenStore));

@@ -4,6 +4,8 @@
     {
         public string Authority { get; }
 
+        public bool EnableRefresh { get; set; } = false;
+
         public HttpContextAuthenticatorOptions(string authority)
         {
             Authority = authority;
