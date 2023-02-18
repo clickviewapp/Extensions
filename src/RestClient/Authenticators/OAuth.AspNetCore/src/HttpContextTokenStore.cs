@@ -1,12 +1,12 @@
 ﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.AspNetCore
 {
+    using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Authentication;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.Extensions.Logging;
     using Tokens;
     using TokenStore;
 
@@ -37,7 +37,7 @@
         public async Task StoreTokensAsync(IEnumerable<Token> tokens)
         {
             var httpContext = GetHttpContext();
-            var authResult = await httpContext.AuthenticateAsync().ConfigureAwait(false);
+            var authResult = await httpContext.AuthenticateAsync();
 
             foreach (var token in tokens)
             {
@@ -53,6 +53,8 @@
                     UpdateTokenValue(authResult.Properties, ExpiresAtKey, expireValue);
                 }
             }
+
+            await httpContext.SignInAsync(authResult.Principal, authResult.Properties);
         }
 
         private void UpdateTokenValue(AuthenticationProperties properties, string tokenName, string tokenValue)
