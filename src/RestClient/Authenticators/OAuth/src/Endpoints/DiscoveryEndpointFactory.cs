@@ -62,7 +62,8 @@
             {
                 return new AuthenticatorEndpoints
                 {
-                    TokenEndpoint = result.TokenEndpoint
+                    TokenEndpoint = result.TokenEndpoint,
+                    RevocationEndpoint = result.RevocationEndpoint
                 };
             }
 
