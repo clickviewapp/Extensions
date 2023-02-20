@@ -67,6 +67,20 @@
             };
         }
 
+        public async Task RevokeTokenAsync(CancellationToken cancellationToken = default)
+        {
+            var refreshToken = await _tokenStore.GetTokenAsync(TokenType.RefreshToken);
+            if (refreshToken == null)
+            {
+                _logger.LogDebug("Refresh token was not found in the store");
+                return;
+            }
+
+            var response = await _tokenClient.RevokeRefreshTokenAsync(refreshToken.Value, cancellationToken);
+            if (response.IsError)
+                _logger.LogError("Failed to revoke refresh token");
+        }
+
         public bool StoreTokens => true;
     }
 }

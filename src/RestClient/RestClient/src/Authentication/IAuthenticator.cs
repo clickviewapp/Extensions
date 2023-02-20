@@ -7,5 +7,6 @@
     public interface IAuthenticator
     {
         Task AuthenticateAsync(IClientRequest request, CancellationToken token = default);
+        Task RevokeTokensAsync();
     }
 }

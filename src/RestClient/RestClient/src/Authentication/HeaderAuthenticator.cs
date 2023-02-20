@@ -24,5 +24,10 @@
 
             return Task.CompletedTask;
         }
+
+        public Task RevokeTokensAsync()
+        {
+            return Task.CompletedTask;
+        }
     }
 }

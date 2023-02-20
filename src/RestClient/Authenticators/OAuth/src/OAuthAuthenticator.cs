@@ -60,6 +60,14 @@
             request.AddHeader("Authorization", "Bearer " + oAuthToken);
         }
 
+        public virtual async Task RevokeTokensAsync()
+        {
+            foreach (var ts in _tokenSources)
+            {
+                await ts.RevokeTokenAsync();
+            }
+        }
+
         protected void AddTokenSource(ITokenSource tokenSource)
         {
             _tokenSources.Add(tokenSource);
