@@ -18,7 +18,7 @@
 
         public static RefreshToken CreateRefreshToken(TokenResponse tokenResponse)
         {
-            return new RefreshToken(tokenResponse.RefreshToken, GetExpireTime(tokenResponse.ExpiresIn));
+            return new RefreshToken(tokenResponse.RefreshToken);
         }
     }
 }
