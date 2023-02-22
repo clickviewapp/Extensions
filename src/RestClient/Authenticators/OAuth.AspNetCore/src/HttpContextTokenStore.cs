@@ -1,8 +1,11 @@
 ﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.AspNetCore
 {
     using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -52,6 +55,19 @@
 
                     UpdateTokenValue(authResult.Properties, ExpiresAtKey, expireValue);
                 }
+            }
+
+            var options = httpContext.RequestServices.GetRequiredService<IOptionsMonitor<CookieAuthenticationOptions>>();
+            var schemeProvider = httpContext.RequestServices.GetRequiredService<IAuthenticationSchemeProvider>();
+            var scheme = (await schemeProvider.GetDefaultSignInSchemeAsync())?.Name;
+            var cookieOptions = options.Get(scheme);
+
+            if (authResult.Properties.AllowRefresh == true || authResult.Properties.AllowRefresh
+                == null && cookieOptions.SlidingExpiration)
+            {
+                // this will allow the cookie to be issued with a new issuedUtc (and thus a new expiration)
+                authResult.Properties.IssuedUtc = null;
+                authResult.Properties.ExpiresUtc = null;
             }
 
             await httpContext.SignInAsync(authResult.Principal, authResult.Properties);
