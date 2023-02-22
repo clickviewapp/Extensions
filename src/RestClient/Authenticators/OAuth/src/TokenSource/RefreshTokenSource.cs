@@ -74,9 +74,16 @@
                 return;
             }
 
-            var response = await _tokenClient.RevokeRefreshTokenAsync(refreshToken.Value, cancellationToken);
-            if (response.IsError)
-                _logger.LogError("Failed to revoke refresh token");
+            try
+            {
+                var response = await _tokenClient.RevokeRefreshTokenAsync(refreshToken.Value, cancellationToken);
+                if (response.IsError)
+                    _logger.LogError("Failed to revoke refresh token");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while revoking the refresh token");
+            }
         }
 
         public bool StoreTokens => true;
