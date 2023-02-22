@@ -41,9 +41,7 @@
 
             _logger.LogDebug("Refreshing token");
 
-            var taskKey = "rt:" + refreshToken.Value;
-
-            var refreshTokenResponse = await _singleTask.RunAsync(taskKey, async () => 
+            var refreshTokenResponse = await _singleTask.RunAsync(refreshToken.Value, async () => 
                 await _tokenClient.GetRefreshTokenAsync(refreshToken.Value, cancellationToken));
 
             //todo: handle errors
