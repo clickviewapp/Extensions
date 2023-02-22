@@ -28,11 +28,6 @@
             return Task.CompletedTask;
         }
 
-        public Task RevokeTokensAsync()
-        {
-            return Task.CompletedTask;
-        }
-
         private static string ToBase64(string s)
         {
             var bytes = Encoding.UTF8.GetBytes(s);
