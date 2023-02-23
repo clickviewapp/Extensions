@@ -41,7 +41,7 @@
 
             _logger.LogDebug("Refreshing token");
 
-            var refreshTokenResponse = await _singleTask.RunAsync(refreshToken.Value, async () => 
+            var refreshTokenResponse = await _singleTask.RunAsync(refreshToken.Value, async () =>
                 await _tokenClient.GetRefreshTokenAsync(refreshToken.Value, cancellationToken));
 
             //todo: handle errors
@@ -56,7 +56,7 @@
             var newAccessToken = Helpers.CreateAccessToken(refreshTokenResponse);
             var newRefreshToken = Helpers.CreateRefreshToken(refreshTokenResponse);
 
-            _logger.LogDebug("Tokens refreshed successfully.");
+            _logger.LogDebug("Tokens refreshed successfully");
 
             return new List<Token>
             {

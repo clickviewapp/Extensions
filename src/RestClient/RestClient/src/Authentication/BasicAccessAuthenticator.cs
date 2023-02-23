@@ -13,7 +13,7 @@
     public class BasicAccessAuthenticator : IAuthenticator
     {
         private readonly string _encoded;
-        
+
         public BasicAccessAuthenticator(string userId, string password)
         {
             if (userId is null) throw new ArgumentNullException(nameof(userId));
