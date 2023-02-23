@@ -88,7 +88,7 @@
                 if (accessToken.ExpireTime.HasValue && accessToken.ExpireTime < DateTimeOffset.UtcNow)
                 {
                     _logger.LogInformation("Token expired ({ExpireTime}) in store: {StoreType}",
-                        accessToken.ExpireTime.Value.ToString("O"), storeName);
+                        accessToken.ExpireTime.Value, storeName);
 
                     continue;
                 }
