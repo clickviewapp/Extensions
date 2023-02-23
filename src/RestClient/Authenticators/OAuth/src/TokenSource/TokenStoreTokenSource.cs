@@ -28,6 +28,11 @@
             };
         }
 
+        public Task RevokeTokenAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
+
         public bool StoreTokens => false;
     }
 }

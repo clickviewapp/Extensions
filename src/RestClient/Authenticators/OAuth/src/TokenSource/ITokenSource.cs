@@ -13,5 +13,6 @@
         bool StoreTokens { get; }
 
         Task<IReadOnlyCollection<Token>> GetTokensAsync(CancellationToken cancellationToken = default);
+        Task RevokeTokenAsync(CancellationToken cancellationToken = default);
     }
 }

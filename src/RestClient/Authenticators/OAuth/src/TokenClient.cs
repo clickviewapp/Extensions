@@ -1,10 +1,12 @@
 ﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth
 {
+    using Endpoints;
+    using IdentityModel;
+    using IdentityModel.Client;
+    using System;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
-    using Endpoints;
-    using IdentityModel.Client;
 
     public class TokenClient
     {
@@ -40,9 +42,30 @@
 
             return await _httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
+                ClientId = _clientId,
+                ClientSecret = _clientSecret,
                 Address = endpoints.TokenEndpoint,
                 RefreshToken = refreshToken
             }, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<TokenRevocationResponse> RevokeRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
+        {
+            var endpoints = await _endpointFactory.GetAsync();
+
+            if (string.IsNullOrWhiteSpace(endpoints.RevocationEndpoint))
+            {
+                throw new InvalidOperationException("Revocation endpoint not configured");
+            }
+
+            return await _httpClient.RevokeTokenAsync(new TokenRevocationRequest
+            {
+                ClientId = _clientId,
+                ClientSecret = _clientSecret,
+                Address = endpoints.RevocationEndpoint,
+                Token = refreshToken,
+                TokenTypeHint = OidcConstants.TokenTypes.RefreshToken
+            }, cancellationToken);
         }
     }
 }

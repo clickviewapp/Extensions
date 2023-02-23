@@ -15,5 +15,10 @@
         {
             return new AccessToken(tokenResponse.AccessToken, GetExpireTime(tokenResponse.ExpiresIn));
         }
+
+        public static RefreshToken CreateRefreshToken(TokenResponse tokenResponse)
+        {
+            return new RefreshToken(tokenResponse.RefreshToken);
+        }
     }
 }

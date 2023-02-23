@@ -20,5 +20,10 @@
         public virtual bool StoreTokens => true;
 
         protected abstract Task<AccessToken> GetAccessTokenAsync(CancellationToken cancellationToken = default);
+
+        public virtual Task RevokeTokenAsync(CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
     }
 }
