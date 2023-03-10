@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test --no-build --configuration Release --logger trx --results-directory ./test-results/
+
+      - name: Package
+        run: dotnet pack --no-build --configuration Release --output ./build-output/
+
+      - name: Upload nuget package artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Nuget Packages
+          path: ./build-output/
+
+      - name: Publish
+        run: dotnet nuget push "./build-output/*.nupkg" --source nuget.org --api-key ${{ secrets.NUGET_TOKEN }}
