@@ -16,7 +16,6 @@
 
     <PropertyGroup>
         <LangVersion>10.0</LangVersion>
-<!--        <Nullable>enable</Nullable>-->
-<!--        <WarningsAsErrors>nullable</WarningsAsErrors>-->
+        <WarningsAsErrors>nullable</WarningsAsErrors>
     </PropertyGroup>
 </Project>
