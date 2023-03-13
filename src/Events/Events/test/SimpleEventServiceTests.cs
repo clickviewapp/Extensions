@@ -12,7 +12,7 @@
 
             var called = false;
 
-            eventService.RegisterHandler<ExampleEvent>(evt =>
+            eventService.RegisterHandler<ExampleEvent>(_ =>
             {
                 called = true;
                 return Task.CompletedTask;

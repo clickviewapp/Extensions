@@ -19,7 +19,7 @@
         {
             foreach (var t in tokens)
             {
-                _tokens.AddOrUpdate(t.TokenType, t, (type, _) => t);
+                _tokens.AddOrUpdate(t.TokenType, t, (_, _) => t);
             }
 
             return Task.CompletedTask;

@@ -25,9 +25,9 @@
             }
 
             var results = await Task.WhenAll(
-                instance.RunAsync("test", (s, token) => ThingToRunAsync(s), CancellationToken.None),
-                instance.RunAsync("test", (s, token) => ThingToRunAsync(s), CancellationToken.None),
-                instance.RunAsync("test", (s, token) => ThingToRunAsync(s), CancellationToken.None)
+                instance.RunAsync("test", (s, _) => ThingToRunAsync(s), CancellationToken.None),
+                instance.RunAsync("test", (s, _) => ThingToRunAsync(s), CancellationToken.None),
+                instance.RunAsync("test", (s, _) => ThingToRunAsync(s), CancellationToken.None)
             );
 
             Assert.Equal(1, timesRun);
@@ -51,9 +51,9 @@
             }
 
             var results = await Task.WhenAll(
-                instance.RunAsync("test1", (s, token) => ThingToRunAsync(s), CancellationToken.None),
-                instance.RunAsync("test2", (s, token) => ThingToRunAsync(s), CancellationToken.None),
-                instance.RunAsync("test3", (s, token) => ThingToRunAsync(s), CancellationToken.None)
+                instance.RunAsync("test1", (s, _) => ThingToRunAsync(s), CancellationToken.None),
+                instance.RunAsync("test2", (s, _) => ThingToRunAsync(s), CancellationToken.None),
+                instance.RunAsync("test3", (s, _) => ThingToRunAsync(s), CancellationToken.None)
             );
 
             Assert.Equal(3, timesRun);
@@ -76,8 +76,8 @@
                 return key;
             }
 
-            await instance.RunAsync("test", (s, token) => ThingToRunAsync(s), CancellationToken.None);
-            await instance.RunAsync("test", (s, token) => ThingToRunAsync(s), CancellationToken.None);
+            await instance.RunAsync("test", (s, _) => ThingToRunAsync(s), CancellationToken.None);
+            await instance.RunAsync("test", (s, _) => ThingToRunAsync(s), CancellationToken.None);
 
             Assert.Equal(2, timesRun);
         }
