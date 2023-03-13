@@ -7,7 +7,7 @@
     public static class TaskSingleExtensions
     {
         /// <summary>
-        /// Executes the action returning the result. Only one action will run concurrently per <param name="key">key</param>
+        /// Executes the action returning the result. Only one action will run concurrently per <paramref name="key"/>
         /// </summary>
         /// <typeparam name="TKey"></typeparam>
         /// <typeparam name="TVal"></typeparam>
