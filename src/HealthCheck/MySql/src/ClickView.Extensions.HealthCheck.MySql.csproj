@@ -2,15 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <Version>1.4.0-rc1</Version>
-    <LangVersion>7.1</LangVersion>
     <PackageTags>healthcheck health mysql</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Company>ClickView</Company>
-    <Authors>ClickView</Authors>
-    <PackageProjectUrl>https://github.com/clickviewapp/Extensions</PackageProjectUrl>
-    <PackageIconUrl>https://static.clickview.com.au/assets/images/nugetlogo-64x64.png</PackageIconUrl>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
