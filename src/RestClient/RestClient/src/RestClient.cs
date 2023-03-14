@@ -32,10 +32,7 @@
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="RestClient" /> class with a specified
-        ///     <param name="httpClient">
-        ///         <see cref="HttpClient" />
-        ///     </param>
+        ///     Initializes a new instance of the <see cref="RestClient" /> class with a specified <paramref name="httpClient"/>
         /// </summary>
         /// <param name="httpClient"></param>
         /// <param name="options"></param>
@@ -46,10 +43,7 @@
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="RestClient" /> class with a specified
-        ///     <param name="httpClient">
-        ///         <see cref="HttpClient" />
-        ///     </param>
+        ///     Initializes a new instance of the <see cref="RestClient" /> class with a specified <paramref name="httpClient"/>
         /// </summary>
         /// <param name="baseAddress"></param>
         /// <param name="httpClient"></param>

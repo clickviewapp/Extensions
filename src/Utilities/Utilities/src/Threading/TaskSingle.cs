@@ -21,7 +21,7 @@
         private readonly Dictionary<TKey, object> _completionTasks = new Dictionary<TKey, object>();
 
         /// <summary>
-        /// Executes the action returning the result. Only one action will run concurrently per <param name="key">key</param>
+        /// Executes the action returning the result. Only one action will run concurrently per <paramref name="key"/>
         /// </summary>
         /// <typeparam name="TVal"></typeparam>
         /// <param name="key">A unique key which is used to identity the work to be executed</param>
