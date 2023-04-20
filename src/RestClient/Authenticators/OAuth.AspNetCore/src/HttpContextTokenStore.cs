@@ -42,7 +42,7 @@
 
             // Only access tokens have expire time
             if (tokenType == TokenType.AccessToken)
-                expireTime = GetTokenExpireTimeAsync(properties);
+                expireTime = GetTokenExpireTime(properties);
 
             return CreateToken(tokenType, tokenValue, expireTime);
         }
@@ -135,7 +135,7 @@
             };
         }
 
-        private static DateTimeOffset? GetTokenExpireTimeAsync(AuthenticationProperties properties)
+        private static DateTimeOffset? GetTokenExpireTime(AuthenticationProperties properties)
         {
             var token = properties.GetTokenValue(ExpiresAtKey);
 
