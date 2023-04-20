@@ -37,7 +37,12 @@
                 return null;
 
             var tokenValue = properties.GetTokenValue(GetHttpTokenName(tokenType));
-            var expireTime = GetTokenExpireTimeAsync(properties);
+
+            DateTimeOffset? expireTime = null;
+
+            // Only access tokens have expire time
+            if (tokenType == TokenType.AccessToken)
+                expireTime = GetTokenExpireTimeAsync(properties);
 
             return CreateToken(tokenType, tokenValue, expireTime);
         }
