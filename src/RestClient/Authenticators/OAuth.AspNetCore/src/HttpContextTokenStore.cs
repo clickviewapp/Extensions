@@ -1,4 +1,4 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.AspNetCore
+namespace ClickView.Extensions.RestClient.Authenticators.OAuth.AspNetCore
 {
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
@@ -30,10 +30,16 @@
         {
             var httpContext = GetHttpContext();
 
-            var expireTime = GetTokenExpireTimeAsync(httpContext);
-            var tokenValue = httpContext.GetTokenAsync(GetHttpTokenName(tokenType));
+            var authResult = await httpContext.AuthenticateAsync();
+            var properties = authResult.Properties;
 
-            return CreateToken(tokenType, await tokenValue, await expireTime);
+            if (properties is null)
+                return null;
+
+            var tokenValue = properties.GetTokenValue(GetHttpTokenName(tokenType));
+            var expireTime = GetTokenExpireTimeAsync(properties);
+
+            return CreateToken(tokenType, tokenValue, expireTime);
         }
 
         //Token reference https://github.com/aspnet/AspNetCore/blob/master/src/Security/Authentication/OAuth/src/OAuthHandler.cs#L116
@@ -109,9 +115,9 @@
             };
         }
 
-        private static async Task<DateTimeOffset?> GetTokenExpireTimeAsync(HttpContext httpContext)
+        private static DateTimeOffset? GetTokenExpireTimeAsync(AuthenticationProperties properties)
         {
-            var token = await httpContext.GetTokenAsync(ExpiresAtKey).ConfigureAwait(false);
+            var token = properties.GetTokenValue(ExpiresAtKey);
 
             if (string.IsNullOrWhiteSpace(token))
                 return null;
