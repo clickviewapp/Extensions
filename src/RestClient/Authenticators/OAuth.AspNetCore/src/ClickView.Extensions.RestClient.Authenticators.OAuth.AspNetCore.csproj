@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <PackageTags>restclient rest http oauth aspnetcore</PackageTags>
     <Description>AspNetCore OAuth authenticator for ClickView.Extensions.RestClient</Description>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
