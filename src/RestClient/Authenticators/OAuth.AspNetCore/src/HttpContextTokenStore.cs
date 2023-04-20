@@ -1,4 +1,4 @@
-namespace ClickView.Extensions.RestClient.Authenticators.OAuth.AspNetCore
+﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.AspNetCore
 {
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
@@ -26,7 +26,7 @@ namespace ClickView.Extensions.RestClient.Authenticators.OAuth.AspNetCore
             _logger = loggerFactory.CreateLogger<HttpContextTokenStore>();
         }
 
-        public async Task<Token> GetTokenAsync(TokenType tokenType)
+        public async Task<Token?> GetTokenAsync(TokenType tokenType)
         {
             var httpContext = GetHttpContext();
 
@@ -48,18 +48,34 @@ namespace ClickView.Extensions.RestClient.Authenticators.OAuth.AspNetCore
             var httpContext = GetHttpContext();
             var authResult = await httpContext.AuthenticateAsync();
 
+            var principal = authResult.Principal;
+            if (principal is null)
+            {
+                _logger.LogWarning("Failed to store tokens. No principal set");
+                return;
+            }
+
+            var properties = authResult.Properties;
+
+            // todo: Should this null check or should this create a new properties?
+            if (properties is null)
+            {
+                _logger.LogWarning("Failed to store tokens. No properties");
+                return;
+            }
+
             foreach (var token in tokens)
             {
                 var tokenName = GetHttpTokenName(token.TokenType);
 
-                UpdateTokenValue(authResult.Properties, tokenName, token.Value);
+                UpdateTokenValue(properties, tokenName, token.Value);
 
                 // update expires_at token for access tokens
-                if (token.TokenType == TokenType.AccessToken && token.ExpireTime.HasValue)
+                if (token is { TokenType: TokenType.AccessToken, ExpireTime: not null })
                 {
                     var expireValue = token.ExpireTime.Value.ToString("o", CultureInfo.InvariantCulture);
 
-                    UpdateTokenValue(authResult.Properties, ExpiresAtKey, expireValue);
+                    UpdateTokenValue(properties, ExpiresAtKey, expireValue);
                 }
             }
 
@@ -68,15 +84,14 @@ namespace ClickView.Extensions.RestClient.Authenticators.OAuth.AspNetCore
             var scheme = (await schemeProvider.GetDefaultSignInSchemeAsync())?.Name;
             var cookieOptions = options.Get(scheme);
 
-            if (authResult.Properties.AllowRefresh == true || authResult.Properties.AllowRefresh
-                == null && cookieOptions.SlidingExpiration)
+            if (properties.AllowRefresh == true || properties.AllowRefresh == null && cookieOptions.SlidingExpiration)
             {
                 // this will allow the cookie to be issued with a new issuedUtc (and thus a new expiration)
-                authResult.Properties.IssuedUtc = null;
-                authResult.Properties.ExpiresUtc = null;
+                properties.IssuedUtc = null;
+                properties.ExpiresUtc = null;
             }
 
-            await httpContext.SignInAsync(authResult.Principal, authResult.Properties);
+            await httpContext.SignInAsync(principal, properties);
         }
 
         private void UpdateTokenValue(AuthenticationProperties properties, string tokenName, string tokenValue)
@@ -99,11 +114,11 @@ namespace ClickView.Extensions.RestClient.Authenticators.OAuth.AspNetCore
             return context;
         }
 
-        private Token CreateToken(TokenType tokenType, string value, DateTimeOffset? expireTime)
+        private Token? CreateToken(TokenType tokenType, string? value, DateTimeOffset? expireTime)
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                _logger.LogDebug("Failed to fetch token {TokenType} from HttpContext", tokenType);
+                _logger.LogDebug("Failed to fetch token {TokenType} from HttpContext. Missing value", tokenType);
                 return null;
             }
 
@@ -130,15 +145,12 @@ namespace ClickView.Extensions.RestClient.Authenticators.OAuth.AspNetCore
 
         private static string GetHttpTokenName(TokenType tokenType)
         {
-            switch (tokenType)
+            return tokenType switch
             {
-                case TokenType.AccessToken:
-                    return "access_token";
-                case TokenType.RefreshToken:
-                    return "refresh_token";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(tokenType), tokenType, null);
-            }
+                TokenType.AccessToken => "access_token",
+                TokenType.RefreshToken => "refresh_token",
+                _ => throw new ArgumentOutOfRangeException(nameof(tokenType), tokenType, null)
+            };
         }
     }
 }
