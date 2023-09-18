@@ -5,4 +5,8 @@
     <PackageTags>utilities</PackageTags>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Primitives\Primitives\src\ClickView.Extensions.Primitives.csproj" />
+  </ItemGroup>
+
 </Project>
