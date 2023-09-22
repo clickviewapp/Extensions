@@ -8,9 +8,17 @@ using Primitives.Extensions;
 
 public static class ThreadingHelper
 {
+    // Default to 4 because:
+    // 1 = May as well use a normal loop
+    // 2 = Not much better than 1
+    // 3/4 = Good candidate
+    // >5 = Probably too many for a default. If you need more you can pass it in
+    // Ended up choosing 4 because I like even numbers
+    private const int DefaultConcurrentTasks = 4;
+
     public static Task<TOut[]> ProcessAsync<TIn, TOut>(IEnumerable<TIn> source,
         Func<TIn, CancellationToken, Task<TOut>> func,
-        int concurrentTasks = 1,
+        int concurrentTasks = DefaultConcurrentTasks,
         CancellationToken cancellationToken = default)
     {
         return ProcessAsync(source, LocalFunc, func, concurrentTasks, cancellationToken);
@@ -22,7 +30,7 @@ public static class ThreadingHelper
     public static async Task<TOut[]> ProcessAsync<TIn, TArg, TOut>(IEnumerable<TIn> source,
         Func<TIn, TArg, CancellationToken, Task<TOut>> func,
         TArg funcArgument,
-        int concurrentTasks = 1,
+        int concurrentTasks = DefaultConcurrentTasks,
         CancellationToken cancellationToken = default)
     {
         if (source is null)
