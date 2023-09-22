@@ -33,7 +33,7 @@
             handlerFactory.RegisterHandler(mockHandler2.Object);
 
             //act
-            await handlerFactory.HandleAsync(new CustomEvent1()).ConfigureAwait(false);
+            await handlerFactory.HandleAsync(new CustomEvent1());
 
             //assert
             Assert.True(handled1);

@@ -17,7 +17,7 @@
 
             var source = new TokenStoreTokenSource(tokenStore.Object);
 
-            var tokens = await source.GetTokensAsync().ConfigureAwait(false);
+            var tokens = await source.GetTokensAsync();
 
             Assert.Empty(tokens);
         }

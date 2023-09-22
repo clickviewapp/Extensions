@@ -23,10 +23,10 @@
             var evt = new CustomEvent("Test message");
 
             //act
-            await eventPublisher.PublishAsync(evt).ConfigureAwait(false);
+            await eventPublisher.PublishAsync(evt);
 
             //Wait for events to propagate/tasks to finish
-            await Task.Delay(100).ConfigureAwait(false);
+            await Task.Delay(100);
 
             //assert
             Assert.Single(eventHandler.Events);
