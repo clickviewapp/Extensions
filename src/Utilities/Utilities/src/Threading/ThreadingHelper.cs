@@ -8,8 +8,20 @@ using Primitives.Extensions;
 
 public static class ThreadingHelper
 {
-    public static async Task<TOut[]> ProcessAsync<TIn, TOut>(IEnumerable<TIn> source,
+    public static Task<TOut[]> ProcessAsync<TIn, TOut>(IEnumerable<TIn> source,
         Func<TIn, CancellationToken, Task<TOut>> func,
+        int concurrentTasks = 1,
+        CancellationToken cancellationToken = default)
+    {
+        return ProcessAsync(source, LocalFunc, func, concurrentTasks, cancellationToken);
+
+        static Task<TOut> LocalFunc(TIn input, Func<TIn, CancellationToken, Task<TOut>> func, CancellationToken ct) =>
+            func(input, ct);
+    }
+
+    public static async Task<TOut[]> ProcessAsync<TIn, TArg, TOut>(IEnumerable<TIn> source,
+        Func<TIn, TArg, CancellationToken, Task<TOut>> func,
+        TArg funcArgument,
         int concurrentTasks = 1,
         CancellationToken cancellationToken = default)
     {
@@ -27,12 +39,12 @@ public static class ThreadingHelper
 
         // If our concurrentTasks is 1, we can just run each task one by one and avoid a lot of allocations
         if (concurrentTasks == 1)
-            return await ProcessSerialAsync(items, func, cancellationToken);
+            return await ProcessSerialAsync(items, func, funcArgument, cancellationToken);
 
         // Check if the count is less than the maxDegrees
         //If it is then we can just run all tasks at once without the need for a SemaphoreSlim
         if (items.Count <= concurrentTasks)
-            return await ProcessParallelAsync(items, func, cancellationToken);
+            return await ProcessParallelAsync(items, func, funcArgument, cancellationToken);
 
         using var semaphore = new SemaphoreSlim(concurrentTasks, concurrentTasks);
         var tasks = new Task<TOut>[items.Count];
@@ -41,19 +53,20 @@ public static class ThreadingHelper
         {
             await semaphore.WaitAsync(cancellationToken);
 
-            tasks[i] = ProcessItemAsync(items[i], func, semaphore, cancellationToken);
+            tasks[i] = ProcessItemAsync(items[i], func, funcArgument, semaphore, cancellationToken);
         }
 
         return await Task.WhenAll(tasks);
 
         static async Task<TOut> ProcessItemAsync(TIn item,
-            Func<TIn, CancellationToken, Task<TOut>> func,
+            Func<TIn, TArg, CancellationToken, Task<TOut>> func,
+            TArg funcArgument,
             SemaphoreSlim semaphoreSlim,
             CancellationToken cancellationToken)
         {
             try
             {
-                return await func(item, cancellationToken);
+                return await func(item, funcArgument, cancellationToken);
             }
             finally
             {
@@ -62,8 +75,10 @@ public static class ThreadingHelper
         }
     }
 
-    private static async Task<TOut[]> ProcessSerialAsync<TIn, TOut>(IReadOnlyList<TIn> objs,
-        Func<TIn, CancellationToken, Task<TOut>> func, CancellationToken cancellationToken = default)
+    private static async Task<TOut[]> ProcessSerialAsync<TIn, TArg, TOut>(IReadOnlyList<TIn> objs,
+        Func<TIn, TArg, CancellationToken, Task<TOut>> func,
+        TArg funcArgument,
+        CancellationToken cancellationToken = default)
     {
         var results = new TOut[objs.Count];
 
@@ -71,27 +86,29 @@ public static class ThreadingHelper
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            results[i] = await func(objs[i], cancellationToken);
+            results[i] = await func(objs[i], funcArgument, cancellationToken);
         }
 
         return results;
     }
 
-    private static async Task<TOut[]> ProcessParallelAsync<TIn, TOut>(IReadOnlyList<TIn> objs,
-        Func<TIn, CancellationToken, Task<TOut>> func, CancellationToken cancellationToken = default)
+    private static async Task<TOut[]> ProcessParallelAsync<TIn, TArg, TOut>(IReadOnlyList<TIn> objs,
+        Func<TIn, TArg, CancellationToken, Task<TOut>> func,
+        TArg funcArgument,
+        CancellationToken cancellationToken = default)
     {
         switch (objs.Count)
         {
             case 0:
                 return Array.Empty<TOut>();
             case 1:
-                return new[] { await func(objs[0], cancellationToken) };
+                return new[] { await func(objs[0], funcArgument, cancellationToken) };
             default:
             {
                 var taskList = new Task<TOut>[objs.Count];
                 for (var i = 0; i < objs.Count; i++)
                 {
-                    taskList[i] = func(objs[i], cancellationToken);
+                    taskList[i] = func(objs[i], funcArgument, cancellationToken);
                 }
 
                 return await Task.WhenAll(taskList);
