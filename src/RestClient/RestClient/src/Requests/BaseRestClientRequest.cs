@@ -17,10 +17,8 @@ namespace ClickView.Extensions.RestClient.Requests
 
     public abstract class BaseRestClientRequest<TResponse> : IClientRequest where TResponse : RestClientResponse
     {
-        private readonly RestClientRequestHeaders _headers = new RestClientRequestHeaders();
-
-        internal readonly Dictionary<string, List<RequestParameterValue>> Parameters =
-            new Dictionary<string, List<RequestParameterValue>>();
+        private readonly RestClientRequestHeaders _headers = new();
+        internal readonly Dictionary<string, List<RequestParameterValue>> Parameters = new();
 
         protected BaseRestClientRequest(HttpMethod method, string resource)
         {

@@ -103,26 +103,22 @@
                 }
             }
 
-            using (var httpRequest = new HttpRequestMessage(request.Method, requestUri))
+            using var httpRequest = new HttpRequestMessage(request.Method, requestUri);
+            foreach (var h in request.Headers)
             {
-                foreach (var h in request.Headers)
-                {
-                    httpRequest.Headers.TryAddWithoutValidation(h.Key, h.Value);
-                }
+                httpRequest.Headers.TryAddWithoutValidation(h.Key, h.Value);
+            }
 
-                SetContent(httpRequest, request);
+            SetContent(httpRequest, request);
 
-                try
-                {
-                    using (var response = await _httpClient.SendAsync(httpRequest, token).ConfigureAwait(false))
-                    {
-                        return await request.GetResponseAsync(response).ConfigureAwait(false);
-                    }
-                }
-                catch (HttpRequestException e)
-                {
-                    throw new ClickViewClientException(e.Message, e);
-                }
+            try
+            {
+                using var response = await _httpClient.SendAsync(httpRequest, token).ConfigureAwait(false);
+                return await request.GetResponseAsync(response).ConfigureAwait(false);
+            }
+            catch (HttpRequestException e)
+            {
+                throw new ClickViewClientException(e.Message, e);
             }
         }
 

@@ -16,4 +16,8 @@
     <ProjectReference Include="..\..\..\RestClient\src\ClickView.Extensions.RestClient.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="ClickView.Extensions.RestClient.Authenticators.OAuth.Tests" />
+  </ItemGroup>
+
 </Project>

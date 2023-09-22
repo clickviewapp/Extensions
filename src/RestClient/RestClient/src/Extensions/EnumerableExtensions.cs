@@ -24,17 +24,16 @@
             }
 
             //enumerate
-            using (var e = source.GetEnumerator())
-            {
-                if (!e.MoveNext())
-                {
-                    value = default;
-                    return false;
-                }
+            using var e = source.GetEnumerator();
 
-                value = e.Current;
-                return true;
+            if (!e.MoveNext())
+            {
+                value = default;
+                return false;
             }
+
+            value = e.Current;
+            return true;
         }
     }
 }

@@ -18,8 +18,7 @@
     public abstract class OAuthAuthenticator<TOptions> : IAuthenticator where TOptions : OAuthAuthenticatorOptions
     {
         private readonly ILogger<OAuthAuthenticator<TOptions>> _logger;
-
-        private readonly List<ITokenSource> _tokenSources = new List<ITokenSource>();
+        private readonly List<ITokenSource> _tokenSources = new();
 
         protected readonly TOptions Options;
         protected readonly ITokenStore TokenStore;
