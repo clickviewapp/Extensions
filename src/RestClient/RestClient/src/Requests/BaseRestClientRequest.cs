@@ -151,15 +151,15 @@ namespace ClickView.Extensions.RestClient.Requests
             if (message.IsSuccessStatusCode)
                 return null;
 
-            if (message.Content != null)
+            var contentString = await message.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+            if (!TryParseErrorBody(contentString, out var errorBody))
+                errorBody = GetDefaultErrorBody(message.StatusCode, message.ReasonPhrase);
+
+            return new Error(message.StatusCode, errorBody)
             {
-                var content = await message.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-                if (TryParseErrorBody(content, out var errorBody))
-                    return new Error(message.StatusCode, errorBody);
-            }
-
-            return new Error(message.StatusCode, GetDefaultErrorBody(message.StatusCode, message.ReasonPhrase));
+                Content = contentString
+            };
         }
 
         protected virtual void HandleError(Error error)
