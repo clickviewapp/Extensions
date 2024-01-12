@@ -22,7 +22,7 @@ namespace ClickView.Extensions.RestClient.Tests
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(message =>
-                        message.RequestUri.Equals(new Uri("http://clickview.com.au/v1/test"))),
+                        message.RequestUri!.Equals(new Uri("http://clickview.com.au/v1/test"))),
                     ItExpr.IsAny<CancellationToken>()
                 )
                 .ReturnsAsync(new HttpResponseMessage
@@ -53,7 +53,7 @@ namespace ClickView.Extensions.RestClient.Tests
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(message =>
-                        message.RequestUri.Equals(new Uri("http://clickview.com.au/v1/test"))),
+                        message.RequestUri!.Equals(new Uri("http://clickview.com.au/v1/test"))),
                     ItExpr.IsAny<CancellationToken>()
                 )
                 .ReturnsAsync(new HttpResponseMessage
@@ -87,7 +87,7 @@ namespace ClickView.Extensions.RestClient.Tests
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(message =>
-                        message.RequestUri.Equals(new Uri("https://hello.hello/test"))),
+                        message.RequestUri!.Equals(new Uri("https://hello.hello/test"))),
                     ItExpr.IsAny<CancellationToken>()
                 )
                 .ReturnsAsync(new HttpResponseMessage
@@ -121,7 +121,7 @@ namespace ClickView.Extensions.RestClient.Tests
                 .Setup<Task<HttpResponseMessage>>(
                     "SendAsync",
                     ItExpr.Is<HttpRequestMessage>(message =>
-                        message.RequestUri.Equals(new Uri("https://clockview.clocks/test"))),
+                        message.RequestUri!.Equals(new Uri("https://clockview.clocks/test"))),
                     ItExpr.IsAny<CancellationToken>()
                 )
                 .ReturnsAsync(new HttpResponseMessage
