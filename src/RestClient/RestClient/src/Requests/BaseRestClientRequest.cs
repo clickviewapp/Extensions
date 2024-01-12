@@ -2,6 +2,7 @@ namespace ClickView.Extensions.RestClient.Requests
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -28,7 +29,7 @@ namespace ClickView.Extensions.RestClient.Requests
 
         public ISerializer Serializer { internal get; set; } = NewtonsoftJsonSerializer.Instance;
 
-        internal HttpContent Content { get; set; }
+        internal HttpContent? Content { get; set; }
 
         /// <summary>
         ///     Set to true if we should throw an exception on 404
@@ -119,7 +120,6 @@ namespace ClickView.Extensions.RestClient.Requests
             if (error != null)
             {
                 HandleError(error);
-
                 response.Error = error;
             }
 
@@ -128,7 +128,7 @@ namespace ClickView.Extensions.RestClient.Requests
 
         protected abstract Task<TResponse> ParseResponseAsync(HttpResponseMessage message);
 
-        protected virtual bool TryParseErrorBody(string content, out ErrorBody error)
+        protected virtual bool TryParseErrorBody(string content, [NotNullWhen(true)] out ErrorBody? error)
         {
             error = null;
             return false;
@@ -142,7 +142,7 @@ namespace ClickView.Extensions.RestClient.Requests
             };
         }
 
-        protected async Task<Error> GetErrorAsync(HttpResponseMessage message)
+        protected async Task<Error?> GetErrorAsync(HttpResponseMessage message)
         {
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
@@ -170,7 +170,7 @@ namespace ClickView.Extensions.RestClient.Requests
             throw ErrorHelper.GetErrorException(error);
         }
 
-        protected T Deserialize<T>(string input)
+        protected T? Deserialize<T>(string input)
         {
             try
             {

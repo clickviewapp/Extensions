@@ -7,7 +7,7 @@
 
     public static class ErrorHelper
     {
-        public static string GetDefaultErrorMessage(HttpStatusCode httpStatusCode)
+        public static string? GetDefaultErrorMessage(HttpStatusCode httpStatusCode)
         {
             switch (httpStatusCode)
             {

@@ -8,7 +8,7 @@ namespace ClickView.Extensions.RestClient.Serialization
 
         string Serialize(object obj);
 
-        T Deserialize<T>(string input);
-        object Deserialize(string input, Type type);
+        T? Deserialize<T>(string input);
+        object? Deserialize(string input, Type type);
     }
 }
