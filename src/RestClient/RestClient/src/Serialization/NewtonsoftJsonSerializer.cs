@@ -7,7 +7,7 @@
     {
         public static readonly ISerializer Instance = new NewtonsoftJsonSerializer();
 
-        private readonly JsonSerializerSettings _jsonSerializerSettings;
+        private readonly JsonSerializerSettings? _jsonSerializerSettings;
 
         public NewtonsoftJsonSerializer()
         {
@@ -27,12 +27,12 @@
             return JsonConvert.SerializeObject(obj, _jsonSerializerSettings);
         }
 
-        public T Deserialize<T>(string input)
+        public T? Deserialize<T>(string input)
         {
             return JsonConvert.DeserializeObject<T>(input, _jsonSerializerSettings);
         }
 
-        public object Deserialize(string input, Type type)
+        public object? Deserialize(string input, Type type)
         {
             return JsonConvert.DeserializeObject(input, type, _jsonSerializerSettings);
         }

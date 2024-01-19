@@ -12,7 +12,7 @@
 
     public class RestClient
     {
-        private readonly Uri _baseAddress;
+        private readonly Uri? _baseAddress;
         private readonly HttpClient _httpClient;
         private readonly CoreRestClientOptions _options;
 
@@ -21,7 +21,7 @@
         /// </summary>
         /// <param name="baseAddress"></param>
         /// <param name="options"></param>
-        public RestClient(Uri baseAddress, RestClientOptions options = null)
+        public RestClient(Uri baseAddress, RestClientOptions? options = null)
         {
             _baseAddress = baseAddress ?? throw new ArgumentNullException(nameof(baseAddress));
 
@@ -36,10 +36,11 @@
         /// </summary>
         /// <param name="httpClient"></param>
         /// <param name="options"></param>
-        public RestClient(HttpClient httpClient, CoreRestClientOptions options = null)
+        public RestClient(HttpClient httpClient, CoreRestClientOptions? options = null)
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             _options = options ?? RestClientOptions.Default;
+            _baseAddress = null;
         }
 
         /// <summary>
@@ -48,7 +49,7 @@
         /// <param name="baseAddress"></param>
         /// <param name="httpClient"></param>
         /// <param name="options"></param>
-        public RestClient(Uri baseAddress, HttpClient httpClient, CoreRestClientOptions options = null)
+        public RestClient(Uri baseAddress, HttpClient httpClient, CoreRestClientOptions? options = null)
             : this(httpClient, options)
         {
             _baseAddress = baseAddress ?? throw new ArgumentNullException(nameof(baseAddress));

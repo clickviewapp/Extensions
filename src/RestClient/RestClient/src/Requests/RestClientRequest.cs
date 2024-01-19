@@ -19,7 +19,7 @@
             return new RestClientResponse<TData>(message, Deserialize(str));
         }
 
-        protected TData Deserialize(string input)
+        protected TData? Deserialize(string input)
         {
             return Deserialize<TData>(input);
         }

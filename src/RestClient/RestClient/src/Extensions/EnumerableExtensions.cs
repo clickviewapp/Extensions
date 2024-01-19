@@ -5,7 +5,7 @@
 
     public static class EnumerableExtensions
     {
-        public static bool TryGetFirstValue<T>(this IEnumerable<T> source, out T value)
+        public static bool TryGetFirstValue<T>(this IEnumerable<T> source, out T? value)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
