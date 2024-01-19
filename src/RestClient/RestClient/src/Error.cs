@@ -11,7 +11,7 @@ namespace ClickView.Extensions.RestClient
         }
 
         public HttpStatusCode HttpStatusCode { get; }
-        public string Content { get; set; }
+        public string Content { get; set; } = null!;
         public ErrorBody Body { get; }
     }
 }
