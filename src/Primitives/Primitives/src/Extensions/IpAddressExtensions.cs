@@ -19,6 +19,9 @@ public static class IpAddressExtensions
     /// <example><code>bool isPrivate = IPAddress.Parse("127.0.0.1").IsPrivate();</code></example>
     public static bool IsPrivate(this IPAddress ip)
     {
+        if (ip is null)
+            throw new ArgumentNullException(nameof(ip));
+
         // Map back to IPv4 if mapped to IPv6, for example "::ffff:1.2.3.4" to "1.2.3.4".
         if (ip.IsIPv4MappedToIPv6)
             ip = ip.MapToIPv4();
