@@ -53,8 +53,8 @@
                 return new List<Token>();
             }
 
-            var newAccessToken = Helpers.CreateAccessToken(refreshTokenResponse);
-            var newRefreshToken = Helpers.CreateRefreshToken(refreshTokenResponse);
+            var newAccessToken = TokenHelpers.CreateAccessToken(refreshTokenResponse);
+            var newRefreshToken = TokenHelpers.CreateRefreshToken(refreshTokenResponse);
 
             _logger.LogDebug("Tokens refreshed successfully");
 
