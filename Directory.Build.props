@@ -15,7 +15,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <LangVersion>10.0</LangVersion>
+        <LangVersion>12.0</LangVersion>
         <WarningsAsErrors>nullable</WarningsAsErrors>
     </PropertyGroup>
 </Project>
