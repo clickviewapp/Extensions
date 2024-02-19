@@ -1,4 +1,4 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
+namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
 {
     using Microsoft.Extensions.Logging;
     using System;
@@ -32,12 +32,14 @@
                 return new List<Token>();
 
             var accessToken = await _tokenStore.GetTokenAsync(TokenType.AccessToken);
-            if (accessToken?.ExpireTime != null && accessToken.ExpireTime > DateTimeOffset.UtcNow)
+            if (accessToken is not null && !accessToken.HasExpired())
+            {
                 return new List<Token>
                 {
                     accessToken,
                     refreshToken
                 };
+            }
 
             _logger.LogDebug("Refreshing token");
 

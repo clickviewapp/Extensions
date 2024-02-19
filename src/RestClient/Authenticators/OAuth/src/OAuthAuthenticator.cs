@@ -84,10 +84,10 @@
                 }
 
                 // check expired
-                if (accessToken.ExpireTime.HasValue && accessToken.ExpireTime < DateTimeOffset.UtcNow)
+                if (accessToken.HasExpired())
                 {
                     _logger.LogInformation("Token expired ({ExpireTime}) in store: {StoreType}",
-                        accessToken.ExpireTime.Value, storeName);
+                        accessToken.ExpireTime, storeName);
 
                     continue;
                 }

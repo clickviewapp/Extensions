@@ -8,7 +8,7 @@ public static class TokenHelpers
 {
     public static DateTimeOffset GetExpireTime(int expiresInSeconds)
     {
-        return DateTimeOffset.UtcNow.AddSeconds(expiresInSeconds - 10); //allow 10sec of clock drift
+        return DateTimeOffset.UtcNow.AddSeconds(expiresInSeconds);
     }
 
     public static AccessToken CreateAccessToken(TokenResponse tokenResponse)
