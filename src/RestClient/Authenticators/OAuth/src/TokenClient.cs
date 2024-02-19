@@ -67,7 +67,7 @@
 
         public async Task<TokenRevocationResponse> RevokeRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
         {
-            var endpoints = await _endpointFactory.GetAsync();
+            var endpoints = await _endpointFactory.GetAsync().ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(endpoints.RevocationEndpoint))
             {
@@ -81,7 +81,7 @@
                 ClientSecret = _clientSecret,
                 Token = refreshToken,
                 TokenTypeHint = OidcConstants.TokenTypes.RefreshToken
-            }, cancellationToken);
+            }, cancellationToken).ConfigureAwait(false);
         }
     }
 }

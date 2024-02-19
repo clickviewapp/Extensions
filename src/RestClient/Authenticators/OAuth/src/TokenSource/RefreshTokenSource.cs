@@ -27,11 +27,11 @@ namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
 
         public async Task<IReadOnlyCollection<Token>> GetTokensAsync(CancellationToken cancellationToken = default)
         {
-            var refreshToken = await _tokenStore.GetTokenAsync(TokenType.RefreshToken);
+            var refreshToken = await _tokenStore.GetTokenAsync(TokenType.RefreshToken).ConfigureAwait(false);
             if (refreshToken == null)
                 return new List<Token>();
 
-            var accessToken = await _tokenStore.GetTokenAsync(TokenType.AccessToken);
+            var accessToken = await _tokenStore.GetTokenAsync(TokenType.AccessToken).ConfigureAwait(false);
             if (accessToken is not null && !accessToken.HasExpired())
             {
                 return new List<Token>
@@ -43,8 +43,8 @@ namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
 
             _logger.LogDebug("Refreshing token");
 
-            var refreshTokenResponse = await _singleTask.RunAsync(refreshToken.Value, async () =>
-                await _tokenClient.GetRefreshTokenAsync(refreshToken.Value, cancellationToken));
+            var refreshTokenResponse = await _singleTask.RunAsync(refreshToken.Value, () =>
+                _tokenClient.GetRefreshTokenAsync(refreshToken.Value, cancellationToken)).ConfigureAwait(false);
 
             //todo: handle errors
             if (refreshTokenResponse.IsError)
@@ -69,7 +69,7 @@ namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
 
         public async Task RevokeTokenAsync(CancellationToken cancellationToken = default)
         {
-            var refreshToken = await _tokenStore.GetTokenAsync(TokenType.RefreshToken);
+            var refreshToken = await _tokenStore.GetTokenAsync(TokenType.RefreshToken).ConfigureAwait(false);
             if (refreshToken == null)
             {
                 _logger.LogDebug("Refresh token was not found in the store");
@@ -78,7 +78,9 @@ namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
 
             try
             {
-                var response = await _tokenClient.RevokeRefreshTokenAsync(refreshToken.Value, cancellationToken);
+                var response = await _tokenClient.RevokeRefreshTokenAsync(refreshToken.Value, cancellationToken)
+                    .ConfigureAwait(false);
+
                 if (response.IsError)
                     _logger.LogError("Failed to revoke refresh token");
             }
