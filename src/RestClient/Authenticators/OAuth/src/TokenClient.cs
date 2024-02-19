@@ -29,10 +29,26 @@
 
             return await _httpClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
+                Address = endpoints.TokenEndpoint,
+                ClientId = _clientId,
+                ClientSecret = _clientSecret,
+                Scope = scope
+            }, cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<TokenResponse> GetResourceOwnerPasswordTokenAsync(string scope, string username, string password,
+            CancellationToken cancellationToken = default)
+        {
+            var endpoints = await _endpointFactory.GetAsync().ConfigureAwait(false);
+
+            return await _httpClient.RequestPasswordTokenAsync(new PasswordTokenRequest
+            {
+                Address = endpoints.TokenEndpoint,
                 ClientId = _clientId,
                 ClientSecret = _clientSecret,
                 Scope = scope,
-                Address = endpoints.TokenEndpoint
+                UserName = username,
+                Password = password
             }, cancellationToken).ConfigureAwait(false);
         }
 
@@ -42,16 +58,16 @@
 
             return await _httpClient.RequestRefreshTokenAsync(new RefreshTokenRequest
             {
+                Address = endpoints.TokenEndpoint,
                 ClientId = _clientId,
                 ClientSecret = _clientSecret,
-                Address = endpoints.TokenEndpoint,
                 RefreshToken = refreshToken
             }, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<TokenRevocationResponse> RevokeRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
         {
-            var endpoints = await _endpointFactory.GetAsync();
+            var endpoints = await _endpointFactory.GetAsync().ConfigureAwait(false);
 
             if (string.IsNullOrWhiteSpace(endpoints.RevocationEndpoint))
             {
@@ -60,12 +76,12 @@
 
             return await _httpClient.RevokeTokenAsync(new TokenRevocationRequest
             {
+                Address = endpoints.RevocationEndpoint,
                 ClientId = _clientId,
                 ClientSecret = _clientSecret,
-                Address = endpoints.RevocationEndpoint,
                 Token = refreshToken,
                 TokenTypeHint = OidcConstants.TokenTypes.RefreshToken
-            }, cancellationToken);
+            }, cancellationToken).ConfigureAwait(false);
         }
     }
 }

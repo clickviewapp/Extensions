@@ -21,28 +21,29 @@
             _tokenStore = tokenStore;
             _tokenClient = tokenClient;
             _logger = loggerFactory.CreateLogger<RefreshTokenSource>();
-
             _singleTask = new TaskSingle<string>();
         }
 
         public async Task<IReadOnlyCollection<Token>> GetTokensAsync(CancellationToken cancellationToken = default)
         {
-            var refreshToken = await _tokenStore.GetTokenAsync(TokenType.RefreshToken);
+            var refreshToken = await _tokenStore.GetTokenAsync(TokenType.RefreshToken).ConfigureAwait(false);
             if (refreshToken == null)
-                return new List<Token>();
+                return Array.Empty<Token>();
 
-            var accessToken = await _tokenStore.GetTokenAsync(TokenType.AccessToken);
-            if (accessToken?.ExpireTime != null && accessToken.ExpireTime > DateTimeOffset.UtcNow)
+            var accessToken = await _tokenStore.GetTokenAsync(TokenType.AccessToken).ConfigureAwait(false);
+            if (accessToken is not null && !accessToken.HasExpired())
+            {
                 return new List<Token>
                 {
                     accessToken,
                     refreshToken
                 };
+            }
 
             _logger.LogDebug("Refreshing token");
 
-            var refreshTokenResponse = await _singleTask.RunAsync(refreshToken.Value, async () =>
-                await _tokenClient.GetRefreshTokenAsync(refreshToken.Value, cancellationToken));
+            var refreshTokenResponse = await _singleTask.RunAsync(refreshToken.Value, () =>
+                _tokenClient.GetRefreshTokenAsync(refreshToken.Value, cancellationToken)).ConfigureAwait(false);
 
             //todo: handle errors
             if (refreshTokenResponse.IsError)
@@ -50,11 +51,11 @@
                 _logger.LogError(refreshTokenResponse.Exception, "Error refreshing token. {Message}",
                     refreshTokenResponse.ErrorDescription);
 
-                return new List<Token>();
+                return Array.Empty<Token>();
             }
 
-            var newAccessToken = Helpers.CreateAccessToken(refreshTokenResponse);
-            var newRefreshToken = Helpers.CreateRefreshToken(refreshTokenResponse);
+            var newAccessToken = TokenHelpers.CreateAccessToken(refreshTokenResponse);
+            var newRefreshToken = TokenHelpers.CreateRefreshToken(refreshTokenResponse);
 
             _logger.LogDebug("Tokens refreshed successfully");
 
@@ -67,7 +68,7 @@
 
         public async Task RevokeTokenAsync(CancellationToken cancellationToken = default)
         {
-            var refreshToken = await _tokenStore.GetTokenAsync(TokenType.RefreshToken);
+            var refreshToken = await _tokenStore.GetTokenAsync(TokenType.RefreshToken).ConfigureAwait(false);
             if (refreshToken == null)
             {
                 _logger.LogDebug("Refresh token was not found in the store");
@@ -76,7 +77,9 @@
 
             try
             {
-                var response = await _tokenClient.RevokeRefreshTokenAsync(refreshToken.Value, cancellationToken);
+                var response = await _tokenClient.RevokeRefreshTokenAsync(refreshToken.Value, cancellationToken)
+                    .ConfigureAwait(false);
+
                 if (response.IsError)
                     _logger.LogError("Failed to revoke refresh token");
             }

@@ -4,15 +4,17 @@
 
     public static class TokenExtensions
     {
-        public static bool IsValid(this Token token)
+        public static bool HasExpired(this Token token)
         {
-            if (token == null)
+            if (token is null)
+                throw new ArgumentNullException(nameof(token));
+
+            // No expire time means its not expired
+            if (!token.ExpireTime.HasValue)
                 return false;
 
-            if (token.ExpireTime.HasValue)
-                return token.ExpireTime.Value > DateTimeOffset.UtcNow;
-
-            return true;
+            // Remove 10 seconds from the expire time to allow for clock drift
+            return token.ExpireTime.Value.AddSeconds(-10) <= DateTimeOffset.UtcNow;
         }
     }
 }

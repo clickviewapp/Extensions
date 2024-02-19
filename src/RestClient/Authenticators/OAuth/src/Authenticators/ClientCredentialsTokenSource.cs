@@ -28,7 +28,7 @@
 
             //todo: handle errors
             if (!response.IsError)
-                return Helpers.CreateAccessToken(response);
+                return TokenHelpers.CreateAccessToken(response);
 
             _logger.LogError(response.Exception,
                 "Error fetching client credentials token. {Error} ({ErrorDescription})", response.Error,
