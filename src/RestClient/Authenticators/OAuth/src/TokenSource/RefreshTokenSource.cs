@@ -1,4 +1,4 @@
-namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
+﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
 {
     using Microsoft.Extensions.Logging;
     using System;
@@ -21,7 +21,6 @@ namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
             _tokenStore = tokenStore;
             _tokenClient = tokenClient;
             _logger = loggerFactory.CreateLogger<RefreshTokenSource>();
-
             _singleTask = new TaskSingle<string>();
         }
 
@@ -29,7 +28,7 @@ namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
         {
             var refreshToken = await _tokenStore.GetTokenAsync(TokenType.RefreshToken).ConfigureAwait(false);
             if (refreshToken == null)
-                return new List<Token>();
+                return Array.Empty<Token>();
 
             var accessToken = await _tokenStore.GetTokenAsync(TokenType.AccessToken).ConfigureAwait(false);
             if (accessToken is not null && !accessToken.HasExpired())
@@ -52,7 +51,7 @@ namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
                 _logger.LogError(refreshTokenResponse.Exception, "Error refreshing token. {Message}",
                     refreshTokenResponse.ErrorDescription);
 
-                return new List<Token>();
+                return Array.Empty<Token>();
             }
 
             var newAccessToken = TokenHelpers.CreateAccessToken(refreshTokenResponse);
