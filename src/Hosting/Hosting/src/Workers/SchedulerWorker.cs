@@ -63,7 +63,7 @@ public abstract class SchedulerWorker : Worker, IDisposable
     {
         var now = DateTime.UtcNow;
 
-        var cronValue = CronExpression.Parse(CronSchedule);
+        var cronValue = CronExpression.Parse(CronSchedule, CronFormat.IncludeSeconds);
         var next = cronValue.GetNextOccurrence(now);
         if (!next.HasValue)
             return null;
