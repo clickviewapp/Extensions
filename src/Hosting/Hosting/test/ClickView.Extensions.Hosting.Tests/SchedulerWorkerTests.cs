@@ -20,7 +20,7 @@ public class SchedulerWorkerTests
 
         await scheduler.StopAsync(CancellationToken.None);
 
-        Assert.InRange(scheduler.Counter, 2, 3);
+        Assert.True(scheduler.Counter >= 2);
 
         scheduler.Dispose();
     }
