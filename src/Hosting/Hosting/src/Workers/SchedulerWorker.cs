@@ -9,13 +9,22 @@ using Microsoft.Extensions.Logging;
 public abstract class SchedulerWorker : Worker, IDisposable
 {
     private readonly ILogger _logger;
+    private readonly Random _delayGenerator = new();
+    private readonly SchedulerOption? _option;
     private Timer? _timer;
     private CancellationTokenSource? _cancellationTokenSource;
 
+    // Cron format: https://www.nuget.org/packages/Cronos/
     protected abstract string CronSchedule { get; }
 
     protected SchedulerWorker(ILogger logger) : base(logger)
     {
+        _logger = logger;
+    }
+
+    protected SchedulerWorker(SchedulerOption option, ILogger logger) : base(logger)
+    {
+        _option = option;
         _logger = logger;
     }
 
@@ -68,7 +77,14 @@ public abstract class SchedulerWorker : Worker, IDisposable
         if (!next.HasValue)
             return null;
 
-        return next.Value - now;
+        var delay = next.Value - now;
+
+        if (_option is null || !_option.AllowExtraDelay)
+            return delay;
+
+        var extraDelay = TimeSpan.FromSeconds(_delayGenerator.Next((int)_option.MinDelayInSecond, (int)_option.MaxDelayInSecond));
+
+        return delay.Add(extraDelay);
     }
 
     public void Dispose()
