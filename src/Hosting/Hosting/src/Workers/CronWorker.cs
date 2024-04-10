@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Cronos;
 using Microsoft.Extensions.Logging;
 
-public abstract class SchedulerWorker : Worker, IDisposable
+public abstract class CronWorker : Worker, IDisposable
 {
     private readonly ILogger _logger;
     private readonly Random _delayGenerator = new();
@@ -17,12 +17,12 @@ public abstract class SchedulerWorker : Worker, IDisposable
     // Cron format: https://www.nuget.org/packages/Cronos/
     protected abstract string CronSchedule { get; }
 
-    protected SchedulerWorker(ILogger logger) : base(logger)
+    protected CronWorker(ILogger logger) : base(logger)
     {
         _logger = logger;
     }
 
-    protected SchedulerWorker(SchedulerOption option, ILogger logger) : base(logger)
+    protected CronWorker(SchedulerOption option, ILogger logger) : base(logger)
     {
         _option = option;
         _logger = logger;

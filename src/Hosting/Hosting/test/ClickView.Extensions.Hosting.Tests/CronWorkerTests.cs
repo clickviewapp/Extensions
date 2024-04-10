@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Workers;
 
-public class SchedulerWorkerTests
+public class CronWorkerTests
 {
     [Fact]
     public async Task RunAsync_RunEveryTwoSeconds()
@@ -56,7 +56,7 @@ public class SchedulerWorkerTests
         scheduler.Dispose();
     }
 
-    public class TestScheduler : SchedulerWorker
+    public class TestScheduler : CronWorker
     {
         public int Counter { get; set; }
 
@@ -74,7 +74,7 @@ public class SchedulerWorkerTests
         protected override string CronSchedule { get; }
     }
 
-    public class TestSchedulerWithOption : SchedulerWorker
+    public class TestSchedulerWithOption : CronWorker
     {
         public DateTime? FirstExecutionTime { get; set; }
 
