@@ -12,14 +12,6 @@ public abstract class CronWorker : Worker
     private readonly Random _delayGenerator = new();
     private readonly CronWorkerOption? _option;
 
-    // Cron format: https://www.nuget.org/packages/Cronos/
-    protected abstract string CronSchedule { get; }
-
-    protected CronWorker(ILogger logger) : base(logger)
-    {
-        _logger = logger;
-    }
-
     protected CronWorker(CronWorkerOption option, ILogger logger) : base(logger)
     {
         _option = option;
@@ -67,7 +59,7 @@ public abstract class CronWorker : Worker
         {
             var now = DateTime.UtcNow;
 
-            var cronValue = CronExpression.Parse(CronSchedule, CronFormat.IncludeSeconds);
+            var cronValue = CronExpression.Parse(_option?.Schedule, CronFormat.IncludeSeconds);
             var next = cronValue.GetNextOccurrence(now);
             if (!next.HasValue)
                 return null;

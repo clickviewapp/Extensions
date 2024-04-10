@@ -10,10 +10,11 @@ public class CronWorkerTests
     [Fact]
     public async Task RunAsync_RunEveryTwoSeconds()
     {
-        var everyTwoSecondCron = "*/2 * * * * *";
+        const string everyTwoSecondCron = "*/2 * * * * *";
+        var option = new CronWorkerOption(everyTwoSecondCron);
 
         var mockLogger = new Mock<ILogger>();
-        var scheduler = new TestScheduler(everyTwoSecondCron, mockLogger.Object);
+        var scheduler = new TestScheduler(option, mockLogger.Object);
 
         await scheduler.StartAsync(CancellationToken.None);
 
@@ -27,23 +28,26 @@ public class CronWorkerTests
     [Fact]
     public void CronWorkerOption_MinGreaterThanMax_ThrowException()
     {
-        Assert.Throws<InvalidSchedulerOptionException>(() => 
-            { new CronWorkerOption(true, 2, 1); });
+        const string everyTwoSecondCron = "*/2 * * * * *";
+
+        Assert.Throws<InvalidCronWorkerOptionException>(() => 
+            { new CronWorkerOption(everyTwoSecondCron, true, 2, 1); });
     }
 
     [Fact]
-    public async Task RunAsync_RunEveryTwoSeconds_return()
+    public async Task RunAsync_RunEveryTwoSecondsWithJitter_Executes()
     {
-        var everyTwoSecondCron = "*/2 * * * * *";
-        var option = new CronWorkerOption(true, 2, 3);
+        const string everyTwoSecondCron = "*/2 * * * * *";
+        var option = new CronWorkerOption(everyTwoSecondCron, true, 2, 3);
 
         var mockLogger = new Mock<ILogger>();
-        var scheduler = new TestSchedulerWithOption(everyTwoSecondCron, option, mockLogger.Object);
+        var scheduler = new TestScheduler(option, mockLogger.Object);
 
         await scheduler.StartAsync(CancellationToken.None);
 
         var currentTime = DateTime.UtcNow;
 
+        // Give it a bit more time to ensure the task is executed
         await Task.Delay(TimeSpan.FromSeconds(4));
 
         await scheduler.StopAsync(CancellationToken.None);
@@ -52,40 +56,18 @@ public class CronWorkerTests
         Assert.True(scheduler.FirstExecutionTime.Value - currentTime > TimeSpan.FromSeconds(2));
     }
 
-    public class TestScheduler : CronWorker
+    public class TestScheduler(CronWorkerOption option, ILogger logger) : CronWorker(option, logger)
     {
         public int Counter { get; set; }
-
-        public TestScheduler(string cron, ILogger logger) : base(logger)
-        {
-            CronSchedule = cron;
-        }
-
-        protected override Task RunAsync(CancellationToken cancellationToken)
-        {
-            Counter++;
-            return Task.CompletedTask;
-        }
-
-        protected override string CronSchedule { get; }
-    }
-
-    public class TestSchedulerWithOption : CronWorker
-    {
         public DateTime? FirstExecutionTime { get; set; }
-
-        public TestSchedulerWithOption(string cron, CronWorkerOption option, ILogger logger) : base(option, logger)
-        {
-            CronSchedule = cron;
-        }
 
         protected override Task RunAsync(CancellationToken cancellationToken)
         {
             FirstExecutionTime ??= DateTime.UtcNow;
 
+            Counter++;
+
             return Task.CompletedTask;
         }
-
-        protected override string CronSchedule { get; }
     }
 }
