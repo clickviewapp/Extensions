@@ -74,10 +74,10 @@ public abstract class CronWorker : Worker
 
             var delay = next.Value - now;
 
-            if (_option is null || !_option.AllowExtraDelay)
+            if (_option is null || !_option.AllowJitter)
                 return delay;
 
-            var extraDelay = TimeSpan.FromSeconds(_delayGenerator.Next((int)_option.MinDelayInSecond, (int)_option.MaxDelayInSecond));
+            var extraDelay = TimeSpan.FromSeconds(_delayGenerator.Next((int)_option.MinJitter, (int)_option.MaxJitter));
 
             return delay.Add(extraDelay);
         }

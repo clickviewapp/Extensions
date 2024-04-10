@@ -4,31 +4,37 @@ using Exceptions;
 
 public record CronWorkerOption
 {
-    public bool AllowExtraDelay { get; }
-    public uint MinDelayInSecond { get; }
-    public uint MaxDelayInSecond { get; } = 120;
+    public bool AllowJitter { get; }
+    /// <summary>
+    /// Minimum extra time in second delayed before the scheduled task can start
+    /// </summary>
+    public uint MinJitter { get; }
+    /// <summary>
+    /// Maximum extra time in second delayed before the scheduled task can start
+    /// </summary>
+    public uint MaxJitter { get; } = 120;
 
-    public CronWorkerOption(bool allowExtraDelay)
+    public CronWorkerOption(bool allowJitter)
     {
-        AllowExtraDelay = allowExtraDelay;
+        AllowJitter = allowJitter;
     }
 
-    public CronWorkerOption(bool allowExtraDelay, uint minDelayInSecond, uint maxDelayInSecond)
+    public CronWorkerOption(bool allowJitter, uint minJitter, uint maxJitter)
     {
-        AllowExtraDelay = allowExtraDelay;
-        MinDelayInSecond = minDelayInSecond;
-        MaxDelayInSecond = maxDelayInSecond;
+        AllowJitter = allowJitter;
+        MinJitter = minJitter;
+        MaxJitter = maxJitter;
 
         Validate();
     }
 
     private void Validate()
     {
-        if (MinDelayInSecond >= MaxDelayInSecond)
-            throw new InvalidSchedulerOptionException(nameof(MinDelayInSecond), $"{nameof(MinDelayInSecond)} value must be less than {nameof(MaxDelayInSecond)} value");
+        if (MinJitter >= MaxJitter)
+            throw new InvalidSchedulerOptionException(nameof(MinJitter), $"{nameof(MinJitter)} value must be less than {nameof(MaxJitter)} value");
 
-        if (MaxDelayInSecond > 120)
-            throw new InvalidSchedulerOptionException(nameof(MaxDelayInSecond), $"{nameof(MaxDelayInSecond)} value must not exceed 120");
+        if (MaxJitter > 120)
+            throw new InvalidSchedulerOptionException(nameof(MaxJitter), $"{nameof(MaxJitter)} value must not exceed 120");
     }
 }
 
