@@ -62,21 +62,31 @@ public abstract class CronWorker : Worker
 
     private TimeSpan? GetNextScheduleDelay()
     {
-        var now = DateTime.UtcNow;
+        // Use try/catch here so that we don't crash the app if anything goes wrong with getting the next schedule time
+        try
+        {
+            var now = DateTime.UtcNow;
 
-        var cronValue = CronExpression.Parse(CronSchedule, CronFormat.IncludeSeconds);
-        var next = cronValue.GetNextOccurrence(now);
-        if (!next.HasValue)
-            return null;
+            var cronValue = CronExpression.Parse(CronSchedule, CronFormat.IncludeSeconds);
+            var next = cronValue.GetNextOccurrence(now);
+            if (!next.HasValue)
+                return null;
 
-        var delay = next.Value - now;
+            var delay = next.Value - now;
 
-        if (_option is null || !_option.AllowExtraDelay)
-            return delay;
+            if (_option is null || !_option.AllowExtraDelay)
+                return delay;
 
-        var extraDelay = TimeSpan.FromSeconds(_delayGenerator.Next((int)_option.MinDelayInSecond, (int)_option.MaxDelayInSecond));
+            var extraDelay = TimeSpan.FromSeconds(_delayGenerator.Next((int)_option.MinDelayInSecond, (int)_option.MaxDelayInSecond));
 
-        return delay.Add(extraDelay);
+            return delay.Add(extraDelay);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to get the next schedule time");
+        }
+
+        return null;
     }
 
     protected abstract Task RunAsync(CancellationToken cancellationToken);
