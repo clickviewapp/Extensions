@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 using Cronos;
 using Microsoft.Extensions.Logging;
 
-public abstract class CronWorker : Worker, IDisposable
+public abstract class CronWorker : Worker
 {
     private readonly ILogger _logger;
     private readonly Random _delayGenerator = new();
     private readonly CronWorkerOption? _option;
-    private Timer? _timer;
-    private CancellationTokenSource? _cancellationTokenSource;
 
     // Cron format: https://www.nuget.org/packages/Cronos/
     protected abstract string CronSchedule { get; }
@@ -28,42 +26,36 @@ public abstract class CronWorker : Worker, IDisposable
         _logger = logger;
     }
 
-    protected override Task ExecuteAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        var dueTime = GetNextScheduleDelay();
-        if (!dueTime.HasValue)
-            throw new Exception("Failed to get next schedule");
-
-        _cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-        _timer = new Timer(_ => TimerCallbackAsync(_cancellationTokenSource.Token), null, dueTime.Value, Timeout.InfiniteTimeSpan);
-
-        return Task.CompletedTask;
-    }
-
-    private async void TimerCallbackAsync(CancellationToken cancellationToken)
-    {
-        if (cancellationToken.IsCancellationRequested)
-            return;
-
-        try
-        {
-            await RunAsync(cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unhandled exception caught in SchedulerWorker ({WorkerName})", Name);
-        }
-        finally
+        while (!cancellationToken.IsCancellationRequested)
         {
             var dueTime = GetNextScheduleDelay();
-            if (dueTime.HasValue)
+            if (!dueTime.HasValue)
             {
-                // Reschedule the timer
-                _timer?.Change(dueTime.Value, Timeout.InfiniteTimeSpan);
+                _logger.LogWarning("Failed to get next schedule");
+
+                // Wait for a while before retrying
+                await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
+                continue;
             }
-            else
+
+            try
             {
-                _logger.LogError("Unable to get the next schedule in SchedulerWorker ({WorkerName})", Name);
+                await Task.Delay(dueTime.Value, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+
+            try
+            {
+                await RunAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unhandled exception caught in CronWorker ({WorkerName})", Name);
             }
         }
     }
@@ -85,15 +77,6 @@ public abstract class CronWorker : Worker, IDisposable
         var extraDelay = TimeSpan.FromSeconds(_delayGenerator.Next((int)_option.MinDelayInSecond, (int)_option.MaxDelayInSecond));
 
         return delay.Add(extraDelay);
-    }
-
-    public void Dispose()
-    {
-        _cancellationTokenSource?.Cancel();
-
-        // Stop the timer
-        _timer?.Change(Timeout.Infinite, 0);
-        _timer?.Dispose();
     }
 
     protected abstract Task RunAsync(CancellationToken cancellationToken);

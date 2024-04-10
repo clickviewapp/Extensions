@@ -22,8 +22,6 @@ public class CronWorkerTests
         await scheduler.StopAsync(CancellationToken.None);
 
         Assert.True(scheduler.Counter >= 2);
-
-        scheduler.Dispose();
     }
 
     [Fact]
@@ -52,8 +50,6 @@ public class CronWorkerTests
 
         Assert.NotNull(scheduler.FirstExecutionTime);
         Assert.True(scheduler.FirstExecutionTime.Value - currentTime > TimeSpan.FromSeconds(2));
-
-        scheduler.Dispose();
     }
 
     public class TestScheduler : CronWorker
