@@ -10,7 +10,7 @@ public abstract class CronWorker : Worker, IDisposable
 {
     private readonly ILogger _logger;
     private readonly Random _delayGenerator = new();
-    private readonly SchedulerOption? _option;
+    private readonly CronWorkerOption? _option;
     private Timer? _timer;
     private CancellationTokenSource? _cancellationTokenSource;
 
@@ -22,7 +22,7 @@ public abstract class CronWorker : Worker, IDisposable
         _logger = logger;
     }
 
-    protected CronWorker(SchedulerOption option, ILogger logger) : base(logger)
+    protected CronWorker(CronWorkerOption option, ILogger logger) : base(logger)
     {
         _option = option;
         _logger = logger;

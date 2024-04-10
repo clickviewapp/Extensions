@@ -2,18 +2,18 @@
 
 using Exceptions;
 
-public record SchedulerOption
+public record CronWorkerOption
 {
     public bool AllowExtraDelay { get; }
     public uint MinDelayInSecond { get; }
     public uint MaxDelayInSecond { get; } = 120;
 
-    public SchedulerOption(bool allowExtraDelay)
+    public CronWorkerOption(bool allowExtraDelay)
     {
         AllowExtraDelay = allowExtraDelay;
     }
 
-    public SchedulerOption(bool allowExtraDelay, uint minDelayInSecond, uint maxDelayInSecond)
+    public CronWorkerOption(bool allowExtraDelay, uint minDelayInSecond, uint maxDelayInSecond)
     {
         AllowExtraDelay = allowExtraDelay;
         MinDelayInSecond = minDelayInSecond;

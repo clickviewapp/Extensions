@@ -27,17 +27,17 @@ public class CronWorkerTests
     }
 
     [Fact]
-    public void SchedulerOption_MinGreaterThanMax_ThrowException()
+    public void CronWorkerOption_MinGreaterThanMax_ThrowException()
     {
         Assert.Throws<InvalidSchedulerOptionException>(() => 
-            { new SchedulerOption(true, 2, 1); });
+            { new CronWorkerOption(true, 2, 1); });
     }
 
     [Fact]
     public async Task RunAsync_RunEveryTwoSeconds_return()
     {
         var everyTwoSecondCron = "*/2 * * * * *";
-        var option = new SchedulerOption(true, 2, 3);
+        var option = new CronWorkerOption(true, 2, 3);
 
         var mockLogger = new Mock<ILogger>();
         var scheduler = new TestSchedulerWithOption(everyTwoSecondCron, option, mockLogger.Object);
@@ -78,7 +78,7 @@ public class CronWorkerTests
     {
         public DateTime? FirstExecutionTime { get; set; }
 
-        public TestSchedulerWithOption(string cron, SchedulerOption option, ILogger logger) : base(option, logger)
+        public TestSchedulerWithOption(string cron, CronWorkerOption option, ILogger logger) : base(option, logger)
         {
             CronSchedule = cron;
         }
