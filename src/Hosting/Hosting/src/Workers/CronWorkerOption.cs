@@ -1,5 +1,6 @@
 ﻿namespace ClickView.Extensions.Hosting.Workers;
 
+using System;
 using Cronos;
 using Exceptions;
 
@@ -9,11 +10,11 @@ public record CronWorkerOption
     /// <summary>
     /// Minimum extra time in second delayed before the scheduled task can start
     /// </summary>
-    public uint MinJitter { get; }
+    public TimeSpan MinJitter { get; } = TimeSpan.Zero;
     /// <summary>
     /// Maximum extra time in second delayed before the scheduled task can start
     /// </summary>
-    public uint MaxJitter { get; } = 120;
+    public TimeSpan MaxJitter { get; } = TimeSpan.FromSeconds(120);
 
     /// <summary>
     /// Cron expression that includes second
@@ -26,7 +27,7 @@ public record CronWorkerOption
         Schedule = schedule;
     }
 
-    public CronWorkerOption(string schedule, bool allowJitter, uint minJitter, uint maxJitter)
+    public CronWorkerOption(string schedule, bool allowJitter, TimeSpan minJitter, TimeSpan maxJitter)
     {
         Schedule = schedule;
         AllowJitter = allowJitter;
@@ -44,8 +45,8 @@ public record CronWorkerOption
         if (MinJitter >= MaxJitter)
             throw new InvalidCronWorkerOptionException(nameof(MinJitter), $"{nameof(MinJitter)} value must be less than {nameof(MaxJitter)} value");
 
-        if (MaxJitter > 120)
-            throw new InvalidCronWorkerOptionException(nameof(MaxJitter), $"{nameof(MaxJitter)} value must not exceed 120");
+        if (MaxJitter > TimeSpan.FromSeconds(120))
+            throw new InvalidCronWorkerOptionException(nameof(MaxJitter), $"{nameof(MaxJitter)} value must not exceed 120 seconds");
     }
 }
 

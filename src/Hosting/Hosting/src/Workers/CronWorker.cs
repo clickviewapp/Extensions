@@ -6,17 +6,11 @@ using System.Threading.Tasks;
 using Cronos;
 using Microsoft.Extensions.Logging;
 
-public abstract class CronWorker : Worker
+public abstract class CronWorker(CronWorkerOption option, ILogger logger) : Worker(logger)
 {
-    private readonly ILogger _logger;
+    private readonly ILogger _logger = logger;
     private readonly Random _delayGenerator = new();
-    private readonly CronWorkerOption? _option;
-
-    protected CronWorker(CronWorkerOption option, ILogger logger) : base(logger)
-    {
-        _option = option;
-        _logger = logger;
-    }
+    private readonly CronWorkerOption? _option = option;
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
@@ -69,7 +63,7 @@ public abstract class CronWorker : Worker
             if (_option is null || !_option.AllowJitter)
                 return delay;
 
-            var extraDelay = TimeSpan.FromSeconds(_delayGenerator.Next((int)_option.MinJitter, (int)_option.MaxJitter));
+            var extraDelay = TimeSpan.FromSeconds(_delayGenerator.Next((int)_option.MinJitter.TotalSeconds, (int)_option.MaxJitter.TotalSeconds));
 
             return delay.Add(extraDelay);
         }

@@ -31,14 +31,14 @@ public class CronWorkerTests
         const string everyTwoSecondCron = "*/2 * * * * *";
 
         Assert.Throws<InvalidCronWorkerOptionException>(() => 
-            { new CronWorkerOption(everyTwoSecondCron, true, 2, 1); });
+            { new CronWorkerOption(everyTwoSecondCron, true, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(1)); });
     }
 
     [Fact]
     public async Task RunAsync_RunEveryTwoSecondsWithJitter_Executes()
     {
         const string everyTwoSecondCron = "*/2 * * * * *";
-        var option = new CronWorkerOption(everyTwoSecondCron, true, 2, 3);
+        var option = new CronWorkerOption(everyTwoSecondCron, true, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(3));
 
         var mockLogger = new Mock<ILogger>();
         var scheduler = new TestScheduler(option, mockLogger.Object);
