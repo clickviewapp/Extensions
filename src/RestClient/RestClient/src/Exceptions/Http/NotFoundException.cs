@@ -1,17 +1,17 @@
-﻿namespace ClickView.Extensions.RestClient.Exceptions.Http
+﻿namespace ClickView.Extensions.RestClient.Exceptions.Http;
+
+using System;
+using System.Net;
+
+public class NotFoundException : ClickViewClientHttpException
 {
-    using System;
-    using System.Net;
-
-    public class NotFoundException : ClickViewClientHttpException
+    public NotFoundException(string? message)
+        : base(HttpStatusCode.NotFound, message ?? StatusCodePhrases.NotFound)
     {
-        public NotFoundException(HttpStatusCode httpStatusCode, string message) : base(httpStatusCode, message)
-        {
-        }
+    }
 
-        public NotFoundException(HttpStatusCode httpStatusCode, string message, Exception innerException) :
-            base(httpStatusCode, message, innerException)
-        {
-        }
+    public NotFoundException(string? message, Exception innerException)
+        : base(HttpStatusCode.NotFound, message ?? StatusCodePhrases.NotFound, innerException)
+    {
     }
 }

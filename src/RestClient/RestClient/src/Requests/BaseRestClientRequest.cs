@@ -94,7 +94,7 @@ namespace ClickView.Extensions.RestClient.Requests
         {
             if (!Parameters.TryGetValue(key, out var list))
             {
-                list = new List<RequestParameterValue>();
+                list = [];
                 Parameters.Add(key, list);
             }
 
@@ -105,7 +105,7 @@ namespace ClickView.Extensions.RestClient.Requests
         {
             if (!Parameters.TryGetValue(key, out var list))
             {
-                list = new List<RequestParameterValue>();
+                list = [];
                 Parameters.Add(key, list);
             }
 
@@ -117,11 +117,11 @@ namespace ClickView.Extensions.RestClient.Requests
             var response = await ParseResponseAsync(message).ConfigureAwait(false);
             var error = await GetErrorAsync(message).ConfigureAwait(false);
 
-            if (error != null)
-            {
-                HandleError(error);
-                response.Error = error;
-            }
+            if (error == null)
+                return response;
+
+            HandleError(error);
+            response.Error = error;
 
             return response;
         }
@@ -132,14 +132,6 @@ namespace ClickView.Extensions.RestClient.Requests
         {
             error = null;
             return false;
-        }
-
-        protected virtual ErrorBody GetDefaultErrorBody(HttpStatusCode httpStatusCode, string defaultMessage)
-        {
-            return new ErrorBody
-            {
-                Message = ErrorHelper.GetDefaultErrorMessage(httpStatusCode) ?? defaultMessage
-            };
         }
 
         protected async Task<Error?> GetErrorAsync(HttpResponseMessage message)
@@ -154,12 +146,9 @@ namespace ClickView.Extensions.RestClient.Requests
             var contentString = await message.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (!TryParseErrorBody(contentString, out var errorBody))
-                errorBody = GetDefaultErrorBody(message.StatusCode, message.ReasonPhrase);
+                errorBody = null;
 
-            return new Error(message.StatusCode, errorBody)
-            {
-                Content = contentString
-            };
+            return new Error(message.StatusCode, errorBody, contentString);
         }
 
         protected virtual void HandleError(Error error)
@@ -167,7 +156,9 @@ namespace ClickView.Extensions.RestClient.Requests
             if (error.HttpStatusCode == HttpStatusCode.NotFound && !ThrowOnNotFound)
                 return;
 
-            throw ErrorHelper.GetErrorException(error);
+            var ex = ErrorHelper.GetErrorException(error);
+            if (ex is not null)
+                throw ex;
         }
 
         protected T? Deserialize<T>(string input)

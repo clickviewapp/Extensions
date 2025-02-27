@@ -1,7 +1,6 @@
-namespace ClickView.Extensions.RestClient
+namespace ClickView.Extensions.RestClient;
+
+public class ErrorBody
 {
-    public class ErrorBody
-    {
-        public string Message { get; set; } = null!;
-    }
+    public string? Message { get; set; }
 }

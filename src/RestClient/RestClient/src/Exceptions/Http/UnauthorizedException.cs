@@ -1,17 +1,17 @@
-﻿namespace ClickView.Extensions.RestClient.Exceptions.Http
+﻿namespace ClickView.Extensions.RestClient.Exceptions.Http;
+
+using System;
+using System.Net;
+
+public class UnauthorizedException : ClickViewClientHttpException
 {
-    using System;
-    using System.Net;
-
-    public class UnauthorizedException : ClickViewClientHttpException
+    public UnauthorizedException(string? message)
+        : base(HttpStatusCode.Unauthorized, message ?? StatusCodePhrases.Unauthorized)
     {
-        public UnauthorizedException(HttpStatusCode httpStatusCode, string message) : base(httpStatusCode, message)
-        {
-        }
+    }
 
-        public UnauthorizedException(HttpStatusCode httpStatusCode, string message, Exception innerException) :
-            base(httpStatusCode, message, innerException)
-        {
-        }
+    public UnauthorizedException(string? message, Exception innerException)
+        : base(HttpStatusCode.Unauthorized, message ?? StatusCodePhrases.Unauthorized, innerException)
+    {
     }
 }

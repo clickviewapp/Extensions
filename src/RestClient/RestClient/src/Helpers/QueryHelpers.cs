@@ -27,8 +27,7 @@ namespace ClickView.Extensions.RestClient.Helpers
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
-            return AddQueryString(
-                uri, new[] {new KeyValuePair<string, string>(name, value)});
+            return AddQueryString(uri, [new KeyValuePair<string, string?>(name, value)]);
         }
 
         /// <summary>
@@ -37,7 +36,7 @@ namespace ClickView.Extensions.RestClient.Helpers
         /// <param name="uri">The base uri.</param>
         /// <param name="queryString">A collection of name value query pairs to append.</param>
         /// <returns>The combined result.</returns>
-        public static string AddQueryString(string uri, IDictionary<string, string> queryString)
+        public static string AddQueryString(string uri, IDictionary<string, string?> queryString)
         {
             if (uri == null)
                 throw new ArgumentNullException(nameof(uri));
@@ -45,7 +44,7 @@ namespace ClickView.Extensions.RestClient.Helpers
             if (queryString == null)
                 throw new ArgumentNullException(nameof(queryString));
 
-            return AddQueryString(uri, (IEnumerable<KeyValuePair<string, string>>) queryString);
+            return AddQueryString(uri, (IEnumerable<KeyValuePair<string, string?>>) queryString);
         }
 
         /// <summary>
@@ -65,17 +64,16 @@ namespace ClickView.Extensions.RestClient.Helpers
             return AddQueryString(uri, Flatten(parameters));
         }
 
-        private static IEnumerable<KeyValuePair<string, string>> Flatten(
-            IDictionary<string, List<RequestParameterValue>> parameters)
+        private static IEnumerable<KeyValuePair<string, string?>> Flatten(IDictionary<string, List<RequestParameterValue>> parameters)
         {
             foreach (var p in parameters)
             foreach (var pp in p.Value.Where(v => v.Type == RequestParameterType.Query))
             {
-                yield return new KeyValuePair<string, string>(p.Key, pp.Value.ToString());
+                yield return new KeyValuePair<string, string?>(p.Key, (string?) pp.Value);
             }
         }
 
-        private static string AddQueryString(string uri, IEnumerable<KeyValuePair<string, string>> queryString)
+        private static string AddQueryString(string uri, IEnumerable<KeyValuePair<string, string?>> queryString)
         {
             if (uri == null)
                 throw new ArgumentNullException(nameof(uri));
@@ -102,6 +100,9 @@ namespace ClickView.Extensions.RestClient.Helpers
 
             foreach (var parameter in queryString)
             {
+                if (parameter.Value == null)
+                    continue;
+
                 sb.Append(hasQuery ? '&' : '?');
                 sb.Append(UrlEncoder.Default.Encode(parameter.Key));
                 sb.Append('=');
