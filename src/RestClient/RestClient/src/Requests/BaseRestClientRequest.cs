@@ -145,8 +145,20 @@ namespace ClickView.Extensions.RestClient.Requests
 
             var contentString = await message.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            if (!TryParseErrorBody(contentString, out var errorBody))
-                errorBody = null;
+            if (TryParseErrorBody(contentString, out var errorBody))
+                return new Error(message.StatusCode, errorBody, contentString);
+
+            // Make sure the error body is null
+            errorBody = null;
+
+            // We didnt parse an error body, so instead create a default one from the ReasonPhrase (if set)
+            if (!string.IsNullOrEmpty(message.ReasonPhrase))
+            {
+                errorBody = new ErrorBody
+                {
+                    Message = message.ReasonPhrase
+                };
+            }
 
             return new Error(message.StatusCode, errorBody, contentString);
         }
