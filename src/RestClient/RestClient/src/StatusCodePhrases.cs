@@ -14,6 +14,9 @@ public static class StatusCodePhrases
     // 404
     public const string NotFound = "Not Found";
 
+    // 429
+    public const string TooManyRequests = "Too Many Requests";
+
     // 500
     public const string InternalServerError = "Internal Server Error";
 
