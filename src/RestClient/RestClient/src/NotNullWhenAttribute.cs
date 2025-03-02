@@ -1,8 +1,10 @@
-#if NETFRAMEWORK
+#if NETSTANDARD || NETFRAMEWORK
+// ReSharper disable once CheckNamespace
 namespace System.Diagnostics.CodeAnalysis;
 
 using System;
 
+[SuppressMessage("Design", "CA1018:Mark attributes with AttributeUsageAttribute")]
 internal sealed class NotNullWhenAttribute : Attribute
 {
     /// <summary>Initializes the attribute with the specified return value condition.</summary>
