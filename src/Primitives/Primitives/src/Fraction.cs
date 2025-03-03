@@ -7,7 +7,7 @@
         public long Numerator { get; }
         public long Denominator { get; }
 
-        public static Fraction Empty = new Fraction();
+        public static readonly Fraction Empty = new Fraction();
 
         public Fraction(long numerator)
         {
@@ -21,12 +21,18 @@
             if (denominator == 0)
                 throw new ArgumentException("Invalid denominator value " + denominator, nameof(denominator));
 
+#if NET
             (Numerator, Denominator) = Simplify(numerator, denominator);
+#else
+            var result = Simplify(numerator, denominator);
+            Numerator = result.Item1;
+            Denominator = result.Item2;
+#endif
         }
 
         public static bool TryParse(string str, out Fraction fraction)
         {
-            return TryParse(str, new[] {'/', ':'}, out fraction);
+            return TryParse(str, ['/', ':'], out fraction);
         }
 
         public static bool TryParse(string str, char[] separators, out Fraction fraction)
