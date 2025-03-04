@@ -9,16 +9,16 @@
         /// <summary>
         /// A default instance of TaskSingle using String as the key type
         /// </summary>
-        public static TaskSingle<string> Default = new TaskSingle<string>();
+        public static readonly TaskSingle<string> Default = new();
     }
 
     /// <summary>
     /// A helper class which provides duplicate function call suppression
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
-    public sealed class TaskSingle<TKey>
+    public sealed class TaskSingle<TKey> where TKey : notnull
     {
-        private readonly Dictionary<TKey, object> _completionTasks = new Dictionary<TKey, object>();
+        private readonly Dictionary<TKey, object> _completionTasks = new();
 
         /// <summary>
         /// Executes the action returning the result. Only one action will run concurrently per <paramref name="key"/>
@@ -54,8 +54,8 @@
 
         private async Task RunAsync<TVal>(TKey key, TaskCompletionSource<TVal> tcs, Func<Task<TVal>> func)
         {
-            TVal result = default;
-            Exception throwException = null;
+            TVal? result = default;
+            Exception? throwException = null;
 
             try
             {
@@ -72,9 +72,9 @@
             switch (throwException)
             {
                 case null:
-                    tcs.SetResult(result);
+                    tcs.SetResult(result!);
                     break;
-                case OperationCanceledException _:
+                case OperationCanceledException:
                     tcs.SetCanceled();
                     break;
                 default:

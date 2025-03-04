@@ -18,6 +18,7 @@
         /// <returns></returns>
         public static Task<TVal> RunAsync<TKey, TVal>(this TaskSingle<TKey> instance, TKey key,
             Func<TKey, CancellationToken, Task<TVal>> func, CancellationToken cancellationToken = default)
+            where TKey : notnull
         {
             return instance.RunAsync(key, () => func(key, cancellationToken));
         }

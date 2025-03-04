@@ -7,12 +7,12 @@ namespace ClickView.Extensions.Utilities
 
     public class AsyncRefCounter<T> where T : IDisposable
     {
-        private readonly Action _onDispose;
+        private readonly Action? _onDispose;
         private readonly Func<CancellationToken, Task<T>> _createFunc;
-        private T _reference;
+        private T? _reference;
         private bool _hasReference;
         private int _refCount;
-        private readonly SemaphoreSlim _slimLock = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _slimLock = new(1, 1);
 
         public AsyncRefCounter(Func<CancellationToken, Task<T>> createFunc)
         {
@@ -43,7 +43,7 @@ namespace ClickView.Extensions.Utilities
                 }
 
                 ++_refCount;
-                return new RefCounterReference<T>(_reference, OnDispose);
+                return new RefCounterReference<T>(_reference!, OnDispose);
             }
             finally
             {
@@ -115,7 +115,7 @@ namespace ClickView.Extensions.Utilities
                 return;
             }
 
-            _reference.Dispose();
+            _reference!.Dispose();
 
             _reference = default;
             _hasReference = false;
