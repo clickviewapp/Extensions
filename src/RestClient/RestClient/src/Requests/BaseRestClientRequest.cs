@@ -21,6 +21,9 @@ namespace ClickView.Extensions.RestClient.Requests
         private readonly RestClientRequestHeaders _headers = new();
         internal readonly Dictionary<string, List<RequestParameterValue>> Parameters = new();
 
+        private object? _content;
+        private MediaTypeHeaderValue? _contentType;
+
         protected BaseRestClientRequest(HttpMethod method, string resource)
         {
             Method = method;
@@ -29,7 +32,6 @@ namespace ClickView.Extensions.RestClient.Requests
 
         public ISerializer Serializer { internal get; set; } = NewtonsoftJsonSerializer.Instance;
 
-        internal HttpContent? Content { get; set; }
 
         /// <summary>
         ///     Set to true if we should throw an exception on 404
@@ -55,39 +57,13 @@ namespace ClickView.Extensions.RestClient.Requests
             if (Method != HttpMethod.Post && Method != HttpMethod.Put)
                 throw new Exception("Cannot add body to " + Method);
 
-            //Check if we have a serializer
-            if (Serializer == null)
-                throw new ArgumentNullException(nameof(Serializer), "Serializer required");
-
-            var mediaType = "application/" + Serializer.Format;
-
-            string content;
-            try
-            {
-                content = Serializer.Serialize(body);
-            }
-            catch (Exception ex)
-            {
-                throw new SerializationException("Failed to serialize request body", ex);
-            }
-
-            Content = new StringContent(content, Encoding.UTF8, mediaType);
-        }
-
-        public void AddBody(Stream stream)
-        {
-            AddBody(stream, new MediaTypeHeaderValue("application/octet-stream"));
+            _content = body;
         }
 
         public void AddBody(Stream stream, MediaTypeHeaderValue mediaType)
         {
-            Content = new StreamContent(stream)
-            {
-                Headers =
-                {
-                    ContentType = mediaType
-                }
-            };
+            AddBody(stream);
+            _contentType = mediaType;
         }
 
         public void AddQueryParameter(string key, string value)
@@ -183,6 +159,45 @@ namespace ClickView.Extensions.RestClient.Requests
             {
                 throw new SerializationException("Failed to deserialize response", ex);
             }
+        }
+
+        internal HttpContent? GetContent()
+        {
+            // If we have no content, return null
+            if (_content is null)
+                return null;
+
+            // If our content is already a HttpContent, return that as is
+            if (_content is Stream stream)
+            {
+                return new StreamContent(stream)
+                {
+                    Headers =
+                    {
+                        ContentType = _contentType ?? ContentTypes.OctetStream
+                    }
+                };
+            }
+
+            // Otherwise, serialize the content and return it
+
+            //Check if we have a serializer
+            if (Serializer == null)
+                throw new InvalidOperationException("No serializer found");
+
+            var mediaType = "application/" + Serializer.Format;
+
+            string content;
+            try
+            {
+                content = Serializer.Serialize(_content);
+            }
+            catch (Exception ex)
+            {
+                throw new SerializationException("Failed to serialize request body", ex);
+            }
+
+            return new StringContent(content, Encoding.UTF8, mediaType);
         }
     }
 }

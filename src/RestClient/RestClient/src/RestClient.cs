@@ -110,7 +110,7 @@
                 httpRequest.Headers.TryAddWithoutValidation(h.Key, h.Value);
             }
 
-            SetContent(httpRequest, request);
+            httpRequest.Content = GetContent(request);
 
             try
             {
@@ -123,20 +123,19 @@
             }
         }
 
-        internal void SetContent<TResponse>(HttpRequestMessage httpRequest, BaseRestClientRequest<TResponse> request)
+        private HttpContent? GetContent<TResponse>(BaseRestClientRequest<TResponse> request)
             where TResponse : RestClientResponse
         {
-            if (request.Content == null)
-                return;
+            var content = request.GetContent();
 
-            if (_options.CompressionMethod == CompressionMethod.None)
-            {
-                httpRequest.Content = request.Content;
-                return;
-            }
+            if (content is null)
+                return null;
 
-            //we need to compress
-            request.Content = new CompressedContent(request.Content, _options.CompressionMethod);
+            // Do we need to compress the content?
+            if (_options.CompressionMethod != CompressionMethod.None)
+                return new CompressedContent(content, _options.CompressionMethod);
+
+            return content;
         }
 
         private static HttpClient CreateClient(RestClientOptions options)
