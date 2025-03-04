@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>$(CoreTargetFrameworks)</TargetFrameworks>
     <PackageTags>restclient rest http oauth aspnetcore</PackageTags>
     <Description>AspNetCore OAuth authenticator for ClickView.Extensions.RestClient</Description>
     <Nullable>enable</Nullable>
