@@ -16,8 +16,4 @@
     <ProjectReference Include="..\..\..\RestClient\src\ClickView.Extensions.RestClient.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <InternalsVisibleTo Include="$(AssemblyName).Tests" />
-  </ItemGroup>
-
 </Project>
