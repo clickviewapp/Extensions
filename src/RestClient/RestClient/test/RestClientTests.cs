@@ -1,6 +1,7 @@
 namespace ClickView.Extensions.RestClient.Tests
 {
     using System;
+    using System.IO;
     using System.Net;
     using System.Net.Http;
     using System.Threading;
@@ -8,6 +9,7 @@ namespace ClickView.Extensions.RestClient.Tests
     using Moq;
     using Moq.Protected;
     using Requests;
+    using Responses;
     using Xunit;
 
     public class RestClientTests
@@ -157,6 +159,44 @@ namespace ClickView.Extensions.RestClient.Tests
 
             // act/assert
             await Assert.ThrowsAsync<InvalidOperationException>(() => client.ExecuteAsync(request));
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_AddBodyStream_MessageContentStreamContent()
+        {
+            // setup
+            var mockMessageHandler = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+
+            mockMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.Is<HttpRequestMessage>(message => message.Content!.GetType() == typeof(StreamContent)),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent("test: success"),
+                })
+                .Verifiable();
+
+            var request = new TestRequest(HttpMethod.Post, "http://localhost/test");
+            var client = new RestClient(new HttpClient(mockMessageHandler.Object));
+
+            request.AddBody(new MemoryStream());
+
+            var response = await client.ExecuteAsync(request);
+
+            mockMessageHandler.Verify();
+            Assert.Equal("test: success", response.Data);
+        }
+
+        private class TestRequest(HttpMethod method, string resource) : RestClientRequest<string>(method, resource)
+        {
+            protected override async Task<RestClientResponse<string>> ParseResponseAsync(HttpResponseMessage message)
+            {
+                return new RestClientResponse<string>(message, await message.Content.ReadAsStringAsync());
+            }
         }
     }
 }
