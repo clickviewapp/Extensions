@@ -85,7 +85,8 @@ namespace ClickView.Extensions.RestClient.Requests
                 Parameters.Add(key, list);
             }
 
-            list.AddRange(values.Select(v => new RequestParameterValue(v, RequestParameterType.Query)));
+            foreach (var value in values)
+                list.Add(new RequestParameterValue(value, RequestParameterType.Query));
         }
 
         internal async Task<TResponse> GetResponseAsync(HttpResponseMessage message)
