@@ -9,6 +9,14 @@
 
     public static partial class EnumerableExtensions
     {
+        /// <summary>
+        /// Tries to get the first element of a sequence
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="value">The first element if found</param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>True if element contains an item, otherwise false</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static bool TryGetFirstValue<T>(this IEnumerable<T> source, [MaybeNullWhen(false)] out T value)
         {
             if (source is null)
@@ -48,6 +56,12 @@
             return true;
         }
 
+        /// <summary>
+        /// Casts a sequence to an <see cref="ICollection{T}"/>, otherwise enumerates the sequence.
+        /// </summary>
+        /// <param name="enumerable"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static ICollection<T> AsCollection<T>(this IEnumerable<T> enumerable)
         {
             if (enumerable is ICollection<T> collection)
@@ -56,6 +70,12 @@
             return enumerable.ToList();
         }
 
+        /// <summary>
+        /// Casts a sequence to a <see cref="IReadOnlyList{T}"/>, otherwise enumerates the sequence.
+        /// </summary>
+        /// <param name="enumerable"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static IReadOnlyList<T> AsReadOnlyList<T>(this IEnumerable<T> enumerable)
         {
             if (enumerable is IReadOnlyList<T> collection)
@@ -64,6 +84,13 @@
             return new ReadOnlyCollection<T>(enumerable.ToList());
         }
 
+        /// <summary>
+        /// Enumerates a sequence and returns only non null values
+        /// </summary>
+        /// <param name="enumerable"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> enumerable) where T : class
         {
             if (enumerable is null)
@@ -76,6 +103,15 @@
             }
         }
 
+        /// <summary>
+        /// Enumerates a sequence and returns only non null values
+        /// </summary>
+        /// <param name="enumerable"></param>
+        /// <param name="selector"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public static IEnumerable<TResult> WhereNotNull<T, TResult>(
             this IEnumerable<T> enumerable,
             Func<T, TResult?> selector)
