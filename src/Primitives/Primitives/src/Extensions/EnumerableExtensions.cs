@@ -1,12 +1,13 @@
-﻿namespace ClickView.Extensions.Primitives.Extensions
+namespace ClickView.Extensions.Primitives.Extensions
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     public static partial class EnumerableExtensions
     {
-        public static bool TryGetFirstValue<T>(this IEnumerable<T> source, out T value)
+        public static bool TryGetFirstValue<T>(this IEnumerable<T> source, [MaybeNullWhen(false)] out T value)
         {
             switch (source)
             {

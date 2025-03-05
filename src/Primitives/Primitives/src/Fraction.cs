@@ -107,7 +107,7 @@
             return Numerator == other.Numerator && Denominator == other.Denominator;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is null) return false;
             return obj is Fraction fraction && Equals(fraction);

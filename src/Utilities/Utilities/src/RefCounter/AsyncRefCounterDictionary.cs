@@ -7,13 +7,13 @@ namespace ClickView.Extensions.Utilities
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class AsyncRefCounterDictionary<TKey, TVal> : IDisposable where TVal : IDisposable
+    public class AsyncRefCounterDictionary<TKey, TVal> : IDisposable where TVal : IDisposable where TKey : notnull
     {
         private readonly Func<TKey, CancellationToken, Task<TVal>> _createFunc;
 
-        private readonly Dictionary<TKey, AsyncRefCounter<TVal>> _references = new Dictionary<TKey, AsyncRefCounter<TVal>>();
+        private readonly Dictionary<TKey, AsyncRefCounter<TVal>> _references = new();
 
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
 
         public AsyncRefCounterDictionary(Func<TKey, CancellationToken, Task<TVal>> createFunc)
         {
@@ -27,7 +27,7 @@ namespace ClickView.Extensions.Utilities
 
         public Task<RefCounterReference<TVal>> GetOrCreateAsync(TKey key, CancellationToken cancellationToken)
         {
-            AsyncRefCounter<TVal> refCounter;
+            AsyncRefCounter<TVal>? refCounter;
 
             lock (_lock)
             {

@@ -7,12 +7,12 @@
 
     public sealed class AsyncDuplicateLock
     {
-        public static AsyncDuplicateLock<object> Default = new AsyncDuplicateLock<object>();
+        public static readonly AsyncDuplicateLock<object> Default = new();
     }
 
     // Thanks StackOverflow!
     // http://stackoverflow.com/a/31194647/1757803
-    public sealed class AsyncDuplicateLock<TKey>
+    public sealed class AsyncDuplicateLock<TKey> where TKey : notnull
     {
         private sealed class RefCounted<T>
         {
@@ -26,11 +26,11 @@
             public T Value { get; }
         }
 
-        private readonly Dictionary<TKey, RefCounted<SemaphoreSlim>> _semaphoreSlims = new Dictionary<TKey, RefCounted<SemaphoreSlim>>();
+        private readonly Dictionary<TKey, RefCounted<SemaphoreSlim>> _semaphoreSlims = new();
 
         private SemaphoreSlim GetOrCreate(TKey key)
         {
-            RefCounted<SemaphoreSlim> item;
+            RefCounted<SemaphoreSlim>? item;
             lock (_semaphoreSlims)
             {
                 if (_semaphoreSlims.TryGetValue(key, out item))
@@ -43,6 +43,7 @@
                     _semaphoreSlims[key] = item;
                 }
             }
+
             return item.Value;
         }
 
