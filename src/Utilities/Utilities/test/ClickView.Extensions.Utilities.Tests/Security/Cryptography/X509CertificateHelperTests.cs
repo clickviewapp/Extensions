@@ -1,16 +1,15 @@
 ﻿namespace ClickView.Extensions.Utilities.Tests.Security.Cryptography
 {
     using System.IO;
-    using System.Threading.Tasks;
     using Utilities.Security.Cryptography;
     using Xunit;
 
     public class X509CertificateHelperTests
     {
         [Fact]
-        public static async Task GetBytes()
+        public static void GetBytes()
         {
-            var fileContents = await File.ReadAllTextAsync("./Security/Cryptography/4096b-rsa-example-cert.pem");
+            var fileContents = File.ReadAllText("./Security/Cryptography/4096b-rsa-example-cert.pem");
 
             var certificate = X509CertificateHelper.GetCertificate(fileContents);
 

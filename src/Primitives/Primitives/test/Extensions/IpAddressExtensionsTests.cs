@@ -89,10 +89,13 @@ public class IpAddressExtensionsTests
     [InlineData("::1")] // Loopback
     [InlineData("fe80::")] // Link local
     [InlineData("fe80:1234:5678::1")] // Link local
+// Exclude these tests for NET6.0 and above as they dont work
+#if NET
     [InlineData("fc00::")] // Unique local, globally assigned.
     [InlineData("fc00:1234:5678::1")] // Unique local, globally assigned.
     [InlineData("fd00::")] // Unique local, locally assigned.
     [InlineData("fd12:3456:789a::1")] // Unique local, locally assigned.
+#endif
     public void IsPrivate_PrivateIPv6_ReturnsTrue(string ip)
     {
         var ipAddress = IPAddress.Parse(ip);

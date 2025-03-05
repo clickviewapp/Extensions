@@ -20,4 +20,10 @@
     <ProjectReference Include="..\src\ClickView.Extensions.RestClient.csproj" />
   </ItemGroup>
 
+  <!-- Conditionally obtain references for the .NET Framework 4.8 target -->
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net481' ">
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Threading.Tasks" />
+  </ItemGroup>
+  
 </Project>
