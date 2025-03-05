@@ -1,4 +1,4 @@
-namespace ClickView.Extensions.Primitives.Extensions
+﻿namespace ClickView.Extensions.Primitives.Extensions
 {
     using System;
     using System.Collections;
@@ -62,6 +62,36 @@ namespace ClickView.Extensions.Primitives.Extensions
                 return collection;
 
             return new ReadOnlyCollection<T>(enumerable.ToList());
+        }
+
+        public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> enumerable) where T : class
+        {
+            if (enumerable is null)
+                throw new ArgumentNullException(nameof(enumerable));
+
+            foreach (var t in enumerable)
+            {
+                if (t is not null)
+                    yield return t;
+            }
+        }
+
+        public static IEnumerable<TResult> WhereNotNull<T, TResult>(
+            this IEnumerable<T> enumerable,
+            Func<T, TResult?> selector)
+            where TResult : class
+        {
+            if (enumerable is null)
+                throw new ArgumentNullException(nameof(enumerable));
+
+            if (selector is null)
+                throw new ArgumentNullException(nameof(selector));
+
+            foreach (var t in enumerable.Select(selector))
+            {
+                if (t is not null)
+                    yield return t;
+            }
         }
     }
 }
