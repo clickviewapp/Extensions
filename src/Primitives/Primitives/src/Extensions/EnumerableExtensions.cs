@@ -1,7 +1,9 @@
 namespace ClickView.Extensions.Primitives.Extensions
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
@@ -9,31 +11,41 @@ namespace ClickView.Extensions.Primitives.Extensions
     {
         public static bool TryGetFirstValue<T>(this IEnumerable<T> source, [MaybeNullWhen(false)] out T value)
         {
-            switch (source)
+            if (source is null)
+                throw new ArgumentNullException(nameof(source));
+
+            // Check to see if the list has 0 items in it. If it does, return false
+#if NET
+            if (source.TryGetNonEnumeratedCount(out var count) && count == 0)
             {
-                case null:
-                    throw new ArgumentNullException(nameof(source));
-                //is a list?
-                case IList<T> col when col.Count == 0:
-                    value = default;
-                    return false;
-                case IList<T> col:
-                    value = col[0];
-                    return true;
+                value = default;
+                return false;
+            }
+#else
+            if (source is ICollection<T> {Count: 0} or ICollection {Count: 0})
+            {
+                value = default;
+                return false;
+            }
+#endif
+
+            if (source is IList<T> list)
+            {
+                value = list[0];
+                return true;
             }
 
             //enumerate
-            using (var e = source.GetEnumerator())
-            {
-                if (!e.MoveNext())
-                {
-                    value = default;
-                    return false;
-                }
+            using var e = source.GetEnumerator();
 
-                value = e.Current;
-                return true;
+            if (!e.MoveNext())
+            {
+                value = default;
+                return false;
             }
+
+            value = e.Current;
+            return true;
         }
 
         public static ICollection<T> AsCollection<T>(this IEnumerable<T> enumerable)
