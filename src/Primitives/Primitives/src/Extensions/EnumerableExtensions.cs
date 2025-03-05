@@ -61,7 +61,7 @@ namespace ClickView.Extensions.Primitives.Extensions
             if (enumerable is IReadOnlyList<T> collection)
                 return collection;
 
-            return enumerable.ToList();
+            return new ReadOnlyCollection<T>(enumerable.ToList());
         }
     }
 }
