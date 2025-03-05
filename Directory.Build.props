@@ -27,6 +27,6 @@
     <PropertyGroup>
         <CoreTargetFrameworks>net8.0</CoreTargetFrameworks>
         <FullTargetFrameworks>net462;netstandard2.0;net8.0</FullTargetFrameworks>
-        <TestTargetFrameworks>net8.0</TestTargetFrameworks>
+        <TestTargetFrameworks>net481;net8.0</TestTargetFrameworks>
     </PropertyGroup>
 </Project>
