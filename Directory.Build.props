@@ -4,6 +4,7 @@
         <Authors>ClickView</Authors>
         <PackageProjectUrl>https://github.com/clickviewapp/Extensions</PackageProjectUrl>
         <PackageIconUrl>https://static.clickview.com.au/assets/images/nugetlogo-64x64.png</PackageIconUrl>
+        <PackageIcon>package-icon.png</PackageIcon>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>

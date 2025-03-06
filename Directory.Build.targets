@@ -4,4 +4,8 @@
                  Include="$(MSBuildThisFileDirectory)/src/Nullable.cs"
                  Link="Properties/Nullable.cs" />
     </ItemGroup>
+
+    <ItemGroup Condition="'$(IsPackable)' == 'true'">
+        <None Include="$(MSBuildThisFileDirectory)\assets\package-icon.png" Pack="true" PackagePath="\" Visible="false" />
+    </ItemGroup>
 </Project>
