@@ -72,6 +72,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClickView.Extensions.RestCl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClickView.Extensions.Hosting.Tests", "src\Hosting\Hosting\test\ClickView.Extensions.Hosting.Tests\ClickView.Extensions.Hosting.Tests.csproj", "{BA285C45-9D1B-4CE7-BF97-972A4D0D8377}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{3EC7C90F-B1E3-4D7E-A98A-925F822E2A03}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yaml = .github\workflows\build.yaml
+		.github\workflows\release.yaml = .github\workflows\release.yaml
+		.github\dependabot.yml = .github\dependabot.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -157,6 +164,7 @@ Global
 		{10FB57EF-0737-4EAC-A6B9-372B15A6B85C} = {39706C76-5265-4D07-8D6A-4294814E4482}
 		{051B6555-18CA-45A6-984A-BC0818432A20} = {BD0881FC-4083-49F5-B108-2205C691A9E4}
 		{BA285C45-9D1B-4CE7-BF97-972A4D0D8377} = {8BA73C9C-4630-4BC0-BE76-F867B00B3BD7}
+		{3EC7C90F-B1E3-4D7E-A98A-925F822E2A03} = {1BF72BE4-3F51-462F-807B-DC9C87C5109C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3A15E820-F957-4F4D-AE2F-6EF055C27DB8}
