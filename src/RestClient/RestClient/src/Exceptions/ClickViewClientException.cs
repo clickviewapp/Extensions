@@ -12,7 +12,7 @@ public class ClickViewClientException : Exception
     {
     }
 
-    public ClickViewClientException(string message, Exception innerException) : base(message, innerException)
+    public ClickViewClientException(string message, Exception? innerException) : base(message, innerException)
     {
     }
 }

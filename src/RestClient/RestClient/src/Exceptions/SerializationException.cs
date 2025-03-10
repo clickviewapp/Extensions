@@ -1,15 +1,14 @@
-﻿namespace ClickView.Extensions.RestClient.Exceptions
-{
-    using System;
+﻿namespace ClickView.Extensions.RestClient.Exceptions;
 
-    /// <inheritdoc />
-    /// <summary>
-    ///     The exception thrown when a serialization error occurs
-    /// </summary>
-    public class SerializationException : ClickViewClientException
+using System;
+
+/// <inheritdoc />
+/// <summary>
+///     The exception thrown when a serialization error occurs
+/// </summary>
+public class SerializationException : ClickViewClientException
+{
+    public SerializationException(string message, Exception innerException) : base(message, innerException)
     {
-        public SerializationException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
     }
 }
