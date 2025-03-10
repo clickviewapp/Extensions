@@ -1,10 +1,12 @@
 ﻿namespace ClickView.Extensions.RestClient.Extensions;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Headers;
 
 public static class HttpHeadersExtensions
 {
-    public static bool TryGetFirstHeaderValue(this HttpHeaders headers, string name, out string? value)
+    public static bool TryGetFirstHeaderValue(this HttpHeaders headers, string name,
+        [MaybeNullWhen(false)] out string value)
     {
         if (!headers.TryGetValues(name, out var values))
         {
@@ -12,7 +14,7 @@ public static class HttpHeadersExtensions
             return false;
         }
 
-        if (!values.TryGetFirstValue(out var first))
+        if (!values.TryGetFirstValue(out var first) || first is null)
         {
             value = null;
             return false;
