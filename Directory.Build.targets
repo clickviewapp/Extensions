@@ -1,8 +1,6 @@
 <Project>
     <ItemGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
-        <Compile Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'net462'"
-                 Include="$(MSBuildThisFileDirectory)/src/Nullable.cs"
-                 Link="Properties/Nullable.cs" />
+        <Compile Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'net462'" Include="$(MSBuildThisFileDirectory)/src/Nullable.cs" Link="Properties/Nullable.cs" />
     </ItemGroup>
 
     <ItemGroup Condition="'$(IsPackable)' == 'true'">
