@@ -91,5 +91,14 @@ public class RestClientRequestTests
         {
             throw new NotImplementedException();
         }
+
+#if NET
+        public ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
+#else
+        public Task<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
+#endif
+        {
+            throw new NotImplementedException();
+        }
     }
 }

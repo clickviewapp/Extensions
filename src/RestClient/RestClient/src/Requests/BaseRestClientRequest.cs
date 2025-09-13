@@ -154,6 +154,18 @@ namespace ClickView.Extensions.RestClient.Requests
                 throw ex;
         }
 
+        protected async Task<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await Serializer.DeserializeAsync<T>(stream, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                throw new SerializationException("Failed to deserialize response", ex);
+            }
+        }
+
         protected T? Deserialize<T>(string input)
         {
             try
