@@ -4,7 +4,6 @@ namespace ClickView.Extensions.RestClient.Requests
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
-    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
@@ -16,30 +15,24 @@ namespace ClickView.Extensions.RestClient.Requests
     using Responses;
     using Serialization;
 
-    public abstract class BaseRestClientRequest<TResponse> : IClientRequest where TResponse : RestClientResponse
+    public abstract class BaseRestClientRequest<TResponse>(HttpMethod method, string resource) : IClientRequest
+        where TResponse : RestClientResponse
     {
-        private readonly RestClientRequestHeaders _headers = new();
+        private readonly RestClientRequestHeaders _headers = [];
         internal readonly Dictionary<string, List<RequestParameterValue>> Parameters = new();
 
         private object? _content;
         private MediaTypeHeaderValue? _contentType;
 
-        protected BaseRestClientRequest(HttpMethod method, string resource)
-        {
-            Method = method;
-            Resource = resource;
-        }
-
         public ISerializer Serializer { internal get; set; } = NewtonsoftJsonSerializer.Instance;
-
 
         /// <summary>
         ///     Set to true if we should throw an exception on 404
         /// </summary>
         protected bool ThrowOnNotFound { get; set; } = false;
 
-        public string Resource { get; set; }
-        public HttpMethod Method { get; }
+        public string Resource { get; set; } = resource;
+        public HttpMethod Method { get; } = method;
         public IEnumerable<KeyValuePair<string, IEnumerable<string>>> Headers => _headers;
 
         public void AddHeader(string key, string value)
