@@ -65,8 +65,8 @@
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <exception cref="ClickViewClientException"></exception>
-        public async Task<TResponse> ExecuteAsync<TResponse>(BaseRestClientRequest<TResponse> request, CancellationToken token = default)
-            where TResponse : RestClientResponse
+        public async Task<TResponse> ExecuteAsync<TResponse>(BaseRestClientRequest<TResponse> request,
+            CancellationToken token = default) where TResponse : RestClientResponse
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
@@ -114,7 +114,10 @@
 
             try
             {
-                using var response = await _httpClient.SendAsync(httpRequest, token).ConfigureAwait(false);
+                using var response = await _httpClient
+                    .SendAsync(httpRequest, HttpCompletionOption.ResponseHeadersRead, token)
+                    .ConfigureAwait(false);
+
                 return await request.GetResponseAsync(response).ConfigureAwait(false);
             }
             catch (HttpRequestException e)
