@@ -21,7 +21,7 @@ public class ClickViewClientHttpException : ClickViewClientException
         HttpStatusCode = httpStatusCode;
     }
 
-    public ClickViewClientHttpException(HttpStatusCode httpStatusCode, string? message, Exception innerException)
+    public ClickViewClientHttpException(HttpStatusCode httpStatusCode, string? message, Exception? innerException)
         : base(message ?? GetErrorMessage(httpStatusCode), innerException)
     {
         HttpStatusCode = httpStatusCode;
