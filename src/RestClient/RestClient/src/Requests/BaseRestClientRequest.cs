@@ -105,7 +105,11 @@ namespace ClickView.Extensions.RestClient.Requests
 
         protected abstract Task<TResponse> ParseResponseAsync(HttpResponseMessage message);
 
-        protected virtual bool TryParseErrorBody(string content, [NotNullWhen(true)] out ErrorBody? error)
+        protected virtual bool TryParseErrorBody(string content,
+#if NET
+            [NotNullWhen(true)]
+#endif
+            out ErrorBody? error)
         {
             error = null;
             return false;
