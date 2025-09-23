@@ -23,7 +23,11 @@
             }
             else
             {
-                await using var stream = await message.Content.ReadAsStreamAsync().ConfigureAwait(false);
+#if NET
+                await
+#endif
+                using var stream = await message.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
                 data = await DeserializeAsync<TData>(stream).ConfigureAwait(false);
             }
 
