@@ -147,7 +147,7 @@ namespace ClickView.Extensions.RestClient.Requests
                 throw ex;
         }
 
-        protected async Task<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
+        protected async ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
         {
             try
             {

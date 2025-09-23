@@ -61,21 +61,13 @@
             return _serializer.Deserialize(reader, type);
         }
 
-#if NET
         public ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
-#else
-        public Task<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
-#endif
         {
             using var jsonReader = new JsonTextReader(new StreamReader(stream));
 
             var result = _serializer.Deserialize<T>(jsonReader);
 
-#if NET
             return new ValueTask<T?>(result);
-#else
-            return Task.FromResult(result);
-#endif
         }
     }
 }
