@@ -193,7 +193,7 @@ namespace ClickView.Extensions.RestClient.Tests
 
         private class TestRequest(HttpMethod method, string resource) : RestClientRequest<string>(method, resource)
         {
-            protected override async Task<RestClientResponse<string>> ParseResponseAsync(HttpResponseMessage message)
+            protected override async ValueTask<RestClientResponse<string>> ParseResponseAsync(HttpResponseMessage message)
             {
                 return new RestClientResponse<string>(message, await message.Content.ReadAsStringAsync());
             }

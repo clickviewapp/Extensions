@@ -82,7 +82,7 @@ namespace ClickView.Extensions.RestClient.Requests
                 list.Add(new RequestParameterValue(value, RequestParameterType.Query));
         }
 
-        internal async Task<TResponse> GetResponseAsync(HttpResponseMessage message)
+        internal async ValueTask<TResponse> GetResponseAsync(HttpResponseMessage message)
         {
             var response = await ParseResponseAsync(message).ConfigureAwait(false);
             var error = await GetErrorAsync(message).ConfigureAwait(false);
@@ -96,7 +96,7 @@ namespace ClickView.Extensions.RestClient.Requests
             return response;
         }
 
-        protected abstract Task<TResponse> ParseResponseAsync(HttpResponseMessage message);
+        protected abstract ValueTask<TResponse> ParseResponseAsync(HttpResponseMessage message);
 
         protected virtual bool TryParseErrorBody(string content,
 #if NET
@@ -108,7 +108,7 @@ namespace ClickView.Extensions.RestClient.Requests
             return false;
         }
 
-        protected async Task<Error?> GetErrorAsync(HttpResponseMessage message)
+        protected async ValueTask<Error?> GetErrorAsync(HttpResponseMessage message)
         {
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
