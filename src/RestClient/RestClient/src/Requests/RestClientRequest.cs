@@ -10,7 +10,7 @@
         {
         }
 
-        protected override async Task<RestClientResponse<TData>> ParseResponseAsync(HttpResponseMessage message)
+        protected override async ValueTask<RestClientResponse<TData>> ParseResponseAsync(HttpResponseMessage message)
         {
             if (!message.IsSuccessStatusCode)
                 return new RestClientResponse<TData>(message, default);
@@ -46,9 +46,9 @@
         {
         }
 
-        protected override Task<RestClientResponse> ParseResponseAsync(HttpResponseMessage message)
+        protected override ValueTask<RestClientResponse> ParseResponseAsync(HttpResponseMessage message)
         {
-            return Task.FromResult(new RestClientResponse(message));
+            return new ValueTask<RestClientResponse>(new RestClientResponse(message));
         }
     }
 }
