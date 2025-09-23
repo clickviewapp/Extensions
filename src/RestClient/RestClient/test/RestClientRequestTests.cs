@@ -82,12 +82,17 @@ public class RestClientRequestTests
             return obj.ToString() ?? "";
         }
 
-        public T? Deserialize<T>(string input)
+        public T Deserialize<T>(string input)
         {
             throw new NotImplementedException();
         }
 
-        public object? Deserialize(string input, Type type)
+        public object Deserialize(string input, Type type)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
