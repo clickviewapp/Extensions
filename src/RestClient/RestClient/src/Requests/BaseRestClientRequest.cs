@@ -4,7 +4,6 @@ namespace ClickView.Extensions.RestClient.Requests
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
-    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
@@ -16,30 +15,24 @@ namespace ClickView.Extensions.RestClient.Requests
     using Responses;
     using Serialization;
 
-    public abstract class BaseRestClientRequest<TResponse> : IClientRequest where TResponse : RestClientResponse
+    public abstract class BaseRestClientRequest<TResponse>(HttpMethod method, string resource) : IClientRequest
+        where TResponse : RestClientResponse
     {
-        private readonly RestClientRequestHeaders _headers = new();
+        private readonly RestClientRequestHeaders _headers = [];
         internal readonly Dictionary<string, List<RequestParameterValue>> Parameters = new();
 
         private object? _content;
         private MediaTypeHeaderValue? _contentType;
 
-        protected BaseRestClientRequest(HttpMethod method, string resource)
-        {
-            Method = method;
-            Resource = resource;
-        }
-
         public ISerializer Serializer { internal get; set; } = NewtonsoftJsonSerializer.Instance;
-
 
         /// <summary>
         ///     Set to true if we should throw an exception on 404
         /// </summary>
         protected bool ThrowOnNotFound { get; set; } = false;
 
-        public string Resource { get; set; }
-        public HttpMethod Method { get; }
+        public string Resource { get; set; } = resource;
+        public HttpMethod Method { get; } = method;
         public IEnumerable<KeyValuePair<string, IEnumerable<string>>> Headers => _headers;
 
         public void AddHeader(string key, string value)
@@ -89,7 +82,7 @@ namespace ClickView.Extensions.RestClient.Requests
                 list.Add(new RequestParameterValue(value, RequestParameterType.Query));
         }
 
-        internal async Task<TResponse> GetResponseAsync(HttpResponseMessage message)
+        internal async ValueTask<TResponse> GetResponseAsync(HttpResponseMessage message)
         {
             var response = await ParseResponseAsync(message).ConfigureAwait(false);
             var error = await GetErrorAsync(message).ConfigureAwait(false);
@@ -103,7 +96,7 @@ namespace ClickView.Extensions.RestClient.Requests
             return response;
         }
 
-        protected abstract Task<TResponse> ParseResponseAsync(HttpResponseMessage message);
+        protected abstract ValueTask<TResponse> ParseResponseAsync(HttpResponseMessage message);
 
         protected virtual bool TryParseErrorBody(string content,
 #if NET
@@ -115,22 +108,24 @@ namespace ClickView.Extensions.RestClient.Requests
             return false;
         }
 
-        protected async Task<Error?> GetErrorAsync(HttpResponseMessage message)
+        protected ValueTask<Error?> GetErrorAsync(HttpResponseMessage message)
         {
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
 
             //There is no error
             if (message.IsSuccessStatusCode)
-                return null;
+                return new ValueTask<Error?>(result: null);
 
+            return GetErrorInternalAsync(message);
+        }
+
+        private async ValueTask<Error?> GetErrorInternalAsync(HttpResponseMessage message)
+        {
             var contentString = await message.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (TryParseErrorBody(contentString, out var errorBody))
                 return new Error(message.StatusCode, errorBody, contentString);
-
-            // Make sure the error body is null
-            errorBody = null;
 
             // We didnt parse an error body, so instead create a default one from the ReasonPhrase (if set)
             if (!string.IsNullOrEmpty(message.ReasonPhrase))
@@ -139,6 +134,11 @@ namespace ClickView.Extensions.RestClient.Requests
                 {
                     Message = message.ReasonPhrase
                 };
+            }
+            else
+            {
+                // Make sure the error body is null
+                errorBody = null;
             }
 
             return new Error(message.StatusCode, errorBody, contentString);
@@ -152,6 +152,28 @@ namespace ClickView.Extensions.RestClient.Requests
             var ex = ErrorHelper.GetErrorException(error);
             if (ex is not null)
                 throw ex;
+        }
+
+        protected ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
+        {
+            var task = Serializer.DeserializeAsync<T>(stream, cancellationToken);
+
+            if (task.IsCompletedSuccessfully)
+                return task;
+
+            return DeserializeAsyncSlow(task);
+
+            static async ValueTask<T?> DeserializeAsyncSlow(ValueTask<T?> task)
+            {
+                try
+                {
+                    return await task.ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    throw new SerializationException("Failed to deserialize response", ex);
+                }
+            }
         }
 
         protected T? Deserialize<T>(string input)

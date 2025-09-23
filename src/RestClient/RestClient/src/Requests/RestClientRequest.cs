@@ -10,13 +10,25 @@
         {
         }
 
-        protected override async Task<RestClientResponse<TData>> ParseResponseAsync(HttpResponseMessage message)
+        protected override ValueTask<RestClientResponse<TData>> ParseResponseAsync(HttpResponseMessage message)
         {
-            if (!message.IsSuccessStatusCode)
-                return new RestClientResponse<TData>(message, default);
+            // If the response is not a success, return early or if we explicitly have a content length of 0, then there is no content to read
+            if (!message.IsSuccessStatusCode || message.Content.Headers.ContentLength == 0)
+                return new ValueTask<RestClientResponse<TData>>(new RestClientResponse<TData>(message, default));
 
-            var str = await message.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return new RestClientResponse<TData>(message, Deserialize(str));
+            return ReadContentAsync(message);
+        }
+
+        private async ValueTask<RestClientResponse<TData>> ReadContentAsync(HttpResponseMessage message)
+        {
+#if NET
+            await
+#endif
+                using var stream = await message.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+            var data = await DeserializeAsync<TData>(stream).ConfigureAwait(false);
+
+            return new RestClientResponse<TData>(message, data);
         }
 
         protected TData? Deserialize(string input)
@@ -31,9 +43,9 @@
         {
         }
 
-        protected override Task<RestClientResponse> ParseResponseAsync(HttpResponseMessage message)
+        protected override ValueTask<RestClientResponse> ParseResponseAsync(HttpResponseMessage message)
         {
-            return Task.FromResult(new RestClientResponse(message));
+            return new ValueTask<RestClientResponse>(new RestClientResponse(message));
         }
     }
 }
