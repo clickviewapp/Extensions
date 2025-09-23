@@ -108,22 +108,24 @@ namespace ClickView.Extensions.RestClient.Requests
             return false;
         }
 
-        protected async ValueTask<Error?> GetErrorAsync(HttpResponseMessage message)
+        protected ValueTask<Error?> GetErrorAsync(HttpResponseMessage message)
         {
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
 
             //There is no error
             if (message.IsSuccessStatusCode)
-                return null;
+                return new ValueTask<Error?>(result: null);
 
+            return GetErrorInternalAsync(message);
+        }
+
+        private async ValueTask<Error?> GetErrorInternalAsync(HttpResponseMessage message)
+        {
             var contentString = await message.Content.ReadAsStringAsync().ConfigureAwait(false);
 
             if (TryParseErrorBody(contentString, out var errorBody))
                 return new Error(message.StatusCode, errorBody, contentString);
-
-            // Make sure the error body is null
-            errorBody = null;
 
             // We didnt parse an error body, so instead create a default one from the ReasonPhrase (if set)
             if (!string.IsNullOrEmpty(message.ReasonPhrase))
@@ -132,6 +134,11 @@ namespace ClickView.Extensions.RestClient.Requests
                 {
                     Message = message.ReasonPhrase
                 };
+            }
+            else
+            {
+                // Make sure the error body is null
+                errorBody = null;
             }
 
             return new Error(message.StatusCode, errorBody, contentString);
@@ -147,15 +154,25 @@ namespace ClickView.Extensions.RestClient.Requests
                 throw ex;
         }
 
-        protected async ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
+        protected ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
         {
-            try
+            var task = Serializer.DeserializeAsync<T>(stream, cancellationToken);
+
+            if (task.IsCompletedSuccessfully)
+                return task;
+
+            return DeserializeAsyncSlow(task);
+
+            static async ValueTask<T?> DeserializeAsyncSlow(ValueTask<T?> task)
             {
-                return await Serializer.DeserializeAsync<T>(stream, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                throw new SerializationException("Failed to deserialize response", ex);
+                try
+                {
+                    return await task.ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    throw new SerializationException("Failed to deserialize response", ex);
+                }
             }
         }
 
