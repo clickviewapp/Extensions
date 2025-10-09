@@ -4,7 +4,6 @@ namespace ClickView.Extensions.RestClient.Requests
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
-    using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
@@ -16,30 +15,24 @@ namespace ClickView.Extensions.RestClient.Requests
     using Responses;
     using Serialization;
 
-    public abstract class BaseRestClientRequest<TResponse> : IClientRequest where TResponse : RestClientResponse
+    public abstract class BaseRestClientRequest<TResponse>(HttpMethod method, string resource) : IClientRequest
+        where TResponse : RestClientResponse
     {
-        private readonly RestClientRequestHeaders _headers = new();
+        private readonly RestClientRequestHeaders _headers = [];
         internal readonly Dictionary<string, List<RequestParameterValue>> Parameters = new();
 
         private object? _content;
         private MediaTypeHeaderValue? _contentType;
 
-        protected BaseRestClientRequest(HttpMethod method, string resource)
-        {
-            Method = method;
-            Resource = resource;
-        }
-
         public ISerializer Serializer { internal get; set; } = NewtonsoftJsonSerializer.Instance;
-
 
         /// <summary>
         ///     Set to true if we should throw an exception on 404
         /// </summary>
         protected bool ThrowOnNotFound { get; set; } = false;
 
-        public string Resource { get; set; }
-        public HttpMethod Method { get; }
+        public string Resource { get; set; } = resource;
+        public HttpMethod Method { get; } = method;
         public IEnumerable<KeyValuePair<string, IEnumerable<string>>> Headers => _headers;
 
         public void AddHeader(string key, string value)
@@ -152,6 +145,18 @@ namespace ClickView.Extensions.RestClient.Requests
             var ex = ErrorHelper.GetErrorException(error);
             if (ex is not null)
                 throw ex;
+        }
+
+        protected async ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await Serializer.DeserializeAsync<T>(stream, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                throw new SerializationException("Failed to deserialize response", ex);
+            }
         }
 
         protected T? Deserialize<T>(string input)
