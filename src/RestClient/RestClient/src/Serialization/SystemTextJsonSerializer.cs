@@ -27,27 +27,26 @@ public class SystemTextJsonSerializer(JsonSerializerOptions options) : ISerializ
         return JsonSerializer.Serialize(obj, options);
     }
 
-    public T Deserialize<T>(string input)
+    public T? Deserialize<T>(string input)
     {
+        if (input is null)
+            throw new ArgumentNullException(nameof(input));
+
         return JsonSerializer.Deserialize<T>(input, options)!;
     }
 
-    public object Deserialize(string input, Type type)
+    public object? Deserialize(string input, Type type)
     {
+        if (input is null)
+            throw new ArgumentNullException(nameof(input));
+
         return JsonSerializer.Deserialize(input, type, options)!;
     }
 
-#if NET
     public ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
     {
         return JsonSerializer.DeserializeAsync<T>(stream, options, cancellationToken);
     }
-#else
-    public Task<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
-    {
-        return JsonSerializer.DeserializeAsync<T>(stream, options, cancellationToken).AsTask();
-    }
-#endif
 
     public string Format => "json";
 }
