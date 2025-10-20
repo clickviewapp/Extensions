@@ -143,10 +143,18 @@
 
         private static HttpClient CreateClient(RestClientOptions options)
         {
+#if NET
+            var handler = new SocketsHttpHandler
+            {
+                AutomaticDecompression = options.DecompressionMethods,
+                PooledConnectionLifetime = options.ConnectionLifetime
+            };
+#else
             var handler = new HttpClientHandler();
 
             if (handler.SupportsAutomaticDecompression)
                 handler.AutomaticDecompression = options.DecompressionMethods;
+#endif
 
             return new HttpClient(handler)
             {
