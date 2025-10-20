@@ -5,8 +5,8 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using ClickView.Extensions.RestClient.Serialization;
 using Requests;
-using Serialization;
 using Xunit;
 
 public class RestClientRequestTests
