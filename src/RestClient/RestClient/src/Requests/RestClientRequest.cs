@@ -15,8 +15,23 @@
             if (!message.IsSuccessStatusCode)
                 return new RestClientResponse<TData>(message, default);
 
-            var str = await message.Content.ReadAsStringAsync().ConfigureAwait(false);
-            return new RestClientResponse<TData>(message, Deserialize(str));
+            TData? data;
+            if (message.Content.Headers.ContentLength == 0)
+            {
+                // If we explicitly have a content length of 0, then there is no content to read
+                data = default;
+            }
+            else
+            {
+#if NET
+                await
+#endif
+                using var stream = await message.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+                data = await DeserializeAsync<TData>(stream).ConfigureAwait(false);
+            }
+
+            return new RestClientResponse<TData>(message, data);
         }
 
         protected TData? Deserialize(string input)

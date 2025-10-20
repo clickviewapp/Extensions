@@ -10,5 +10,7 @@ namespace ClickView.Extensions.RestClient.Serialization
 
         T? Deserialize<T>(string input);
         object? Deserialize(string input, Type type);
+
+        ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default);
     }
 }
