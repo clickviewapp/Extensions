@@ -162,7 +162,10 @@ namespace ClickView.Extensions.RestClient
 
         private static ProductInfoHeaderValue? GetDefaultUserAgent(string? userAgent)
         {
-            return string.IsNullOrEmpty(userAgent) ? null : ProductInfoHeaderValue.Parse(userAgent);
+            if (userAgent is null)
+                return null;
+
+            return ProductInfoHeaderValue.Parse(userAgent);
         }
     }
 }
