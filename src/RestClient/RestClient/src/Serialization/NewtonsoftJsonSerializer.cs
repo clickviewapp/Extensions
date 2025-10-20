@@ -63,6 +63,9 @@
 
         public ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
         {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
             using var jsonReader = new JsonTextReader(new StreamReader(stream));
 
             var result = _serializer.Deserialize<T>(jsonReader);
