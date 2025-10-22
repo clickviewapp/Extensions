@@ -32,7 +32,7 @@ public class SystemTextJsonSerializer(JsonSerializerOptions options) : ISerializ
         if (input is null)
             throw new ArgumentNullException(nameof(input));
 
-        return JsonSerializer.Deserialize<T>(input, options)!;
+        return JsonSerializer.Deserialize<T>(input, options);
     }
 
     public object? Deserialize(string input, Type type)
@@ -40,7 +40,7 @@ public class SystemTextJsonSerializer(JsonSerializerOptions options) : ISerializ
         if (input is null)
             throw new ArgumentNullException(nameof(input));
 
-        return JsonSerializer.Deserialize(input, type, options)!;
+        return JsonSerializer.Deserialize(input, type, options);
     }
 
     public ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default)
