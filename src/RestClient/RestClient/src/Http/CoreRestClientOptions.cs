@@ -6,5 +6,6 @@ namespace ClickView.Extensions.RestClient.Http
     {
         public CompressionMethod CompressionMethod { get; set; } = CompressionMethod.None;
         public IAuthenticator? Authenticator { get; set; } = null;
+        public string? DefaultUserAgent { get; set; }
     }
 }

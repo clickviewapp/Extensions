@@ -1,7 +1,8 @@
-﻿namespace ClickView.Extensions.RestClient
+namespace ClickView.Extensions.RestClient
 {
     using System;
     using System.Net.Http;
+    using System.Net.Http.Headers;
     using System.Threading;
     using System.Threading.Tasks;
     using Exceptions;
@@ -15,6 +16,7 @@
         private readonly Uri? _baseAddress;
         private readonly HttpClient _httpClient;
         private readonly CoreRestClientOptions _options;
+        private readonly ProductInfoHeaderValue? _userAgent;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RestClient" /> class
@@ -26,8 +28,9 @@
             _baseAddress = baseAddress ?? throw new ArgumentNullException(nameof(baseAddress));
 
             var o = options ?? RestClientOptions.Default;
-            _options = o;
 
+            _options = o;
+            _userAgent = GetDefaultUserAgent(_options.DefaultUserAgent);
             _httpClient = CreateClient(o);
         }
 
@@ -40,6 +43,8 @@
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             _options = options ?? RestClientOptions.Default;
+            _userAgent = GetDefaultUserAgent(_options.DefaultUserAgent);
+
             _baseAddress = null;
         }
 
@@ -71,8 +76,6 @@
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
 
-            token.ThrowIfCancellationRequested();
-
             if (_options.Authenticator != null)
                 await _options.Authenticator.AuthenticateAsync(request, token).ConfigureAwait(false);
 
@@ -93,7 +96,6 @@
                 {
                     // only do the following logic if the _httpClient doesn't have a base address already
                     // we should remove this if we update the ctor to always have a baseAddress
-
                     if (_httpClient.BaseAddress == null)
                     {
                         throw new InvalidOperationException(
@@ -105,10 +107,14 @@
             }
 
             using var httpRequest = new HttpRequestMessage(request.Method, requestUri);
+
+            // Add user agent if supplied
+            if (_userAgent is not null)
+                httpRequest.Headers.UserAgent.Add(_userAgent);
+
+            // Add all the headers from the request and validate them.
             foreach (var h in request.Headers)
-            {
-                httpRequest.Headers.TryAddWithoutValidation(h.Key, h.Value);
-            }
+                httpRequest.Headers.Add(h.Key, h.Value);
 
             httpRequest.Content = GetContent(request);
 
@@ -160,6 +166,14 @@
             {
                 Timeout = options.Timeout
             };
+        }
+
+        private static ProductInfoHeaderValue? GetDefaultUserAgent(string? userAgent)
+        {
+            if (userAgent is null)
+                return null;
+
+            return ProductInfoHeaderValue.Parse(userAgent);
         }
     }
 }
