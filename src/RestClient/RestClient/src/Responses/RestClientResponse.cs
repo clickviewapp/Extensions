@@ -4,26 +4,15 @@ namespace ClickView.Extensions.RestClient.Responses
     using System.Net.Http;
     using System.Net.Http.Headers;
 
-    public class RestClientResponse
+    public class RestClientResponse(HttpResponseMessage message)
     {
-        public RestClientResponse(HttpResponseMessage message)
-        {
-            HttpStatusCode = message.StatusCode;
-            Headers = message.Headers;
-        }
-
-        public HttpStatusCode HttpStatusCode { get; }
+        public HttpStatusCode HttpStatusCode { get; } = message.StatusCode;
         public Error? Error { get; internal set; }
-        public HttpResponseHeaders Headers { get; }
+        public HttpResponseHeaders Headers { get; } = message.Headers;
     }
 
-    public class RestClientResponse<T> : RestClientResponse
+    public class RestClientResponse<T>(HttpResponseMessage message, T? data) : RestClientResponse(message)
     {
-        public RestClientResponse(HttpResponseMessage message, T? data) : base(message)
-        {
-            Data = data;
-        }
-
-        public T? Data { get; internal set; }
+        public T? Data { get; internal set; } = data;
     }
 }
