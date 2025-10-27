@@ -30,7 +30,7 @@ namespace ClickView.Extensions.RestClient
             var o = options ?? RestClientOptions.Default;
 
             _options = o;
-            _userAgent = GetDefaultUserAgent(_options.DefaultUserAgent);
+            _userAgent = _options.DefaultUserAgent;
             _httpClient = CreateClient(o);
         }
 
@@ -43,7 +43,7 @@ namespace ClickView.Extensions.RestClient
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             _options = options ?? RestClientOptions.Default;
-            _userAgent = GetDefaultUserAgent(_options.DefaultUserAgent);
+            _userAgent = _options.DefaultUserAgent;
 
             _baseAddress = null;
         }
@@ -166,14 +166,6 @@ namespace ClickView.Extensions.RestClient
             {
                 Timeout = options.Timeout
             };
-        }
-
-        private static ProductInfoHeaderValue? GetDefaultUserAgent(string? userAgent)
-        {
-            if (userAgent is null)
-                return null;
-
-            return ProductInfoHeaderValue.Parse(userAgent);
         }
     }
 }
