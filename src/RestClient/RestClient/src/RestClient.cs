@@ -16,7 +16,6 @@ namespace ClickView.Extensions.RestClient
         private readonly Uri? _baseAddress;
         private readonly HttpClient _httpClient;
         private readonly CoreRestClientOptions _options;
-        private readonly ProductInfoHeaderValue? _userAgent;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RestClient" /> class
@@ -30,7 +29,6 @@ namespace ClickView.Extensions.RestClient
             var o = options ?? RestClientOptions.Default;
 
             _options = o;
-            _userAgent = _options.DefaultUserAgent;
             _httpClient = CreateClient(o);
         }
 
@@ -43,9 +41,9 @@ namespace ClickView.Extensions.RestClient
         {
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
             _options = options ?? RestClientOptions.Default;
-            _userAgent = _options.DefaultUserAgent;
-
             _baseAddress = null;
+
+            PrepareHttpClient(_httpClient, _options);
         }
 
         /// <summary>
@@ -108,10 +106,6 @@ namespace ClickView.Extensions.RestClient
 
             using var httpRequest = new HttpRequestMessage(request.Method, requestUri);
 
-            // Add user agent if supplied
-            if (_userAgent is not null)
-                httpRequest.Headers.UserAgent.Add(_userAgent);
-
             // Add all the headers from the request and validate them.
             foreach (var h in request.Headers)
                 httpRequest.Headers.Add(h.Key, h.Value);
@@ -162,10 +156,29 @@ namespace ClickView.Extensions.RestClient
                 handler.AutomaticDecompression = options.DecompressionMethods;
 #endif
 
-            return new HttpClient(handler)
+            var httpClient = new HttpClient(handler)
             {
                 Timeout = options.Timeout
             };
+
+            PrepareHttpClient(httpClient, options);
+
+
+            return httpClient;
+        }
+
+        private static void PrepareHttpClient(HttpClient httpClient, CoreRestClientOptions options)
+        {
+            // Populate/replace user agent
+            if (options.DefaultUserAgent is not null)
+            {
+                var httpClientUserAgents = httpClient.DefaultRequestHeaders.UserAgent;
+
+                // Clear all existing user agents
+                httpClientUserAgents.Clear();
+
+                httpClientUserAgents.ParseAdd(options.DefaultUserAgent);
+            }
         }
     }
 }
