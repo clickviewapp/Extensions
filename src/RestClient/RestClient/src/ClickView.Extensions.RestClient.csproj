@@ -8,8 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="System.Text.Encodings.Web" Version="9.0.10" />
-    <PackageReference Include="System.Text.Json" Version="9.0.10" />
+    <PackageReference Include="System.Text.Encodings.Web" Version="10.0.0" />
+    <PackageReference Include="System.Text.Json" Version="10.0.0" />
   </ItemGroup>
 
   <!-- Conditionally obtain references for the .NET Framework 4.6 target -->
