@@ -1,5 +1,6 @@
-namespace ClickView.Extensions.RestClient.Requests
+﻿namespace ClickView.Extensions.RestClient.Requests
 {
+    using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
     using Responses;
