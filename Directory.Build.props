@@ -20,14 +20,14 @@
     </ItemGroup>
 
     <PropertyGroup>
-        <LangVersion>12.0</LangVersion>
+        <LangVersion>14</LangVersion>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <PropertyGroup>
-        <CoreTargetFrameworks>net8.0</CoreTargetFrameworks>
-        <FullTargetFrameworks>net462;netstandard2.0;net8.0</FullTargetFrameworks>
-        <TestTargetFrameworks>net481;net8.0</TestTargetFrameworks>
+        <CoreTargetFrameworks>net8.0;net10.0</CoreTargetFrameworks>
+        <FullTargetFrameworks>net462;netstandard2.0;net8.0;net10.0</FullTargetFrameworks>
+        <TestTargetFrameworks>net481;net8.0;net10.0</TestTargetFrameworks>
     </PropertyGroup>
 </Project>
