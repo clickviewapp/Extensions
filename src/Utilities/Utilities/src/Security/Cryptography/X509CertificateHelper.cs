@@ -28,7 +28,11 @@
 
         public static X509Certificate2 GetCertificate(string base64String)
         {
+#if NET10_0_OR_GREATER
+            return X509CertificateLoader.LoadCertificate(GetBytes(base64String));
+#else
             return new X509Certificate2(GetBytes(base64String));
+#endif
         }
     }
 }
