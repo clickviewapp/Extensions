@@ -28,7 +28,7 @@ jobs:
         run: dotnet test --no-build --logger trx --results-directory ./test-results/
 
       - name: Upload test results
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: Test Results
           path: ./test-results/
