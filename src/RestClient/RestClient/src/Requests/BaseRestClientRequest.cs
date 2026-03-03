@@ -23,6 +23,15 @@ namespace ClickView.Extensions.RestClient.Requests
 
         private object? _content;
         private MediaTypeHeaderValue? _contentType;
+        
+        private readonly HashSet<HttpMethod> _methodsSupportingBody =
+        [
+            HttpMethod.Post,
+            HttpMethod.Put,
+#if NETCOREAPP2_1_OR_GREATER
+            HttpMethod.Patch
+#endif
+        ];
 
         public ISerializer Serializer { internal get; set; } = NewtonsoftJsonSerializer.Instance;
 
@@ -47,7 +56,7 @@ namespace ClickView.Extensions.RestClient.Requests
 
         public void AddBody(object body)
         {
-            if (Method != HttpMethod.Post && Method != HttpMethod.Put)
+            if (!_methodsSupportingBody.Contains(Method))
                 throw new Exception("Cannot add body to " + Method);
 
             _content = body;
