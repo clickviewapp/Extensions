@@ -4,7 +4,7 @@
 
     public class AccessToken : Token
     {
-        public AccessToken(string value, DateTimeOffset expireTime) : base(TokenType.AccessToken, value)
+        public AccessToken(string value, DateTimeOffset? expireTime) : base(TokenType.AccessToken, value)
         {
             ExpireTime = expireTime;
         }
