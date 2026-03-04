@@ -47,10 +47,20 @@ namespace ClickView.Extensions.RestClient.Requests
 
         public void AddBody(object body)
         {
-            if (Method != HttpMethod.Post && Method != HttpMethod.Put)
+            if (!MethodSupportsBody(Method))
                 throw new Exception("Cannot add body to " + Method);
 
             _content = body;
+            return;
+
+            bool MethodSupportsBody(HttpMethod method)
+            {
+                return method == HttpMethod.Post ||
+#if NETCOREAPP2_1_OR_GREATER
+                       method == HttpMethod.Patch ||
+#endif
+                       method == HttpMethod.Put;
+            }
         }
 
         public void AddBody(Stream stream, MediaTypeHeaderValue mediaType)
