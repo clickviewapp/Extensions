@@ -1,12 +1,12 @@
 ﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth
 {
-    using Endpoints;
-    using IdentityModel;
-    using IdentityModel.Client;
     using System;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
+    using Endpoints;
+    using IdentityModel;
+    using IdentityModel.Client;
 
     public class TokenClient
     {

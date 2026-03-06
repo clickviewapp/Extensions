@@ -43,7 +43,7 @@ public static class ThreadingHelper
 
         // If we have no items then theres nothing to do
         if (items.Count == 0)
-            return Array.Empty<TOut>();
+            return [];
 
         // If our concurrentTasks is 1, we can just run each task one by one and avoid a lot of allocations
         if (concurrentTasks == 1)
@@ -108,9 +108,9 @@ public static class ThreadingHelper
         switch (objs.Count)
         {
             case 0:
-                return Array.Empty<TOut>();
+                return [];
             case 1:
-                return new[] { await func(objs[0], funcArgument, cancellationToken) };
+                return [await func(objs[0], funcArgument, cancellationToken)];
             default:
             {
                 var taskList = new Task<TOut>[objs.Count];

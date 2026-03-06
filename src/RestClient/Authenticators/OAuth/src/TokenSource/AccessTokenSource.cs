@@ -1,6 +1,5 @@
 ﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
 {
-    using System;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
@@ -13,9 +12,9 @@
             var token = await GetAccessTokenAsync(cancellationToken).ConfigureAwait(false);
 
             if (token == null)
-                return Array.Empty<Token>();
+                return [];
 
-            return new[] { token };
+            return [token];
         }
 
         public virtual bool StoreTokens => true;
