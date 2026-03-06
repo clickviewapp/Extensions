@@ -3,20 +3,14 @@ namespace ClickView.Extensions.Utilities
 {
     using System;
 
-    public class RefCounterReference<T> : IDisposable where T : IDisposable
+    public sealed class RefCounterReference<T>(T value, Action onDispose) : IDisposable
+        where T : IDisposable
     {
-        private readonly Action _onDispose;
-        public T Value { get; }
-
-        public RefCounterReference(T value, Action onDispose)
-        {
-            Value = value;
-            _onDispose = onDispose;
-        }
+        public T Value { get; } = value;
 
         public void Dispose()
         {
-            _onDispose();
+            onDispose();
         }
     }
 }
