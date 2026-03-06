@@ -1,18 +1,17 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
+﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource;
+
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Tokens;
+
+public interface ITokenSource
 {
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Tokens;
+    /// <summary>
+    ///     Return true if the tokens from this source should be stored
+    /// </summary>
+    bool StoreTokens { get; }
 
-    public interface ITokenSource
-    {
-        /// <summary>
-        ///     Return true if the tokens from this source should be stored
-        /// </summary>
-        bool StoreTokens { get; }
-
-        Task<IReadOnlyCollection<Token>> GetTokensAsync(CancellationToken cancellationToken = default);
-        Task RevokeTokenAsync(CancellationToken cancellationToken = default);
-    }
+    Task<IReadOnlyCollection<Token>> GetTokensAsync(CancellationToken cancellationToken = default);
+    Task RevokeTokenAsync(CancellationToken cancellationToken = default);
 }

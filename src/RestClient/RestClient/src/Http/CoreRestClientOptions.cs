@@ -1,11 +1,10 @@
-namespace ClickView.Extensions.RestClient.Http
-{
-    using Authentication;
+namespace ClickView.Extensions.RestClient.Http;
 
-    public class CoreRestClientOptions
-    {
-        public CompressionMethod CompressionMethod { get; set; } = CompressionMethod.None;
-        public IAuthenticator? Authenticator { get; set; }
-        public string? DefaultUserAgent { get; set; }
-    }
+using Authentication;
+
+public class CoreRestClientOptions
+{
+    public CompressionMethod CompressionMethod { get; set; } = CompressionMethod.None;
+    public IAuthenticator? Authenticator { get; set; }
+    public string? DefaultUserAgent { get; set; }
 }

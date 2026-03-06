@@ -1,9 +1,8 @@
-﻿namespace ClickView.Extensions.Events.Bus
-{
-    using System.Threading.Tasks;
+﻿namespace ClickView.Extensions.Events.Bus;
 
-    public interface IEventBus
-    {
-        Task PublishAsync(Event evt);
-    }
+using System.Threading.Tasks;
+
+public interface IEventBus
+{
+    Task PublishAsync(Event evt);
 }

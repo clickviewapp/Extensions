@@ -1,17 +1,16 @@
-﻿namespace ClickView.Extensions.Primitives.Extensions
+﻿namespace ClickView.Extensions.Primitives.Extensions;
+
+using System;
+
+public static class TypeExtensions
 {
-    using System;
-
-    public static class TypeExtensions
+    public static bool IsNullable(this Type type)
     {
-        public static bool IsNullable(this Type type)
-        {
-            return IsGenericType(type, typeof(Nullable<>));
-        }
+        return IsGenericType(type, typeof(Nullable<>));
+    }
 
-        public static bool IsGenericType(this Type type, Type typeDefinition)
-        {
-            return type.IsGenericType && type.GetGenericTypeDefinition() == typeDefinition;
-        }
+    public static bool IsGenericType(this Type type, Type typeDefinition)
+    {
+        return type.IsGenericType && type.GetGenericTypeDefinition() == typeDefinition;
     }
 }

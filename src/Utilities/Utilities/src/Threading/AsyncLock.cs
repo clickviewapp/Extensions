@@ -1,46 +1,45 @@
-﻿namespace ClickView.Extensions.Utilities.Threading
+﻿namespace ClickView.Extensions.Utilities.Threading;
+
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+// Thanks Scott ♥
+// https://www.hanselman.com/blog/ComparingTwoTechniquesInNETAsynchronousCoordinationPrimitives.aspx
+public sealed class AsyncLock
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
+    private readonly Task<IDisposable> _releaser;
 
-    // Thanks Scott ♥
-    // https://www.hanselman.com/blog/ComparingTwoTechniquesInNETAsynchronousCoordinationPrimitives.aspx
-    public sealed class AsyncLock
+    public AsyncLock()
     {
-        private readonly SemaphoreSlim _semaphore = new(1, 1);
-        private readonly Task<IDisposable> _releaser;
+        _releaser = Task.FromResult<IDisposable>(new Releaser(this));
+    }
 
-        public AsyncLock()
+    public Task<IDisposable> LockAsync()
+    {
+        var wait = _semaphore.WaitAsync();
+        return wait.IsCompleted
+            ? _releaser
+            : wait.ContinueWith((_, state) => (IDisposable) state!,
+                state: _releaser.Result,
+                CancellationToken.None,
+                TaskContinuationOptions.ExecuteSynchronously,
+                TaskScheduler.Default);
+    }
+
+    private sealed class Releaser : IDisposable
+    {
+        private readonly AsyncLock _toRelease;
+
+        internal Releaser(AsyncLock toRelease)
         {
-            _releaser = Task.FromResult<IDisposable>(new Releaser(this));
+            _toRelease = toRelease;
         }
 
-        public Task<IDisposable> LockAsync()
+        public void Dispose()
         {
-            var wait = _semaphore.WaitAsync();
-            return wait.IsCompleted
-                ? _releaser
-                : wait.ContinueWith((_, state) => (IDisposable) state!,
-                    state: _releaser.Result,
-                    CancellationToken.None,
-                    TaskContinuationOptions.ExecuteSynchronously,
-                    TaskScheduler.Default);
-        }
-
-        private sealed class Releaser : IDisposable
-        {
-            private readonly AsyncLock _toRelease;
-
-            internal Releaser(AsyncLock toRelease)
-            {
-                _toRelease = toRelease;
-            }
-
-            public void Dispose()
-            {
-                _toRelease._semaphore.Release();
-            }
+            _toRelease._semaphore.Release();
         }
     }
 }

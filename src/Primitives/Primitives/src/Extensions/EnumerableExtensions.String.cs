@@ -1,12 +1,11 @@
-﻿namespace ClickView.Extensions.Primitives.Extensions
-{
-    using System.Collections.Generic;
+﻿namespace ClickView.Extensions.Primitives.Extensions;
 
-    public static partial class EnumerableExtensions
+using System.Collections.Generic;
+
+public static partial class EnumerableExtensions
+{
+    public static string Join(this IEnumerable<string> enumerable, string separator)
     {
-        public static string Join(this IEnumerable<string> enumerable, string separator)
-        {
-            return string.Join(separator, enumerable);
-        }
+        return string.Join(separator, enumerable);
     }
 }

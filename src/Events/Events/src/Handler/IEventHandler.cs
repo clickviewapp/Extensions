@@ -1,9 +1,8 @@
-﻿namespace ClickView.Extensions.Events.Handler
-{
-    using System.Threading.Tasks;
+﻿namespace ClickView.Extensions.Events.Handler;
 
-    public interface IEventHandler<in T> where T : Event
-    {
-        Task HandleEventAsync(T evt);
-    }
+using System.Threading.Tasks;
+
+public interface IEventHandler<in T> where T : Event
+{
+    Task HandleEventAsync(T evt);
 }

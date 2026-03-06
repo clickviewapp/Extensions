@@ -1,28 +1,27 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenStore
+﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenStore;
+
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Tokens;
+
+public class InMemoryTokenStore : ITokenStore
 {
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using Tokens;
+    private readonly ConcurrentDictionary<TokenType, Token> _tokens = new ConcurrentDictionary<TokenType, Token>();
 
-    public class InMemoryTokenStore : ITokenStore
+    public Task<Token> GetTokenAsync(TokenType tokenType)
     {
-        private readonly ConcurrentDictionary<TokenType, Token> _tokens = new ConcurrentDictionary<TokenType, Token>();
+        _tokens.TryGetValue(tokenType, out var token);
+        return Task.FromResult(token);
+    }
 
-        public Task<Token> GetTokenAsync(TokenType tokenType)
+    public Task StoreTokensAsync(IEnumerable<Token> tokens)
+    {
+        foreach (var t in tokens)
         {
-            _tokens.TryGetValue(tokenType, out var token);
-            return Task.FromResult(token);
+            _tokens.AddOrUpdate(t.TokenType, t, (_, _) => t);
         }
 
-        public Task StoreTokensAsync(IEnumerable<Token> tokens)
-        {
-            foreach (var t in tokens)
-            {
-                _tokens.AddOrUpdate(t.TokenType, t, (_, _) => t);
-            }
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

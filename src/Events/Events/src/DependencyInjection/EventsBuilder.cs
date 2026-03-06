@@ -1,14 +1,13 @@
-﻿namespace ClickView.Extensions.Events.DependencyInjection
+﻿namespace ClickView.Extensions.Events.DependencyInjection;
+
+using Microsoft.Extensions.DependencyInjection;
+
+public class EventsBuilder : IEventsBuilder
 {
-    using Microsoft.Extensions.DependencyInjection;
+    public IServiceCollection Services { get; }
 
-    public class EventsBuilder : IEventsBuilder
+    public EventsBuilder(IServiceCollection services)
     {
-        public IServiceCollection Services { get; }
-
-        public EventsBuilder(IServiceCollection services)
-        {
-            Services = services;
-        }
+        Services = services;
     }
 }

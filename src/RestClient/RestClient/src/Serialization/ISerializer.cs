@@ -1,16 +1,15 @@
-namespace ClickView.Extensions.RestClient.Serialization
+namespace ClickView.Extensions.RestClient.Serialization;
+
+using System;
+
+public interface ISerializer
 {
-    using System;
+    string Format { get; }
 
-    public interface ISerializer
-    {
-        string Format { get; }
+    string Serialize(object obj);
 
-        string Serialize(object obj);
+    T? Deserialize<T>(string input);
+    object? Deserialize(string input, Type type);
 
-        T? Deserialize<T>(string input);
-        object? Deserialize(string input, Type type);
-
-        ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default);
-    }
+    ValueTask<T?> DeserializeAsync<T>(Stream stream, CancellationToken cancellationToken = default);
 }

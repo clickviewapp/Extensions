@@ -1,44 +1,43 @@
-﻿namespace ClickView.Extensions.Hosting.Workers
+﻿namespace ClickView.Extensions.Hosting.Workers;
+
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+
+public abstract class IntervalWorker : Worker
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.Logging;
+    private readonly ILogger _logger;
+    protected abstract TimeSpan Interval { get; }
 
-    public abstract class IntervalWorker : Worker
+    protected IntervalWorker(ILogger logger) : base(logger)
     {
-        private readonly ILogger _logger;
-        protected abstract TimeSpan Interval { get; }
+        _logger = logger;
+    }
 
-        protected IntervalWorker(ILogger logger) : base(logger)
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+    {
+        while (!cancellationToken.IsCancellationRequested)
         {
-            _logger = logger;
-        }
-
-        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
-        {
-            while (!cancellationToken.IsCancellationRequested)
+            try
             {
-                try
-                {
-                    await LoopAsync(cancellationToken).ConfigureAwait(false);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Unhandled Exception caught in IntervalWorker ({WorkerName})", Name);
-                }
+                await LoopAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unhandled Exception caught in IntervalWorker ({WorkerName})", Name);
+            }
 
-                try
-                {
-                    await Task.Delay(Interval, cancellationToken).ConfigureAwait(false);
-                }
-                catch (OperationCanceledException)
-                {
-                    return;
-                }
+            try
+            {
+                await Task.Delay(Interval, cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
             }
         }
-
-        protected abstract Task LoopAsync(CancellationToken cancellationToken);
     }
+
+    protected abstract Task LoopAsync(CancellationToken cancellationToken);
 }

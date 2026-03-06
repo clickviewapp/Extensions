@@ -1,38 +1,37 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
+﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource;
+
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Tokens;
+using TokenStore;
+
+public class TokenStoreTokenSource : ITokenSource
 {
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Tokens;
-    using TokenStore;
+    private readonly ITokenStore _tokenStore;
 
-    public class TokenStoreTokenSource : ITokenSource
+    public TokenStoreTokenSource(ITokenStore tokenStore)
     {
-        private readonly ITokenStore _tokenStore;
-
-        public TokenStoreTokenSource(ITokenStore tokenStore)
-        {
-            _tokenStore = tokenStore;
-        }
-
-        public async Task<IReadOnlyCollection<Token>> GetTokensAsync(CancellationToken cancellationToken = default)
-        {
-            var token = await _tokenStore.GetTokenAsync(TokenType.AccessToken).ConfigureAwait(false);
-
-            if (token == null)
-                return [];
-
-            return
-            [
-                token
-            ];
-        }
-
-        public Task RevokeTokenAsync(CancellationToken cancellationToken = default)
-        {
-            return Task.CompletedTask;
-        }
-
-        public bool StoreTokens => false;
+        _tokenStore = tokenStore;
     }
+
+    public async Task<IReadOnlyCollection<Token>> GetTokensAsync(CancellationToken cancellationToken = default)
+    {
+        var token = await _tokenStore.GetTokenAsync(TokenType.AccessToken).ConfigureAwait(false);
+
+        if (token == null)
+            return [];
+
+        return
+        [
+            token
+        ];
+    }
+
+    public Task RevokeTokenAsync(CancellationToken cancellationToken = default)
+    {
+        return Task.CompletedTask;
+    }
+
+    public bool StoreTokens => false;
 }
