@@ -1,11 +1,10 @@
-﻿namespace ClickView.Extensions.RestClient.Http
-{
-    using System.Net.Http.Headers;
+﻿namespace ClickView.Extensions.RestClient.Http;
 
-    public sealed class RestClientRequestHeaders : HttpHeaders
+using System.Net.Http.Headers;
+
+public sealed class RestClientRequestHeaders : HttpHeaders
+{
+    internal RestClientRequestHeaders()
     {
-        internal RestClientRequestHeaders()
-        {
-        }
     }
 }

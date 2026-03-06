@@ -1,28 +1,27 @@
-﻿namespace ClickView.Extensions.RestClient.Authentication
+﻿namespace ClickView.Extensions.RestClient.Authentication;
+
+using System.Threading;
+using System.Threading.Tasks;
+using Requests;
+
+/// <summary>
+///     Basic authenticator which adds a header value to each request
+/// </summary>
+public class HeaderAuthenticator : IAuthenticator
 {
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Requests;
+    private readonly string _key;
+    private readonly string _value;
 
-    /// <summary>
-    ///     Basic authenticator which adds a header value to each request
-    /// </summary>
-    public class HeaderAuthenticator : IAuthenticator
+    public HeaderAuthenticator(string key, string value)
     {
-        private readonly string _key;
-        private readonly string _value;
+        _key = key;
+        _value = value;
+    }
 
-        public HeaderAuthenticator(string key, string value)
-        {
-            _key = key;
-            _value = value;
-        }
+    public Task AuthenticateAsync(IClientRequest request, CancellationToken token = default)
+    {
+        request.AddHeader(_key, _value);
 
-        public Task AuthenticateAsync(IClientRequest request, CancellationToken token = default)
-        {
-            request.AddHeader(_key, _value);
-
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

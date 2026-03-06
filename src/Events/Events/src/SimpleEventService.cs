@@ -1,38 +1,37 @@
-﻿namespace ClickView.Extensions.Events
+﻿namespace ClickView.Extensions.Events;
+
+using System;
+using System.Threading.Tasks;
+using Bus;
+using Handler;
+using Publisher;
+
+public class SimpleEventService : IEventPublisher, IHandlerRegistrar
 {
-    using System;
-    using System.Threading.Tasks;
-    using Bus;
-    using Handler;
-    using Publisher;
+    private readonly IHandlerRegistrar _registrar;
+    private readonly IEventPublisher _publisher;
 
-    public class SimpleEventService : IEventPublisher, IHandlerRegistrar
+    public SimpleEventService()
     {
-        private readonly IHandlerRegistrar _registrar;
-        private readonly IEventPublisher _publisher;
+        var factory = new DefaultEventHandlerFactory();
+        var eventBus = new InMemoryEventBus(factory);
 
-        public SimpleEventService()
-        {
-            var factory = new DefaultEventHandlerFactory();
-            var eventBus = new InMemoryEventBus(factory);
+        _registrar = factory;
+        _publisher = new EventPublisher(eventBus);
+    }
 
-            _registrar = factory;
-            _publisher = new EventPublisher(eventBus);
-        }
+    public Task PublishAsync(Event evt)
+    {
+        return _publisher.PublishAsync(evt);
+    }
 
-        public Task PublishAsync(Event evt)
-        {
-            return _publisher.PublishAsync(evt);
-        }
+    public void RegisterHandler<T>(IEventHandler<T> handler) where T : Event
+    {
+        _registrar.RegisterHandler(handler);
+    }
 
-        public void RegisterHandler<T>(IEventHandler<T> handler) where T : Event
-        {
-            _registrar.RegisterHandler(handler);
-        }
-
-        public void RegisterHandler<T>(Func<T, Task> handlerFunc) where T : Event
-        {
-            _registrar.RegisterHandler(handlerFunc);
-        }
+    public void RegisterHandler<T>(Func<T, Task> handlerFunc) where T : Event
+    {
+        _registrar.RegisterHandler(handlerFunc);
     }
 }

@@ -1,33 +1,32 @@
-﻿namespace ClickView.Extensions.Events.Tests
+﻿namespace ClickView.Extensions.Events.Tests;
+
+using System.Threading.Tasks;
+using Xunit;
+
+public class SimpleEventServiceTests
 {
-    using System.Threading.Tasks;
-    using Xunit;
-
-    public class SimpleEventServiceTests
+    [Fact]
+    public async Task PublishAndHandle()
     {
-        [Fact]
-        public async Task PublishAndHandle()
+        var eventService = new SimpleEventService();
+
+        var called = false;
+
+        eventService.RegisterHandler<ExampleEvent>(_ =>
         {
-            var eventService = new SimpleEventService();
+            called = true;
+            return Task.CompletedTask;
+        });
 
-            var called = false;
+        await eventService.PublishAsync(new ExampleEvent());
 
-            eventService.RegisterHandler<ExampleEvent>(_ =>
-            {
-                called = true;
-                return Task.CompletedTask;
-            });
+        Assert.True(called);
+    }
 
-            await eventService.PublishAsync(new ExampleEvent());
-
-            Assert.True(called);
-        }
-
-        public class ExampleEvent : Event
+    public class ExampleEvent : Event
+    {
+        public ExampleEvent() : base("hello")
         {
-            public ExampleEvent() : base("hello")
-            {
-            }
         }
     }
 }

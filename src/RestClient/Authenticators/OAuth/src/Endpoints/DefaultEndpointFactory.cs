@@ -1,19 +1,18 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Endpoints
+﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Endpoints;
+
+using System.Threading.Tasks;
+
+public class DefaultEndpointFactory : IAuthenticatorEndpointFactory
 {
-    using System.Threading.Tasks;
+    private readonly AuthenticatorEndpoints _endpoints;
 
-    public class DefaultEndpointFactory : IAuthenticatorEndpointFactory
+    public DefaultEndpointFactory(AuthenticatorEndpoints endpoints)
     {
-        private readonly AuthenticatorEndpoints _endpoints;
+        _endpoints = endpoints;
+    }
 
-        public DefaultEndpointFactory(AuthenticatorEndpoints endpoints)
-        {
-            _endpoints = endpoints;
-        }
-
-        public Task<AuthenticatorEndpoints> GetAsync()
-        {
-            return Task.FromResult(_endpoints);
-        }
+    public Task<AuthenticatorEndpoints> GetAsync()
+    {
+        return Task.FromResult(_endpoints);
     }
 }

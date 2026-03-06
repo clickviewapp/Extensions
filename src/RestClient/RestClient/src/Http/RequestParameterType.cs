@@ -1,11 +1,10 @@
-﻿namespace ClickView.Extensions.RestClient.Http
-{
-    using System;
+﻿namespace ClickView.Extensions.RestClient.Http;
 
-    [Flags]
-    public enum RequestParameterType
-    {
-        Query,
-        Body
-    }
+using System;
+
+[Flags]
+public enum RequestParameterType
+{
+    Query,
+    Body
 }

@@ -1,84 +1,83 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Endpoints
+﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Endpoints;
+
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Exceptions;
+using IdentityModel.Client;
+
+public class DiscoveryEndpointFactory : IAuthenticatorEndpointFactory
 {
-    using System;
-    using System.Net.Http;
-    using System.Threading.Tasks;
-    using Exceptions;
-    using IdentityModel.Client;
+    private readonly string _authority;
+    private readonly HttpClient _httpClient;
+    private readonly DiscoveryPolicy _discoveryPolicy;
 
-    public class DiscoveryEndpointFactory : IAuthenticatorEndpointFactory
+    private volatile Task<AuthenticatorEndpoints> _discoveryCache;
+    private DateTime _nextReload = DateTime.MinValue;
+    private readonly object _reloadLock = new object();
+
+    public DiscoveryEndpointFactory(string authority, HttpClient httpClient)
     {
-        private readonly string _authority;
-        private readonly HttpClient _httpClient;
-        private readonly DiscoveryPolicy _discoveryPolicy;
+        _authority = authority ?? throw new ArgumentNullException(nameof(authority));
+        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
 
-        private volatile Task<AuthenticatorEndpoints> _discoveryCache;
-        private DateTime _nextReload = DateTime.MinValue;
-        private readonly object _reloadLock = new object();
-
-        public DiscoveryEndpointFactory(string authority, HttpClient httpClient)
+        _discoveryPolicy = new DiscoveryPolicy
         {
-            _authority = authority ?? throw new ArgumentNullException(nameof(authority));
-            _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+            RequireHttps = authority.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
+        };
+    }
 
-            _discoveryPolicy = new DiscoveryPolicy
-            {
-                RequireHttps = authority.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
-            };
-        }
+    public TimeSpan CacheDuration { get; set; } = TimeSpan.FromHours(8);
 
-        public TimeSpan CacheDuration { get; set; } = TimeSpan.FromHours(8);
+    public Task<AuthenticatorEndpoints> GetAsync()
+    {
+        var now = DateTime.UtcNow;
 
-        public Task<AuthenticatorEndpoints> GetAsync()
+        if (_nextReload <= now)
+            Refresh();
+
+        return _discoveryCache;
+    }
+
+    public void Refresh()
+    {
+        lock (_reloadLock)
         {
             var now = DateTime.UtcNow;
 
-            if (_nextReload <= now)
-                Refresh();
+            if (_nextReload > now)
+                return;
 
-            return _discoveryCache;
+            _nextReload = now.Add(CacheDuration);
+            _discoveryCache = LoadEndpointsAsync();
         }
+    }
 
-        public void Refresh()
+    private async Task<AuthenticatorEndpoints> LoadEndpointsAsync()
+    {
+        var result = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
         {
-            lock (_reloadLock)
-            {
-                var now = DateTime.UtcNow;
+            Address = _authority,
+            Policy = _discoveryPolicy
+        }).ConfigureAwait(false);
 
-                if (_nextReload > now)
-                    return;
-
-                _nextReload = now.Add(CacheDuration);
-                _discoveryCache = LoadEndpointsAsync();
-            }
-        }
-
-        private async Task<AuthenticatorEndpoints> LoadEndpointsAsync()
+        if (!result.IsError)
         {
-            var result = await _httpClient.GetDiscoveryDocumentAsync(new DiscoveryDocumentRequest
+            return new AuthenticatorEndpoints
             {
-                Address = _authority,
-                Policy = _discoveryPolicy
-            }).ConfigureAwait(false);
-
-            if (!result.IsError)
-            {
-                return new AuthenticatorEndpoints
-                {
-                    TokenEndpoint = result.TokenEndpoint,
-                    RevocationEndpoint = result.RevocationEndpoint
-                };
-            }
-
-            // Force next request to retry immediately
-            lock (_reloadLock)
-            {
-                _nextReload = DateTime.MinValue;
-            }
-
-            throw new ClientDiscoveryException(
-                "Failed to retrieve endpoints from discovery document",
-                result.Exception);
+                TokenEndpoint = result.TokenEndpoint,
+                RevocationEndpoint = result.RevocationEndpoint
+            };
         }
+
+        // Force next request to retry immediately
+        lock (_reloadLock)
+        {
+            _nextReload = DateTime.MinValue;
+        }
+
+        throw new ClientDiscoveryException(
+            "Failed to retrieve endpoints from discovery document",
+            result.Exception);
     }
 }

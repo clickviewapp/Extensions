@@ -1,9 +1,8 @@
-﻿namespace ClickView.Extensions.Events.Publisher
-{
-    using System.Threading.Tasks;
+﻿namespace ClickView.Extensions.Events.Publisher;
 
-    public interface IEventPublisher
-    {
-        Task PublishAsync(Event evt);
-    }
+using System.Threading.Tasks;
+
+public interface IEventPublisher
+{
+    Task PublishAsync(Event evt);
 }

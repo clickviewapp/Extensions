@@ -1,47 +1,46 @@
-﻿namespace ClickView.Extensions.Events.Handler
+﻿namespace ClickView.Extensions.Events.Handler;
+
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+internal class DefaultEventHandlerFactory : IHandlerRunner, IHandlerRegistrar
 {
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
+    private readonly ConcurrentDictionary<Type, List<Func<Event, Task>>> _handlers =
+        new ConcurrentDictionary<Type, List<Func<Event, Task>>>();
 
-    internal class DefaultEventHandlerFactory : IHandlerRunner, IHandlerRegistrar
+    public void RegisterHandler<T>(IEventHandler<T> handler) where T : Event
     {
-        private readonly ConcurrentDictionary<Type, List<Func<Event, Task>>> _handlers =
-            new ConcurrentDictionary<Type, List<Func<Event, Task>>>();
+        RegisterHandler<T>(handler.HandleEventAsync);
+    }
 
-        public void RegisterHandler<T>(IEventHandler<T> handler) where T : Event
-        {
-            RegisterHandler<T>(handler.HandleEventAsync);
-        }
+    public void RegisterHandler<T>(Func<T, Task> handlerFunc) where T : Event
+    {
+        var eventType = typeof(T);
 
-        public void RegisterHandler<T>(Func<T, Task> handlerFunc) where T : Event
-        {
-            var eventType = typeof(T);
+        Task Func(Event e) => handlerFunc((T)e);
 
-            Task Func(Event e) => handlerFunc((T)e);
-
-            _handlers.AddOrUpdate(eventType,
-                [Func],
-                (_, list) =>
-                {
-                    list.Add(Func);
-                    return list;
-                });
-        }
-
-        public Task HandleAsync(Event evt)
-        {
-            var eventType = evt.GetType();
-
-            if (!_handlers.TryGetValue(eventType, out var handlers))
+        _handlers.AddOrUpdate(eventType,
+            [Func],
+            (_, list) =>
             {
-                //TODO: Maybe throw an exception saying no handlers?
-                return Task.FromResult(0);
-            }
+                list.Add(Func);
+                return list;
+            });
+    }
 
-            return Task.WhenAll(handlers.Select(h => h(evt)));
+    public Task HandleAsync(Event evt)
+    {
+        var eventType = evt.GetType();
+
+        if (!_handlers.TryGetValue(eventType, out var handlers))
+        {
+            //TODO: Maybe throw an exception saying no handlers?
+            return Task.FromResult(0);
         }
+
+        return Task.WhenAll(handlers.Select(h => h(evt)));
     }
 }

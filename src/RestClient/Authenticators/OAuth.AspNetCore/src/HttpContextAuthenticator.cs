@@ -1,16 +1,15 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.AspNetCore
+﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.AspNetCore;
+
+using TokenSource;
+
+public class HttpContextAuthenticator : OAuthAuthenticator<HttpContextAuthenticatorOptions>
 {
-    using TokenSource;
-
-    public class HttpContextAuthenticator : OAuthAuthenticator<HttpContextAuthenticatorOptions>
+    public HttpContextAuthenticator(HttpContextAuthenticatorOptions options) : base(options)
     {
-        public HttpContextAuthenticator(HttpContextAuthenticatorOptions options) : base(options)
-        {
-            if (!options.EnableRefresh) return;
+        if (!options.EnableRefresh) return;
 
-            var tokenClient = new TokenClient(HttpClient, options.ClientId, options.ClientSecret, CreateEndpointFactory(options.Authority));
+        var tokenClient = new TokenClient(HttpClient, options.ClientId, options.ClientSecret, CreateEndpointFactory(options.Authority));
 
-            AddTokenSource(new RefreshTokenSource(TokenStore, tokenClient, options.LoggerFactory));
-        }
+        AddTokenSource(new RefreshTokenSource(TokenStore, tokenClient, options.LoggerFactory));
     }
 }

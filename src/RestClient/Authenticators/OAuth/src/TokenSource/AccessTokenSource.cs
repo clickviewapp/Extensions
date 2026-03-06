@@ -1,29 +1,28 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
+﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource;
+
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Tokens;
+
+public abstract class AccessTokenSource : ITokenSource
 {
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Tokens;
-
-    public abstract class AccessTokenSource : ITokenSource
+    public async Task<IReadOnlyCollection<Token>> GetTokensAsync(CancellationToken cancellationToken = default)
     {
-        public async Task<IReadOnlyCollection<Token>> GetTokensAsync(CancellationToken cancellationToken = default)
-        {
-            var token = await GetAccessTokenAsync(cancellationToken).ConfigureAwait(false);
+        var token = await GetAccessTokenAsync(cancellationToken).ConfigureAwait(false);
 
-            if (token == null)
-                return [];
+        if (token == null)
+            return [];
 
-            return [token];
-        }
+        return [token];
+    }
 
-        public virtual bool StoreTokens => true;
+    public virtual bool StoreTokens => true;
 
-        protected abstract Task<AccessToken> GetAccessTokenAsync(CancellationToken cancellationToken = default);
+    protected abstract Task<AccessToken> GetAccessTokenAsync(CancellationToken cancellationToken = default);
 
-        public virtual Task RevokeTokenAsync(CancellationToken cancellationToken = default)
-        {
-            return Task.CompletedTask;
-        }
+    public virtual Task RevokeTokenAsync(CancellationToken cancellationToken = default)
+    {
+        return Task.CompletedTask;
     }
 }

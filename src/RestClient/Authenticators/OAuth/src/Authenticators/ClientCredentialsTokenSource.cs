@@ -1,40 +1,39 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Authenticators
+﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Authenticators;
+
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Tokens;
+using TokenSource;
+
+public class ClientCredentialsTokenSource : AccessTokenSource
 {
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Microsoft.Extensions.Logging;
-    using Tokens;
-    using TokenSource;
+    private readonly TokenClient _tokenClient;
+    private readonly ILogger<ClientCredentialsTokenSource> _logger;
+    private readonly string _scope;
 
-    public class ClientCredentialsTokenSource : AccessTokenSource
+    public ClientCredentialsTokenSource(TokenClient tokenClient, ILoggerFactory loggerFactory,
+        IEnumerable<string> scopes)
     {
-        private readonly TokenClient _tokenClient;
-        private readonly ILogger<ClientCredentialsTokenSource> _logger;
-        private readonly string _scope;
+        _tokenClient = tokenClient;
+        _scope = string.Join(" ", scopes);
+        _logger = loggerFactory.CreateLogger<ClientCredentialsTokenSource>();
+    }
 
-        public ClientCredentialsTokenSource(TokenClient tokenClient, ILoggerFactory loggerFactory,
-            IEnumerable<string> scopes)
-        {
-            _tokenClient = tokenClient;
-            _scope = string.Join(" ", scopes);
-            _logger = loggerFactory.CreateLogger<ClientCredentialsTokenSource>();
-        }
+    protected override async Task<AccessToken> GetAccessTokenAsync(CancellationToken cancellationToken = default)
+    {
+        var response = await _tokenClient.GetClientCredentialsTokenAsync(_scope, cancellationToken)
+            .ConfigureAwait(false);
 
-        protected override async Task<AccessToken> GetAccessTokenAsync(CancellationToken cancellationToken = default)
-        {
-            var response = await _tokenClient.GetClientCredentialsTokenAsync(_scope, cancellationToken)
-                .ConfigureAwait(false);
+        //todo: handle errors
+        if (!response.IsError)
+            return TokenHelpers.CreateAccessToken(response);
 
-            //todo: handle errors
-            if (!response.IsError)
-                return TokenHelpers.CreateAccessToken(response);
+        _logger.LogError(response.Exception,
+            "Error fetching client credentials token. {Error} ({ErrorDescription})", response.Error,
+            response.ErrorDescription);
 
-            _logger.LogError(response.Exception,
-                "Error fetching client credentials token. {Error} ({ErrorDescription})", response.Error,
-                response.ErrorDescription);
-
-            return null;
-        }
+        return null;
     }
 }

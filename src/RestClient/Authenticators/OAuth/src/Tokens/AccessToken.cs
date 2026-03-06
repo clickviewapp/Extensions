@@ -1,12 +1,11 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Tokens
-{
-    using System;
+﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Tokens;
 
-    public class AccessToken : Token
+using System;
+
+public class AccessToken : Token
+{
+    public AccessToken(string value, DateTimeOffset? expireTime) : base(TokenType.AccessToken, value)
     {
-        public AccessToken(string value, DateTimeOffset? expireTime) : base(TokenType.AccessToken, value)
-        {
-            ExpireTime = expireTime;
-        }
+        ExpireTime = expireTime;
     }
 }

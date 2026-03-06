@@ -1,8 +1,7 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Tokens
+﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Tokens;
+
+public enum TokenType
 {
-    public enum TokenType
-    {
-        AccessToken,
-        RefreshToken
-    }
+    AccessToken,
+    RefreshToken
 }

@@ -1,9 +1,8 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Authenticators
-{
-    using System.Collections.Generic;
+﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.Authenticators;
 
-    public class ClientCredentialsAuthenticatorOptions : OAuthAuthenticatorOptions
-    {
-        public IEnumerable<string> Scopes { get; set; }
-    }
+using System.Collections.Generic;
+
+public class ClientCredentialsAuthenticatorOptions : OAuthAuthenticatorOptions
+{
+    public IEnumerable<string> Scopes { get; set; }
 }
