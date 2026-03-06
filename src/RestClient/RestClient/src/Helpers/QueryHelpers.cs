@@ -92,8 +92,7 @@ namespace ClickView.Extensions.RestClient.Helpers
                 uriToBeAppended = uri.Substring(0, anchorIndex);
             }
 
-            var queryIndex = uriToBeAppended.IndexOf('?');
-            var hasQuery = queryIndex != -1;
+            var hasQuery = uriToBeAppended.Contains('?');
 
             var sb = new StringBuilder();
             sb.Append(uriToBeAppended);

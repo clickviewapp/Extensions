@@ -29,7 +29,7 @@ namespace ClickView.Extensions.RestClient.Requests
         /// <summary>
         ///     Set to true if we should throw an exception on 404
         /// </summary>
-        protected bool ThrowOnNotFound { get; set; } = false;
+        protected bool ThrowOnNotFound { get; set; }
 
         public string Resource { get; set; } = resource;
         public HttpMethod Method { get; } = method;

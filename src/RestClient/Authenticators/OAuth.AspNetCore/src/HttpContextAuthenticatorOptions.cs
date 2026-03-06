@@ -1,14 +1,9 @@
 ﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.AspNetCore
 {
-    public class HttpContextAuthenticatorOptions : OAuthAuthenticatorOptions
+    public class HttpContextAuthenticatorOptions(string authority) : OAuthAuthenticatorOptions
     {
-        public string Authority { get; }
+        public string Authority { get; } = authority;
 
-        public bool EnableRefresh { get; set; } = false;
-
-        public HttpContextAuthenticatorOptions(string authority)
-        {
-            Authority = authority;
-        }
+        public bool EnableRefresh { get; set; }
     }
 }

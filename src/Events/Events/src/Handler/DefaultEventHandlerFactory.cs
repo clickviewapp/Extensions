@@ -23,7 +23,7 @@
             Task Func(Event e) => handlerFunc((T)e);
 
             _handlers.AddOrUpdate(eventType,
-                new List<Func<Event, Task>> { Func },
+                [Func],
                 (_, list) =>
                 {
                     list.Add(Func);

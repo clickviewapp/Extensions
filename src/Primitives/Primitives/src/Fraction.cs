@@ -7,7 +7,7 @@
         public long Numerator { get; }
         public long Denominator { get; }
 
-        public static readonly Fraction Empty = new Fraction();
+        public static readonly Fraction Empty;
 
         public Fraction(long numerator)
         {

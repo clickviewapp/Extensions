@@ -47,7 +47,7 @@
 
         private class CustomEventHandler : IEventHandler<CustomEvent>
         {
-            public List<CustomEvent> Events { get; } = new List<CustomEvent>();
+            public List<CustomEvent> Events { get; } = [];
 
             public Task HandleEventAsync(CustomEvent evt)
             {

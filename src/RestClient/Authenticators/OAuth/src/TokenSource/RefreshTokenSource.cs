@@ -1,10 +1,10 @@
 ﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth.TokenSource
 {
-    using Microsoft.Extensions.Logging;
     using System;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.Logging;
     using Tokens;
     using TokenStore;
     using Utilities.Threading;
@@ -28,7 +28,7 @@
         {
             var refreshToken = await _tokenStore.GetTokenAsync(TokenType.RefreshToken).ConfigureAwait(false);
             if (refreshToken == null)
-                return Array.Empty<Token>();
+                return [];
 
             var accessToken = await _tokenStore.GetTokenAsync(TokenType.AccessToken).ConfigureAwait(false);
             if (accessToken is not null && !accessToken.HasExpired())
@@ -51,7 +51,7 @@
                 _logger.LogError(refreshTokenResponse.Exception, "Error refreshing token. {Message}",
                     refreshTokenResponse.ErrorDescription);
 
-                return Array.Empty<Token>();
+                return [];
             }
 
             var newAccessToken = TokenHelpers.CreateAccessToken(refreshTokenResponse);
