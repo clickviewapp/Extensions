@@ -15,7 +15,7 @@ public static partial class EnumerableExtensions
     /// <param name="source"></param>
     /// <param name="value">The first element if found</param>
     /// <typeparam name="T"></typeparam>
-    /// <returns>True if element contains an item, otherwise false</returns>
+    /// <returns>True if <paramref name="source"/> contains an item, otherwise false</returns>
     /// <exception cref="ArgumentNullException"></exception>
     public static bool TryGetFirstValue<T>(this IEnumerable<T> source, [MaybeNullWhen(false)] out T value)
     {
@@ -59,44 +59,67 @@ public static partial class EnumerableExtensions
     /// <summary>
     /// Casts a sequence to an <see cref="ICollection{T}"/>, otherwise enumerates the sequence.
     /// </summary>
-    /// <param name="enumerable"></param>
+    /// <param name="source"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static ICollection<T> AsCollection<T>(this IEnumerable<T> enumerable)
+    public static ICollection<T> AsCollection<T>(this IEnumerable<T> source)
     {
-        if (enumerable is ICollection<T> collection)
+        if (source is null)
+            throw new ArgumentNullException(nameof(source));
+
+        if (source is ICollection<T> collection)
             return collection;
 
-        return enumerable.ToList();
+        return source.ToList();
     }
 
     /// <summary>
     /// Casts a sequence to a <see cref="IReadOnlyList{T}"/>, otherwise enumerates the sequence.
     /// </summary>
-    /// <param name="enumerable"></param>
+    /// <param name="source"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public static IReadOnlyList<T> AsReadOnlyList<T>(this IEnumerable<T> enumerable)
+    public static IReadOnlyList<T> AsReadOnlyList<T>(this IEnumerable<T> source)
     {
-        if (enumerable is IReadOnlyList<T> collection)
+        if (source is null)
+            throw new ArgumentNullException(nameof(source));
+
+        if (source is IReadOnlyList<T> collection)
             return collection;
 
-        return new ReadOnlyCollection<T>(enumerable.ToList());
+        return new ReadOnlyCollection<T>(source.ToList());
+    }
+
+    /// <summary>
+    /// Casts a sequence to a <see cref="IReadOnlyCollection{T}" />, otherwise enumerates the sequence.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public static IReadOnlyCollection<T> AsReadOnlyCollection<T>(this IEnumerable<T> source)
+    {
+        if (source is null)
+            throw new ArgumentNullException(nameof(source));
+
+        if (source is IReadOnlyCollection<T> collection)
+            return collection;
+
+        return new ReadOnlyCollection<T>(source.ToList());
     }
 
     /// <summary>
     /// Enumerates a sequence and returns only non null values
     /// </summary>
-    /// <param name="enumerable"></param>
+    /// <param name="source"></param>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> enumerable) where T : class
+    public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source)
     {
-        if (enumerable is null)
-            throw new ArgumentNullException(nameof(enumerable));
+        if (source is null)
+            throw new ArgumentNullException(nameof(source));
 
-        foreach (var t in enumerable)
+        foreach (var t in source)
         {
             if (t is not null)
                 yield return t;
@@ -106,24 +129,23 @@ public static partial class EnumerableExtensions
     /// <summary>
     /// Enumerates a sequence and returns only non null values
     /// </summary>
-    /// <param name="enumerable"></param>
+    /// <param name="source"></param>
     /// <param name="selector"></param>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TResult"></typeparam>
     /// <returns></returns>
     /// <exception cref="ArgumentNullException"></exception>
     public static IEnumerable<TResult> WhereNotNull<T, TResult>(
-        this IEnumerable<T> enumerable,
+        this IEnumerable<T> source,
         Func<T, TResult?> selector)
-        where TResult : class
     {
-        if (enumerable is null)
-            throw new ArgumentNullException(nameof(enumerable));
+        if (source is null)
+            throw new ArgumentNullException(nameof(source));
 
         if (selector is null)
             throw new ArgumentNullException(nameof(selector));
 
-        foreach (var t in enumerable.Select(selector))
+        foreach (var t in source.Select(selector))
         {
             if (t is not null)
                 yield return t;
