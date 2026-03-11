@@ -3,7 +3,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -30,11 +29,11 @@ public static partial class EnumerableExtensions
             return false;
         }
 #else
-            if (source is ICollection<T> {Count: 0} or ICollection {Count: 0})
-            {
-                value = default;
-                return false;
-            }
+        if (source is ICollection<T> {Count: 0} or ICollection {Count: 0})
+        {
+            value = default;
+            return false;
+        }
 #endif
 
         if (source is IList<T> list)
@@ -70,7 +69,7 @@ public static partial class EnumerableExtensions
         if (source is ICollection<T> collection)
             return collection;
 
-        return source.ToList();
+        return source.ToArray();
     }
 
     /// <summary>
@@ -87,7 +86,7 @@ public static partial class EnumerableExtensions
         if (source is IReadOnlyList<T> collection)
             return collection;
 
-        return new ReadOnlyCollection<T>(source.ToList());
+        return source.ToArray();
     }
 
     /// <summary>
@@ -104,7 +103,7 @@ public static partial class EnumerableExtensions
         if (source is IReadOnlyCollection<T> collection)
             return collection;
 
-        return new ReadOnlyCollection<T>(source.ToList());
+        return source.ToArray();
     }
 
     /// <summary>
