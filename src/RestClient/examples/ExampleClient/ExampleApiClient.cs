@@ -24,20 +24,20 @@ public class ExampleApiClient
     /// </summary>
     /// <param name="username"></param>
     /// <returns></returns>
-    public async Task<UserModel> GetUserCustomRequestAsync(string username)
+    public async Task<UserModel?> GetUserCustomRequestAsync(string username)
     {
-        var response = await _client.ExecuteAsync(new ExampleUserRequest(username)).ConfigureAwait(false);
+        var response = await _client.ExecuteAsync(new ExampleUserRequest(username));
 
         return response.Data;
     }
 
-    public async Task<UserModel> GetUserAsync(string username)
+    public async Task<UserModel?> GetUserAsync(string username)
     {
         var request = new RestClientRequest<UserModel>(HttpMethod.Get, "v1/users");
 
         request.AddQueryParameter("username", username);
 
-        var response = await _client.ExecuteAsync(request).ConfigureAwait(false);
+        var response = await _client.ExecuteAsync(request);
 
         return response.Data;
     }

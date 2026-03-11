@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>$(FullTargetFrameworks)</TargetFrameworks>
     <PackageTags>events</PackageTags>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

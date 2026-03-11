@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>$(FullTargetFrameworks)</TargetFrameworks>
     <PackageTags>primitives</PackageTags>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
 </Project>

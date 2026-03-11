@@ -26,7 +26,7 @@ public class EventsIntegrationTests
         await eventPublisher.PublishAsync(evt);
 
         //Wait for events to propagate/tasks to finish
-        await Task.Delay(100);
+        await Task.Delay(100, TestContext.Current.CancellationToken);
 
         //assert
         Assert.Single(eventHandler.Events);

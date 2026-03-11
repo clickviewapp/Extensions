@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>$(FullTargetFrameworks)</TargetFrameworks>
-    <Nullable>enable</Nullable>
     <PackageTags>hosting</PackageTags>
   </PropertyGroup>
 

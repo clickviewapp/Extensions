@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>$(FullTargetFrameworks)</TargetFrameworks>
     <PackageTags>utilities</PackageTags>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
