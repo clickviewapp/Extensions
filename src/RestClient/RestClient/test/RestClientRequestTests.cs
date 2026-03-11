@@ -27,7 +27,9 @@ public class RestClientRequestTests
         var result = request.GetContent();
 
         var streamContent = Assert.IsType<StreamContent>(result);
+#pragma warning disable xUnit1051
         var bytes = await streamContent.ReadAsByteArrayAsync();
+#pragma warning restore xUnit1051
         Assert.Equal(streamContent.Headers.ContentType, MediaTypeHeaderValue.Parse("application/octet-stream"));
         Assert.Equal([1, 2, 3], bytes);
     }
@@ -41,7 +43,9 @@ public class RestClientRequestTests
         var result = request.GetContent();
 
         var streamContent = Assert.IsType<StreamContent>(result);
+#pragma warning disable xUnit1051
         var bytes = await streamContent.ReadAsByteArrayAsync();
+#pragma warning restore xUnit1051
         Assert.Equal(streamContent.Headers.ContentType, MediaTypeHeaderValue.Parse("application/test"));
         Assert.Equal([1, 2, 3], bytes);
     }
@@ -58,7 +62,9 @@ public class RestClientRequestTests
         var result = request.GetContent();
 
         var streamContent = Assert.IsType<StringContent>(result);
+#pragma warning disable xUnit1051
         var resultString = await streamContent.ReadAsStringAsync();
+#pragma warning restore xUnit1051
 
         Assert.Equal("hello world", resultString);
         Assert.Equal("application/test", streamContent.Headers.ContentType?.MediaType);

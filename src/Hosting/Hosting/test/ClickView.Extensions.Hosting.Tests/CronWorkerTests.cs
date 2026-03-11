@@ -18,7 +18,7 @@ public class CronWorkerTests
 
         await scheduler.StartAsync(CancellationToken.None);
 
-        await Task.Delay(TimeSpan.FromSeconds(5));
+        await Task.Delay(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken);
 
         await scheduler.StopAsync(CancellationToken.None);
 
@@ -30,7 +30,7 @@ public class CronWorkerTests
     {
         const string everyTwoSecondCron = "*/2 * * * * *";
 
-        Assert.Throws<InvalidCronWorkerOptionException>(() => 
+        Assert.Throws<InvalidCronWorkerOptionException>(() =>
             { new CronWorkerOption(everyTwoSecondCron, true, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(1)); });
     }
 
@@ -48,7 +48,7 @@ public class CronWorkerTests
         var currentTime = DateTime.UtcNow;
 
         // Give it a bit more time to ensure the task is executed
-        await Task.Delay(TimeSpan.FromSeconds(4));
+        await Task.Delay(TimeSpan.FromSeconds(4), TestContext.Current.CancellationToken);
 
         await scheduler.StopAsync(CancellationToken.None);
 
