@@ -74,27 +74,27 @@ public class RestClientRequestTests
     }
 
     [Fact]
-    public void AddHeader_SingleValue_SameHeaderTwice_DoesNotThrow()
+    public void AddOrUpdateHeader_SingleValue_SameHeaderTwice_DoesNotThrow()
     {
         const string key = "X-Test-Header";
         const string value = "TestValue";
 
         var request = new RestClientRequest(HttpMethod.Post, "test");
-        request.AddHeader(key, value);
-        request.AddHeader(key, value);
+        request.AddOrUpdateHeader(key, value);
+        request.AddOrUpdateHeader(key, value);
 
         Assert.Single(request.Headers);
     }
 
     [Fact]
-    public void AddHeader_MultipleValues_SameHeaderTwice_DoesNotThrow()
+    public void AddOrUpdateHeader_MultipleValues_SameHeaderTwice_DoesNotThrow()
     {
         const string key = "X-Test-Header";
         string[] values = ["TestValue1", "TestValue2"];
 
         var request = new RestClientRequest(HttpMethod.Post, "test");
-        request.AddHeader(key, values);
-        request.AddHeader(key, values);
+        request.AddOrUpdateHeader(key, values);
+        request.AddOrUpdateHeader(key, values);
 
         Assert.Single(request.Headers);
     }

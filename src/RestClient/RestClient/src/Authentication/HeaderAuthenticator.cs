@@ -1,4 +1,4 @@
-﻿namespace ClickView.Extensions.RestClient.Authentication;
+namespace ClickView.Extensions.RestClient.Authentication;
 
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,7 +20,7 @@ public class HeaderAuthenticator : IAuthenticator
 
     public Task AuthenticateAsync(IClientRequest request, CancellationToken token = default)
     {
-        request.AddHeader(_key, _value);
+        request.AddOrUpdateHeader(_key, _value);
 
         return Task.CompletedTask;
     }
