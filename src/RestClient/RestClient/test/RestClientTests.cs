@@ -214,7 +214,7 @@ public class RestClientTests
                 ItExpr.IsAny<HttpRequestMessage>(),
                 ItExpr.IsAny<CancellationToken>()
             )
-            .Callback<HttpRequestMessage, CancellationToken>((request, token) =>
+            .Callback<HttpRequestMessage, CancellationToken>((request, _) =>
             {
                 userAgentHeader = request.Headers.UserAgent.ToString();
             })
