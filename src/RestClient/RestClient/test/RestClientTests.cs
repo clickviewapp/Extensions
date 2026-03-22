@@ -40,7 +40,7 @@ public class RestClientTests
         var client = new RestClient(new Uri("http://clickview.com.au"), new HttpClient(mockMessageHandler.Object));
 
         // act
-        await client.ExecuteAsync(request);
+        await client.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
         // assert
         mockMessageHandler.Verify();
@@ -74,7 +74,7 @@ public class RestClientTests
         });
 
         // act
-        await client.ExecuteAsync(request);
+        await client.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
         // assert
         mockMessageHandler.Verify();
@@ -108,7 +108,7 @@ public class RestClientTests
         });
 
         // act
-        await client.ExecuteAsync(request);
+        await client.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
         // assert
         mockMessageHandler.Verify();
@@ -142,7 +142,7 @@ public class RestClientTests
         });
 
         // act
-        await client.ExecuteAsync(request);
+        await client.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
         // assert
         mockMessageHandler.Verify();
@@ -159,7 +159,7 @@ public class RestClientTests
         var client = new RestClient(new HttpClient(mockMessageHandler.Object));
 
         // act/assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() => client.ExecuteAsync(request));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => client.ExecuteAsync(request, TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -186,7 +186,7 @@ public class RestClientTests
 
         request.AddBody(new MemoryStream());
 
-        var response = await client.ExecuteAsync(request);
+        var response = await client.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
         mockMessageHandler.Verify();
         Assert.Equal("test: success", response.Data);
@@ -231,7 +231,7 @@ public class RestClientTests
             DefaultUserAgent = "testapp/1.0.0 (rv:1; test; example/1.2.3)"
         });
 
-        await client.ExecuteAsync(request);
+        await client.ExecuteAsync(request, TestContext.Current.CancellationToken);
 
         mockMessageHandler.Verify();
         Assert.Equal("testapp/1.0.0 (rv:1; test; example/1.2.3)", userAgentHeader);
