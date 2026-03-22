@@ -11,5 +11,7 @@ public interface IClientRequest
 
     void AddHeader(string key, string value);
     void AddHeader(string key, IEnumerable<string> values);
+    void AddOrUpdateHeader(string key, string value);
+    void AddOrUpdateHeader(string key, IEnumerable<string> values);
     void AddBody(object body);
 }

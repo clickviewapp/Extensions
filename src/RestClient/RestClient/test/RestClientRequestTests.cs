@@ -79,6 +79,32 @@ public class RestClientRequestTests
         Assert.Equal("Cannot add body to GET", ex.Message);
     }
 
+    [Fact]
+    public void AddOrUpdateHeader_SingleValue_SameHeaderTwice_DoesNotThrow()
+    {
+        const string key = "X-Test-Header";
+        const string value = "TestValue";
+
+        var request = new RestClientRequest(HttpMethod.Post, "test");
+        request.AddOrUpdateHeader(key, value);
+        request.AddOrUpdateHeader(key, value);
+
+        Assert.Single(request.Headers);
+    }
+
+    [Fact]
+    public void AddOrUpdateHeader_MultipleValues_SameHeaderTwice_DoesNotThrow()
+    {
+        const string key = "X-Test-Header";
+        string[] values = ["TestValue1", "TestValue2"];
+
+        var request = new RestClientRequest(HttpMethod.Post, "test");
+        request.AddOrUpdateHeader(key, values);
+        request.AddOrUpdateHeader(key, values);
+
+        Assert.Single(request.Headers);
+    }
+
     private class TestSerializer : ISerializer
     {
         public string Format => "test";
