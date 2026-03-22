@@ -17,7 +17,7 @@ public class TokenStoreTokenSourceTests
 
         var source = new TokenStoreTokenSource(tokenStore.Object);
 
-        var tokens = await source.GetTokensAsync();
+        var tokens = await source.GetTokensAsync(TestContext.Current.CancellationToken);
 
         Assert.Empty(tokens);
     }

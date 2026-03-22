@@ -4,6 +4,7 @@
     <TargetFrameworks>$(FullTargetFrameworks)</TargetFrameworks>
     <PackageTags>restclient rest http oauth</PackageTags>
     <Description>OAuth authenticators for ClickView.Extensions.RestClient</Description>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

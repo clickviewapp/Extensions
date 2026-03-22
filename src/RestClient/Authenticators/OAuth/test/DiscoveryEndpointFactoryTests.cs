@@ -39,7 +39,7 @@ public class DiscoveryEndpointFactoryTests
 
         var endpoints = await factory.GetAsync();
 
-        await Task.Delay(1500);
+        await Task.Delay(1500, TestContext.Current.CancellationToken);
 
         var endpoints2 = await factory.GetAsync();
 

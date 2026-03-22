@@ -1,5 +1,6 @@
 ﻿namespace ExampleClient;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http;
 using ClickView.Extensions.RestClient;
@@ -26,7 +27,7 @@ public class ExampleUserRequest : RestClientRequest<UserModel>
         base.HandleError(error);
     }
 
-    protected override bool TryParseErrorBody(string content, out ErrorBody error)
+    protected override bool TryParseErrorBody(string content, [NotNullWhen(true)] out ErrorBody? error)
     {
         var errorResponse = Deserialize<ErrorResponse>(content);
 
