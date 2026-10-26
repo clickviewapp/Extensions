@@ -29,7 +29,7 @@ public static partial class EnumerableExtensions
             return false;
         }
 #else
-        if (source is ICollection<T> {Count: 0} or ICollection {Count: 0})
+        if (source is ICollection<T> { Count: 0 } or ICollection { Count: 0 })
         {
             value = default;
             return false;
@@ -118,11 +118,24 @@ public static partial class EnumerableExtensions
         if (source is null)
             throw new ArgumentNullException(nameof(source));
 
-        foreach (var t in source)
-        {
-            if (t is not null)
-                yield return t;
-        }
+        return source.Where(static t => t is not null)!;
+    }
+
+    /// <summary>
+    /// Enumerates a sequence and returns only non null values
+    /// </summary>
+    /// <param name="source"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source) where T : struct
+    {
+        if (source is null)
+            throw new ArgumentNullException(nameof(source));
+
+        return source
+            .Where(static t => t.HasValue)
+            .Select(static t => t.GetValueOrDefault());
     }
 
     /// <summary>
@@ -144,10 +157,32 @@ public static partial class EnumerableExtensions
         if (selector is null)
             throw new ArgumentNullException(nameof(selector));
 
-        foreach (var t in source.Select(selector))
-        {
-            if (t is not null)
-                yield return t;
-        }
+        return source
+            .Select(selector)
+            .WhereNotNull();
+    }
+
+    /// <summary>
+    /// Enumerates a sequence and returns only non null values
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="selector"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TResult"></typeparam>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    public static IEnumerable<TResult> WhereNotNull<T, TResult>(
+        this IEnumerable<T> source,
+        Func<T, TResult?> selector) where TResult : struct
+    {
+        if (source is null)
+            throw new ArgumentNullException(nameof(source));
+
+        if (selector is null)
+            throw new ArgumentNullException(nameof(selector));
+
+        return source
+            .Select(selector)
+            .WhereNotNull();
     }
 }
