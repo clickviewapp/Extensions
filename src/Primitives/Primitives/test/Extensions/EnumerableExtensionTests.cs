@@ -48,7 +48,27 @@ public class EnumerableExtensionTests
 
         var result = list.WhereNotNull();
 
-        Assert.Equal(result, [1, 2, 3]);
+        Assert.Equal([1, 2, 3], result);
+    }
+
+    [Fact]
+    public void WhereNotNull_ClassTypeListContainsNull_ReturnsNoNullValues()
+    {
+        string?[] list = ["1", null, "2", null];
+
+        var result = list.WhereNotNull();
+
+        Assert.Equal(["1", "2"], result);
+    }
+
+    [Fact]
+    public void WhereNotNull_SelectorValueTypeListContainsNull_ReturnsNoNullValues()
+    {
+        int?[] list = [1, null, 2, null];
+
+        var result = list.WhereNotNull(x => x);
+
+        Assert.Equal([1, 2], result);
     }
 
     [Fact]
@@ -58,7 +78,15 @@ public class EnumerableExtensionTests
 
         var result = list.WhereNotNull(x => x.Value);
 
-        Assert.Equal(result, ["1", "2"]);
+        Assert.Equal(["1", "2"], result);
+    }
+
+    [Fact]
+    public void WhereNotNull_UnconstrainedGeneric_ReturnsNoNullValues()
+    {
+        string?[] list = ["1", null, "2"];
+
+        Assert.Equal(["1", "2"], list.WhereNotNull());
     }
 
     private class Test(string? value)
