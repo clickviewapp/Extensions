@@ -11,10 +11,6 @@
         <NoWarn>1591</NoWarn>
     </PropertyGroup>
 
-    <PropertyGroup>
-        <Version>1.8.0</Version>
-    </PropertyGroup>
-
     <ItemGroup>
         <InternalsVisibleTo Include="$(AssemblyName).Tests" />
     </ItemGroup>
