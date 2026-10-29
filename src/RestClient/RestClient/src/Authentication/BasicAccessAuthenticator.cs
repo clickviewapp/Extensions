@@ -1,4 +1,4 @@
-﻿namespace ClickView.Extensions.RestClient.Authentication;
+namespace ClickView.Extensions.RestClient.Authentication;
 
 using System;
 using System.Text;
@@ -24,7 +24,7 @@ public class BasicAccessAuthenticator : IAuthenticator
 
     public Task AuthenticateAsync(IClientRequest request, CancellationToken token = default)
     {
-        request.AddHeader("Authorization", $"Basic {_encoded}");
+        request.AddOrUpdateHeader("Authorization", $"Basic {_encoded}");
         return Task.CompletedTask;
     }
 

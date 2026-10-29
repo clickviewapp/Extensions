@@ -45,6 +45,18 @@ public abstract class BaseRestClientRequest<TResponse>(HttpMethod method, string
         _headers.Add(key, values);
     }
 
+    public void AddOrUpdateHeader(string key, string value)
+    {
+        _headers.Remove(key);   // no-op if it does not exist
+        _headers.Add(key, value);
+    }
+
+    public void AddOrUpdateHeader(string key, IEnumerable<string> values)
+    {
+        _headers.Remove(key);   // no-op if it does not exist
+        _headers.Add(key, values);
+    }
+
     public void AddBody(object body)
     {
         if (!MethodSupportsBody(Method))
@@ -53,7 +65,7 @@ public abstract class BaseRestClientRequest<TResponse>(HttpMethod method, string
         _content = body;
         return;
 
-        bool MethodSupportsBody(HttpMethod method)
+        static bool MethodSupportsBody(HttpMethod method)
         {
             return method == HttpMethod.Post ||
 #if NETCOREAPP2_1_OR_GREATER

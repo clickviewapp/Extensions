@@ -1,4 +1,4 @@
-﻿namespace ClickView.Extensions.RestClient.Authenticators.OAuth;
+namespace ClickView.Extensions.RestClient.Authenticators.OAuth;
 
 using System;
 using System.Collections.Generic;
@@ -56,7 +56,7 @@ public abstract class OAuthAuthenticator<TOptions> : IAuthenticator where TOptio
             return;
         }
 
-        request.AddHeader("Authorization", "Bearer " + oAuthToken);
+        request.AddOrUpdateHeader("Authorization", "Bearer " + oAuthToken);
     }
 
     protected void AddTokenSource(ITokenSource tokenSource)

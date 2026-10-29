@@ -162,7 +162,6 @@ public class RestClient
 
         PrepareHttpClient(httpClient, options);
 
-
         return httpClient;
     }
 
